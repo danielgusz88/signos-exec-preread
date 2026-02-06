@@ -143,12 +143,17 @@ class AnnotationManager {
     // Load existing annotations
     async loadExistingAnnotations() {
         for (const section of CONFIG.SECTIONS) {
-            await this.loadSectionAnnotations(section.id);
+            await this.loadSectionAnnotations(section.id, true); // true = initial load
         }
+        // Update progress after loading all annotations
+        localStorage.setItem('section_status', JSON.stringify(this.sectionStatus));
+        this.updateProgress();
+        this.updateNavigation();
     }
     
     // Load annotations for a specific section
-    async loadSectionAnnotations(sectionId) {
+    // isInitialLoad: if true, always populate textarea; if false (realtime update), don't overwrite user's typing
+    async loadSectionAnnotations(sectionId, isInitialLoad = false) {
         const annotations = await window.annotationStore.getAnnotations(sectionId);
         const section = document.querySelector(`[data-section="${sectionId}"]`);
         if (!section) return;
@@ -161,8 +166,11 @@ class AnnotationManager {
             const myAnnotation = annotations.find(a => a.exec_name === this.currentExec);
             if (myAnnotation) {
                 // Pre-populate textarea with user's existing comment
-                if (myAnnotation.comment_text && !textarea.value) {
-                    textarea.value = myAnnotation.comment_text;
+                // On initial load, always set it. On realtime updates, only if textarea is empty
+                if (myAnnotation.comment_text) {
+                    if (isInitialLoad || !textarea.value.trim()) {
+                        textarea.value = myAnnotation.comment_text;
+                    }
                 }
                 // Pre-select their reaction button
                 if (myAnnotation.reaction_type) {
@@ -172,6 +180,11 @@ class AnnotationManager {
                         reactionBtn.classList.add('selected');
                         this.selectedReactions[sectionId] = myAnnotation.reaction_type;
                     }
+                }
+                
+                // Mark section as reviewed if user has annotation
+                if (isInitialLoad) {
+                    this.sectionStatus[sectionId] = 'reviewed';
                 }
             }
         }
