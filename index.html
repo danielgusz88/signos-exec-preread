@@ -1622,8 +1622,62 @@
                         <h3>Current Team Structure → Go-Forward Pods</h3>
                         <p style="color: var(--text-secondary); margin-bottom: 20px;">For each team member, select which pod they should be assigned to. Add notes if you have specific thoughts on their role or fit.</p>
 
+                        <!-- Live Pod Counts Summary -->
+                        <div class="pod-counts-summary" id="podCountsSummary" style="background: linear-gradient(135deg, var(--bg-card), var(--bg-elevated)); border: 1px solid var(--border-color); border-radius: 16px; padding: 24px; margin-bottom: 24px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                                <h4 style="margin: 0; color: var(--text-primary);">📊 Live Pod Allocation</h4>
+                                <div style="display: flex; gap: 16px;">
+                                    <span style="font-size: 18px; font-weight: 700; color: var(--accent-success);">
+                                        🏢 Active: <span id="totalActiveCount">0</span>
+                                    </span>
+                                    <span style="font-size: 18px; font-weight: 700; color: var(--accent-danger);">
+                                        ❌ Offboard: <span id="totalOffboardCount">0</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="pod-counts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px;">
+                                <div class="pod-count-card" data-pod="Leadership" style="background: linear-gradient(135deg, #1a1a2e, #16213e); border: 1px solid #9b59b6; border-radius: 12px; padding: 16px; text-align: center;">
+                                    <div style="font-size: 28px; font-weight: 700; color: #9b59b6;" id="count-Leadership">0</div>
+                                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Leadership</div>
+                                </div>
+                                <div class="pod-count-card" data-pod="Growth" style="background: linear-gradient(135deg, #1a1a2e, #16213e); border: 1px solid #f39c12; border-radius: 12px; padding: 16px; text-align: center;">
+                                    <div style="font-size: 28px; font-weight: 700; color: #f39c12;" id="count-Growth">0</div>
+                                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Growth</div>
+                                </div>
+                                <div class="pod-count-card" data-pod="Acquisition" style="background: linear-gradient(135deg, #1a1a2e, #16213e); border: 1px solid #3498db; border-radius: 12px; padding: 16px; text-align: center;">
+                                    <div style="font-size: 28px; font-weight: 700; color: #3498db;" id="count-Acquisition">0</div>
+                                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Acquisition</div>
+                                </div>
+                                <div class="pod-count-card" data-pod="Retention" style="background: linear-gradient(135deg, #1a1a2e, #16213e); border: 1px solid #2ecc71; border-radius: 12px; padding: 16px; text-align: center;">
+                                    <div style="font-size: 28px; font-weight: 700; color: #2ecc71;" id="count-Retention">0</div>
+                                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Retention</div>
+                                </div>
+                                <div class="pod-count-card" data-pod="Platform" style="background: linear-gradient(135deg, #1a1a2e, #16213e); border: 1px solid #9b59b6; border-radius: 12px; padding: 16px; text-align: center;">
+                                    <div style="font-size: 28px; font-weight: 700; color: #9b59b6;" id="count-Platform">0</div>
+                                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Platform</div>
+                                </div>
+                                <div class="pod-count-card" data-pod="Infrastructure" style="background: linear-gradient(135deg, #1a1a2e, #16213e); border: 1px solid #1abc9c; border-radius: 12px; padding: 16px; text-align: center;">
+                                    <div style="font-size: 28px; font-weight: 700; color: #1abc9c;" id="count-Infrastructure">0</div>
+                                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Infrastructure</div>
+                                </div>
+                                <div class="pod-count-card" data-pod="Enterprise" style="background: linear-gradient(135deg, #1a1a2e, #16213e); border: 1px solid #e74c3c; border-radius: 12px; padding: 16px; text-align: center;">
+                                    <div style="font-size: 28px; font-weight: 700; color: #e74c3c;" id="count-Enterprise">0</div>
+                                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Enterprise</div>
+                                </div>
+                                <div class="pod-count-card" data-pod="Ops/G&A" style="background: linear-gradient(135deg, #1a1a2e, #16213e); border: 1px solid #95a5a6; border-radius: 12px; padding: 16px; text-align: center;">
+                                    <div style="font-size: 28px; font-weight: 700; color: #95a5a6;" id="count-Ops/G&A">0</div>
+                                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Ops/G&A</div>
+                                </div>
+                                <div class="pod-count-card" data-pod="Offboard/TBD" style="background: linear-gradient(135deg, #1a1a2e, #2c1810); border: 1px solid #e74c3c; border-radius: 12px; padding: 16px; text-align: center;">
+                                    <div style="font-size: 28px; font-weight: 700; color: #e74c3c;" id="count-Offboard/TBD">0</div>
+                                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Offboard/TBD</div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="pod-legend" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; padding: 16px; background: var(--bg-card); border-radius: 12px;">
                             <span style="font-size: 12px; color: var(--text-muted); width: 100%; margin-bottom: 8px;">Pod Options:</span>
+                            <span class="pod-tag leadership">Leadership</span>
                             <span class="pod-tag growth">Growth</span>
                             <span class="pod-tag acquisition">Acquisition</span>
                             <span class="pod-tag retention">Retention</span>

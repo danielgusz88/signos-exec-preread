@@ -558,11 +558,74 @@ function initTeamRoster() {
     
     container.innerHTML = html;
     
+    // Add change listeners to all pod selects for live count updates
+    container.querySelectorAll('.pod-select').forEach(select => {
+        select.addEventListener('change', updatePodCounts);
+    });
+    
+    // Initial count update
+    updatePodCounts();
+    
     // Load existing assignments
     const execName = window.annotationManager?.currentExec || localStorage.getItem('current_exec');
     if (execName) {
         loadTeamAssignments(execName);
     }
+}
+
+// Update pod counts based on current selections
+function updatePodCounts() {
+    const counts = {
+        'Leadership': 0,
+        'Growth': 0,
+        'Acquisition': 0,
+        'Retention': 0,
+        'Platform': 0,
+        'Infrastructure': 0,
+        'Enterprise': 0,
+        'Ops/G&A': 0,
+        'Offboard/TBD': 0
+    };
+    
+    // Count all pod selections
+    document.querySelectorAll('.pod-select').forEach(select => {
+        const value = select.value;
+        if (value && counts.hasOwnProperty(value)) {
+            counts[value]++;
+        }
+    });
+    
+    // Update the display
+    Object.keys(counts).forEach(pod => {
+        const countEl = document.getElementById(`count-${pod}`);
+        if (countEl) {
+            const oldValue = parseInt(countEl.textContent) || 0;
+            const newValue = counts[pod];
+            countEl.textContent = newValue;
+            
+            // Animate if changed
+            if (oldValue !== newValue) {
+                countEl.style.transform = 'scale(1.2)';
+                countEl.style.transition = 'transform 0.2s ease';
+                setTimeout(() => {
+                    countEl.style.transform = 'scale(1)';
+                }, 200);
+            }
+        }
+    });
+    
+    // Calculate totals
+    const totalActive = counts['Leadership'] + counts['Growth'] + counts['Acquisition'] + 
+                       counts['Retention'] + counts['Platform'] + counts['Infrastructure'] + 
+                       counts['Enterprise'] + counts['Ops/G&A'];
+    const totalOffboard = counts['Offboard/TBD'];
+    
+    // Update totals
+    const activeEl = document.getElementById('totalActiveCount');
+    const offboardEl = document.getElementById('totalOffboardCount');
+    
+    if (activeEl) activeEl.textContent = totalActive;
+    if (offboardEl) offboardEl.textContent = totalOffboard;
 }
 
 // Save team assignments to Supabase
@@ -677,6 +740,9 @@ async function loadTeamAssignments(execName) {
                     notesInput.value = assignment.notes;
                 }
             });
+            
+            // Update pod counts after loading assignments
+            updatePodCounts();
             
             console.log('Loaded team assignments for', execName);
         }
