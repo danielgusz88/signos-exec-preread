@@ -593,8 +593,15 @@
         async function loadGeneralFeedback() {
             const container = document.getElementById('generalFeedbackSummary');
             
+            // Check if Supabase is available
+            const supabaseClient = window.annotationStore?.supabase;
+            if (!supabaseClient || !window.annotationStore?.useSupabase) {
+                container.innerHTML = '<div class="no-feedback">General feedback requires Supabase connection. Using localStorage fallback.</div>';
+                return;
+            }
+            
             try {
-                const { data, error } = await window.supabase
+                const { data, error } = await supabaseClient
                     .from('general_feedback')
                     .select('*')
                     .order('updated_at', { ascending: false });
@@ -839,8 +846,10 @@
                 
                 // Also fetch general feedback
                 let generalFeedbackText = '';
+                const supabaseForAI = window.annotationStore?.supabase;
+                if (supabaseForAI && window.annotationStore?.useSupabase) {
                 try {
-                    const { data: generalData } = await window.supabase
+                    const { data: generalData } = await supabaseForAI
                         .from('general_feedback')
                         .select('*');
                     
@@ -859,6 +868,7 @@
                 } catch (e) {
                     console.error('Error fetching general feedback for AI:', e);
                 }
+                } // End of supabaseForAI check
                 
                 const prompt = `You are helping prepare for an executive offsite meeting at Signos. Analyze the following pre-read feedback from executives and provide a structured summary.
 
