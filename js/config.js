@@ -6,8 +6,7 @@ const CONFIG = {
     SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpvY2FpdmtzcnJjdWxpZHBqbW15Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg1MDYzOTAsImV4cCI6MjA4NDA4MjM5MH0.TSHU3oQwK8vYR0WkXazW-0LdGVHydGW9XCpXrvoAJA8',
     
     // Claude API Configuration
-    // Will be entered via prompt in admin dashboard for security
-    CLAUDE_API_KEY: null,
+    CLAUDE_API_KEY: 'sk-ant-api03-LUT8Lr3iWHxTY9pF4V5gcb90Q-gQn3pRVNivLQHluAzZb36vnujIhib416HPrHz5Q7oYADCFF48ZvJuxhXg2Rg-UxCO1wAA',
     
     // Section definitions
     SECTIONS: [
