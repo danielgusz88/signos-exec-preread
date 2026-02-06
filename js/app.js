@@ -270,15 +270,17 @@ async function saveDecisionInputs() {
     
     // Gather all decision inputs
     const decisions = {};
-    const decisionIds = ['growth-pod', 'team-allocation', 'glp1-launch', 'enterprise-allocation', 'attach-rate', 'board-ask'];
+    const decisionIds = ['growth-pod', 'team-allocation', 'glp1-launch', 'enterprise-allocation', 'attach-rate', 'board-ask', 'headcount-changes'];
     
     decisionIds.forEach(decisionId => {
         const selectedOption = document.querySelector(`input[name="decision-${decisionId}"]:checked`);
         const inputText = document.getElementById(`input-${decisionId}`)?.value || '';
+        const finalText = document.getElementById(`final-${decisionId}`)?.value || '';
         
         decisions[decisionId] = {
             option: selectedOption ? selectedOption.value : null,
-            input: inputText
+            input: inputText,
+            final: finalText
         };
     });
     
@@ -362,6 +364,12 @@ async function loadDecisionInputs(execName) {
                 if (decision.input) {
                     const textarea = document.getElementById(`input-${decisionId}`);
                     if (textarea) textarea.value = decision.input;
+                }
+                
+                // Set the final decision text
+                if (decision.final) {
+                    const finalTextarea = document.getElementById(`final-${decisionId}`);
+                    if (finalTextarea) finalTextarea.value = decision.final;
                 }
             });
             
