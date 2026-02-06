@@ -530,7 +530,7 @@
         
         function updateExecBreakdown() {
             const breakdown = {};
-            CONFIG.EXECUTIVES.forEach(exec => {
+            CONFIG.EXEC_NAMES.forEach(exec => {
                 breakdown[exec] = 0;
             });
             
@@ -541,7 +541,7 @@
             });
             
             const container = document.getElementById('execBreakdown');
-            container.innerHTML = CONFIG.EXECUTIVES.map(exec => {
+            container.innerHTML = CONFIG.EXEC_NAMES.map(exec => {
                 const count = breakdown[exec];
                 const statusClass = count > 0 ? 'complete' : '';
                 const statusText = count > 0 ? `${count} comments` : 'No comments yet';

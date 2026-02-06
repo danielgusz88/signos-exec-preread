@@ -9,19 +9,23 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <!-- Exec Selector Modal -->
+    <!-- Login Modal -->
     <div id="execModal" class="modal-overlay">
         <div class="modal-content">
-            <h2>👋 Welcome to the Offsite Pre-Read</h2>
-            <p>Select your name to track your annotations and feedback.</p>
-            <div class="exec-grid">
-                <button class="exec-btn" data-exec="Sharam">👤 Sharam</button>
-                <button class="exec-btn" data-exec="Roger">👤 Roger</button>
-                <button class="exec-btn" data-exec="Lindsay">👤 Lindsay</button>
-                <button class="exec-btn" data-exec="Emma">👤 Emma</button>
-                <button class="exec-btn" data-exec="Colin">👤 Colin</button>
-                <button class="exec-btn" data-exec="Kate">👤 Kate (Advisor)</button>
-            </div>
+            <h2>🔐 Executive Offsite Pre-Read</h2>
+            <p>Sign in to track your annotations and feedback.</p>
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter your first name (lowercase)" autocomplete="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter password" autocomplete="current-password" required>
+                </div>
+                <div id="loginError" class="login-error"></div>
+                <button type="submit" class="btn-login">Sign In</button>
+            </form>
             <p class="modal-note">Your annotations will be visible to other executives after you submit them.</p>
         </div>
     </div>

@@ -3,25 +3,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Initialize navigation
     initNavigation();
     
-    // Check for existing exec
+    // Check for existing exec session
     const savedExec = localStorage.getItem('current_exec');
-    if (savedExec) {
+    if (savedExec && isValidExec(savedExec)) {
         document.getElementById('currentExecName').textContent = savedExec;
         document.getElementById('execModal').classList.add('hidden');
         window.annotationManager.currentExec = savedExec;
     }
     
-    // Setup exec selector buttons
-    document.querySelectorAll('.exec-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const name = btn.dataset.exec;
-            window.annotationManager.setCurrentExec(name);
-        });
-    });
+    // Setup login form
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
+    }
     
-    // Setup change exec button
+    // Setup change exec button (logout)
     document.getElementById('changeExec').addEventListener('click', () => {
+        // Clear session and show login
+        localStorage.removeItem('current_exec');
         document.getElementById('execModal').classList.remove('hidden');
+        document.getElementById('loginError').textContent = '';
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
     });
     
     // Initialize annotation manager
@@ -54,6 +57,34 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Track scroll position for active section
     setupScrollTracking();
 });
+
+// Handle login form submission
+function handleLogin(e) {
+    e.preventDefault();
+    
+    const username = document.getElementById('username').value.toLowerCase().trim();
+    const password = document.getElementById('password').value;
+    const errorEl = document.getElementById('loginError');
+    
+    // Find matching executive
+    const exec = CONFIG.EXECUTIVES.find(e => 
+        e.username === username && e.password === password
+    );
+    
+    if (exec) {
+        // Login successful
+        errorEl.textContent = '';
+        window.annotationManager.setCurrentExec(exec.name);
+    } else {
+        // Login failed
+        errorEl.textContent = 'Invalid username or password. Try your first name (lowercase) and "signos".';
+    }
+}
+
+// Validate exec is still in the list
+function isValidExec(name) {
+    return CONFIG.EXECUTIVES.some(e => e.name === name);
+}
 
 // Initialize navigation sidebar
 function initNavigation() {

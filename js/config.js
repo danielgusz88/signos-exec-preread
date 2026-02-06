@@ -22,15 +22,18 @@ const CONFIG = {
         { id: '8', title: 'Board Messaging', short: 'Board' }
     ],
     
-    // Executives list
+    // Executives list with credentials (username: firstname lowercase, password: signos)
     EXECUTIVES: [
-        'Sharam',
-        'Roger',
-        'Lindsay',
-        'Emma',
-        'Colin',
-        'Kate'
+        { name: 'Sharam', username: 'sharam', password: 'signos' },
+        { name: 'Roger', username: 'roger', password: 'signos' },
+        { name: 'Lindsay', username: 'lindsay', password: 'signos' },
+        { name: 'Emma', username: 'emma', password: 'signos' },
+        { name: 'Colin', username: 'colin', password: 'signos' },
+        { name: 'Dan', username: 'dan', password: 'signos' }
     ],
+    
+    // Helper to get exec names for display
+    EXEC_NAMES: ['Sharam', 'Roger', 'Lindsay', 'Emma', 'Colin', 'Dan'],
     
     // Reaction types
     REACTIONS: {
