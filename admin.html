@@ -871,10 +871,10 @@
                     .select('*')
                     .order('updated_at', { ascending: false });
                 
-                if (error) throw error;
+                if (error && error.code !== '42P01') throw error; // 42P01 = table doesn't exist
                 
                 if (!data || data.length === 0) {
-                    container.innerHTML = '<div class="no-decisions">No decision inputs submitted yet.</div>';
+                    container.innerHTML = '<div class="no-decisions">No decision inputs submitted yet. Executives can vote and provide input in Section 11.</div>';
                     return;
                 }
                 
