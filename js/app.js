@@ -45,6 +45,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Setup general feedback save button
     document.getElementById('saveGeneralFeedback')?.addEventListener('click', saveGeneralFeedback);
     
+    // Setup sprint feedback save button
+    document.getElementById('saveSprintFeedback')?.addEventListener('click', saveSprintFeedback);
+    
     // Smooth scroll to sections on nav click
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', () => {
@@ -249,8 +252,114 @@ async function loadGeneralFeedback(execName) {
         console.error('Error loading general feedback:', error);
     }
     
-    // Also load decision inputs
+    // Also load decision inputs and sprint feedback
     loadDecisionInputs(execName);
+    loadSprintFeedback(execName);
+}
+
+// Save sprint feedback to Supabase
+async function saveSprintFeedback() {
+    const execName = window.annotationManager?.currentExec || localStorage.getItem('current_exec');
+    if (!execName) {
+        alert('Please log in first');
+        return;
+    }
+    
+    const saveBtn = document.getElementById('saveSprintFeedback');
+    const statusEl = document.getElementById('sprintFeedbackStatus');
+    
+    if (!saveBtn) return;
+    
+    saveBtn.disabled = true;
+    statusEl.textContent = 'Saving...';
+    statusEl.style.color = 'var(--text-muted)';
+    
+    // Gather sprint feedback
+    const feedback = {
+        speed: document.querySelector('.feedback-textarea[data-field="speed"]')?.value || '',
+        output: document.querySelector('.feedback-textarea[data-field="output"]')?.value || '',
+        structure: document.querySelector('.feedback-textarea[data-field="structure"]')?.value || '',
+        performance: document.querySelector('.feedback-textarea[data-field="performance"]')?.value || '',
+        recommendations: document.querySelector('.feedback-textarea[data-field="recommendations"]')?.value || ''
+    };
+    
+    try {
+        const { data: existing } = await window.supabase
+            .from('sprint_feedback')
+            .select('id')
+            .eq('exec_name', execName)
+            .single();
+        
+        if (existing) {
+            const { error } = await window.supabase
+                .from('sprint_feedback')
+                .update({ 
+                    feedback: feedback,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('exec_name', execName);
+            if (error) throw error;
+        } else {
+            const { error } = await window.supabase
+                .from('sprint_feedback')
+                .insert({ 
+                    exec_name: execName, 
+                    feedback: feedback,
+                    updated_at: new Date().toISOString()
+                });
+            if (error) throw error;
+        }
+        
+        statusEl.textContent = '✓ Saved!';
+        statusEl.style.color = 'var(--accent-success)';
+        window.annotationManager?.showToast('Sprint feedback saved successfully!');
+        
+        setTimeout(() => { statusEl.textContent = ''; }, 3000);
+        
+    } catch (error) {
+        console.error('Error saving sprint feedback:', error);
+        statusEl.textContent = '✗ Error saving';
+        statusEl.style.color = 'var(--accent-danger)';
+    } finally {
+        saveBtn.disabled = false;
+    }
+}
+
+// Load sprint feedback from Supabase
+async function loadSprintFeedback(execName) {
+    if (!execName || !window.supabase) return;
+    
+    try {
+        const { data, error } = await window.supabase
+            .from('sprint_feedback')
+            .select('feedback')
+            .eq('exec_name', execName)
+            .single();
+        
+        if (error && error.code !== 'PGRST116' && error.code !== '42P01') {
+            console.error('Error loading sprint feedback:', error);
+            return;
+        }
+        
+        if (data && data.feedback) {
+            const fb = data.feedback;
+            const speedEl = document.querySelector('.feedback-textarea[data-field="speed"]');
+            const outputEl = document.querySelector('.feedback-textarea[data-field="output"]');
+            const structureEl = document.querySelector('.feedback-textarea[data-field="structure"]');
+            const performanceEl = document.querySelector('.feedback-textarea[data-field="performance"]');
+            const recommendationsEl = document.querySelector('.feedback-textarea[data-field="recommendations"]');
+            
+            if (speedEl && fb.speed) speedEl.value = fb.speed;
+            if (outputEl && fb.output) outputEl.value = fb.output;
+            if (structureEl && fb.structure) structureEl.value = fb.structure;
+            if (performanceEl && fb.performance) performanceEl.value = fb.performance;
+            if (recommendationsEl && fb.recommendations) recommendationsEl.value = fb.recommendations;
+            
+            console.log('Loaded sprint feedback for', execName);
+        }
+    } catch (error) {
+        console.error('Error loading sprint feedback:', error);
+    }
 }
 
 // Save decision inputs to Supabase
