@@ -24,14 +24,26 @@ create table annotations (
   created_at timestamp with time zone default now()
 );
 
+-- Create general_feedback table
+create table general_feedback (
+  id uuid default gen_random_uuid() primary key,
+  exec_name text not null unique,
+  feedback jsonb not null default '{}',
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now()
+);
+
 -- Enable Row Level Security (optional but recommended)
 alter table annotations enable row level security;
+alter table general_feedback enable row level security;
 
 -- Allow all operations for now (you can tighten this later)
 create policy "Allow all" on annotations for all using (true);
+create policy "Allow all" on general_feedback for all using (true);
 
 -- Enable real-time
 alter publication supabase_realtime add table annotations;
+alter publication supabase_realtime add table general_feedback;
 ```
 
 4. Update `js/config.js` with your Supabase credentials:
@@ -58,7 +70,7 @@ npx netlify-cli deploy --prod
 ## Features
 
 ### For Executives (index.html)
-- 8 sections covering offsite topics
+- 10 sections covering offsite topics
 - Reaction buttons (Agree, Question, Concern, Idea)
 - Freeform comments per section
 - Progress tracking

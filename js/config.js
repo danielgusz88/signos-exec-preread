@@ -19,7 +19,9 @@ const CONFIG = {
         { id: '5', title: 'Operating Structure', short: 'Pods' },
         { id: '6', title: 'Team Size & Capacity', short: 'Team' },
         { id: '7', title: 'Revenue Plan', short: 'Revenue' },
-        { id: '8', title: 'Board Messaging', short: 'Board' }
+        { id: '8', title: 'Board Messaging', short: 'Board' },
+        { id: '9', title: 'Enterprise Strategy', short: 'Enterprise' },
+        { id: '10', title: 'General Feedback', short: 'Feedback' }
     ],
     
     // Executives list with credentials (username: firstname lowercase, password: signos)

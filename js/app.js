@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('currentExecName').textContent = savedExec;
         document.getElementById('execModal').classList.add('hidden');
         window.annotationManager.currentExec = savedExec;
+        
+        // Load general feedback for this exec
+        setTimeout(() => loadGeneralFeedback(savedExec), 1000);
     }
     
     // Setup login form
@@ -38,6 +41,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('submitAllBtn')?.addEventListener('click', () => {
         window.annotationManager.showToast('All sections reviewed! You\'re ready for the offsite.');
     });
+    
+    // Setup general feedback save button
+    document.getElementById('saveGeneralFeedback')?.addEventListener('click', saveGeneralFeedback);
     
     // Smooth scroll to sections on nav click
     document.querySelectorAll('.nav-item').forEach(item => {
@@ -75,6 +81,9 @@ function handleLogin(e) {
         // Login successful
         errorEl.textContent = '';
         window.annotationManager.setCurrentExec(exec.name);
+        
+        // Load their general feedback after a short delay
+        setTimeout(() => loadGeneralFeedback(exec.name), 1000);
     } else {
         // Login failed
         errorEl.textContent = 'Invalid username or password. Try your first name (lowercase) and "signos".';
@@ -125,4 +134,118 @@ function setupScrollTracking() {
     });
     
     sections.forEach(section => observer.observe(section));
+}
+
+// Save general feedback to Supabase
+async function saveGeneralFeedback() {
+    const exec = window.annotationManager?.currentExec;
+    if (!exec) {
+        window.annotationManager?.showToast('Please select an executive first');
+        return;
+    }
+    
+    const statusEl = document.getElementById('generalFeedbackStatus');
+    const saveBtn = document.getElementById('saveGeneralFeedback');
+    
+    // Gather all feedback fields
+    const feedbackData = {
+        priorities: document.getElementById('general-priorities')?.value || '',
+        risks: document.getElementById('general-risks')?.value || '',
+        ideas: document.getElementById('general-ideas')?.value || '',
+        questions: document.getElementById('general-questions')?.value || '',
+        other: document.getElementById('general-other')?.value || ''
+    };
+    
+    // Check if there's any content
+    const hasContent = Object.values(feedbackData).some(v => v.trim());
+    if (!hasContent) {
+        window.annotationManager?.showToast('Please add some feedback before saving');
+        return;
+    }
+    
+    saveBtn.disabled = true;
+    statusEl.textContent = 'Saving...';
+    statusEl.style.color = 'var(--text-secondary)';
+    
+    try {
+        // Check if feedback already exists for this exec
+        const { data: existing, error: fetchError } = await window.supabase
+            .from('general_feedback')
+            .select('id')
+            .eq('exec_name', exec)
+            .single();
+        
+        if (existing) {
+            // Update existing
+            const { error } = await window.supabase
+                .from('general_feedback')
+                .update({
+                    feedback: feedbackData,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('exec_name', exec);
+            
+            if (error) throw error;
+        } else {
+            // Insert new
+            const { error } = await window.supabase
+                .from('general_feedback')
+                .insert({
+                    exec_name: exec,
+                    feedback: feedbackData,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                });
+            
+            if (error) throw error;
+        }
+        
+        statusEl.textContent = '✓ Saved!';
+        statusEl.style.color = 'var(--accent-success)';
+        window.annotationManager?.showToast('General feedback saved successfully!');
+        
+        setTimeout(() => {
+            statusEl.textContent = '';
+        }, 3000);
+        
+    } catch (error) {
+        console.error('Error saving general feedback:', error);
+        statusEl.textContent = '✗ Error saving';
+        statusEl.style.color = 'var(--accent-danger)';
+        window.annotationManager?.showToast('Error saving feedback. Please try again.');
+    } finally {
+        saveBtn.disabled = false;
+    }
+}
+
+// Load general feedback from Supabase
+async function loadGeneralFeedback(execName) {
+    if (!execName || !window.supabase) return;
+    
+    try {
+        const { data, error } = await window.supabase
+            .from('general_feedback')
+            .select('feedback')
+            .eq('exec_name', execName)
+            .single();
+        
+        if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
+            console.error('Error loading general feedback:', error);
+            return;
+        }
+        
+        if (data && data.feedback) {
+            const fb = data.feedback;
+            
+            if (fb.priorities) document.getElementById('general-priorities').value = fb.priorities;
+            if (fb.risks) document.getElementById('general-risks').value = fb.risks;
+            if (fb.ideas) document.getElementById('general-ideas').value = fb.ideas;
+            if (fb.questions) document.getElementById('general-questions').value = fb.questions;
+            if (fb.other) document.getElementById('general-other').value = fb.other;
+            
+            console.log('Loaded general feedback for', execName);
+        }
+    } catch (error) {
+        console.error('Error loading general feedback:', error);
+    }
 }

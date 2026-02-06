@@ -52,7 +52,7 @@
             <div class="progress-bar">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
-            <span class="progress-text" id="progressText">0 of 8 sections reviewed</span>
+            <span class="progress-text" id="progressText">0 of 10 sections reviewed</span>
         </div>
 
         <!-- Main Content -->
@@ -851,24 +851,125 @@
                             </div>
                         </div>
 
-                        <h3>12-Month Projection</h3>
-                        <div class="projection-summary">
-                            <div class="proj-item">
-                                <span class="proj-label">Total Revenue</span>
-                                <span class="proj-value">$83.5M</span>
+                        <h3>12-Month Projection <span style="background: var(--accent-warning); color: var(--bg-primary); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; margin-left: 12px;">DRAFT</span></h3>
+                        
+                        <div class="callout" style="margin-bottom: 20px; border-left-color: var(--accent-warning);">
+                            <p><strong>⚠️ Draft Model:</strong> These projections require validation. Numbers below are illustrative based on stated assumptions.</p>
+                        </div>
+
+                        <h4 style="font-size: 15px; margin-bottom: 12px;">Revenue Build-Up (Monthly)</h4>
+                        <div class="economics-table" style="margin-bottom: 24px;">
+                            <div class="econ-row header" style="grid-template-columns: 1fr 80px 80px 80px 100px;">
+                                <span>Month</span>
+                                <span>New Cust</span>
+                                <span>Total Cust</span>
+                                <span>Attach %</span>
+                                <span>Revenue</span>
                             </div>
-                            <div class="proj-item">
-                                <span class="proj-label">Gross Margin</span>
-                                <span class="proj-value">48.9%</span>
+                            <div class="econ-row" style="grid-template-columns: 1fr 80px 80px 80px 100px;">
+                                <span>Mar (GLP-1 launch)</span>
+                                <span>1,000</span>
+                                <span>8,000</span>
+                                <span>10%</span>
+                                <span>$1.5M</span>
                             </div>
-                            <div class="proj-item">
-                                <span class="proj-label">Net Profit</span>
-                                <span class="proj-value">$31.7M</span>
+                            <div class="econ-row" style="grid-template-columns: 1fr 80px 80px 80px 100px;">
+                                <span>Jun (Q2 end)</span>
+                                <span>2,500</span>
+                                <span>14,000</span>
+                                <span>20%</span>
+                                <span>$3.8M</span>
+                            </div>
+                            <div class="econ-row" style="grid-template-columns: 1fr 80px 80px 80px 100px;">
+                                <span>Sep (Q3 end)</span>
+                                <span>3,500</span>
+                                <span>22,000</span>
+                                <span>30%</span>
+                                <span>$6.2M</span>
+                            </div>
+                            <div class="econ-row" style="grid-template-columns: 1fr 80px 80px 80px 100px;">
+                                <span>Dec (Q4 end)</span>
+                                <span>4,000</span>
+                                <span>30,000</span>
+                                <span>35%</span>
+                                <span>$8.5M</span>
                             </div>
                         </div>
 
-                        <div class="callout warning">
-                            <p><strong>Key assumption:</strong> 30% add-on attach rate by Q3. If only 15%, revenue drops significantly. Need to model downside scenario.</p>
+                        <h4 style="font-size: 15px; margin-bottom: 12px;">Revenue Assumptions</h4>
+                        <ul class="key-points" style="margin-bottom: 24px;">
+                            <li><strong>Base CGM subscription:</strong> $199/mo average</li>
+                            <li><strong>Add-on revenue per attached user:</strong> ~$150/mo blended (mix of GLP-1, labs, coaching, supplements)</li>
+                            <li><strong>Monthly churn:</strong> Improving from 11% → 6% by Q4 with journey improvements</li>
+                            <li><strong>Cumulative customer base:</strong> Net of churn, ~30K active by Dec</li>
+                        </ul>
+
+                        <h4 style="font-size: 15px; margin-bottom: 12px;">Operating Costs (Annual)</h4>
+                        <div class="economics-table" style="margin-bottom: 24px;">
+                            <div class="econ-row header" style="grid-template-columns: 1fr 100px 150px;">
+                                <span>Category</span>
+                                <span>Annual Cost</span>
+                                <span>Notes</span>
+                            </div>
+                            <div class="econ-row" style="grid-template-columns: 1fr 100px 150px;">
+                                <span>👥 Headcount (30 FTEs)</span>
+                                <span>$6.0M</span>
+                                <span>~$200K avg fully loaded</span>
+                            </div>
+                            <div class="econ-row" style="grid-template-columns: 1fr 100px 150px;">
+                                <span>📣 Marketing/CAC</span>
+                                <span>$8.0M</span>
+                                <span>~$300 CAC × ~26K new cust</span>
+                            </div>
+                            <div class="econ-row" style="grid-template-columns: 1fr 100px 150px;">
+                                <span>🏢 Infrastructure/Tools</span>
+                                <span>$1.5M</span>
+                                <span>Cloud, SaaS, data tools</span>
+                            </div>
+                            <div class="econ-row" style="grid-template-columns: 1fr 100px 150px;">
+                                <span>⚙️ G&A / Other</span>
+                                <span>$1.0M</span>
+                                <span>Legal, accounting, misc</span>
+                            </div>
+                            <div class="econ-row" style="grid-template-columns: 1fr 100px 150px; background: var(--bg-hover);">
+                                <span><strong>Total OpEx</strong></span>
+                                <span><strong>$16.5M</strong></span>
+                                <span></span>
+                            </div>
+                        </div>
+
+                        <h4 style="font-size: 15px; margin-bottom: 12px;">P&L Summary (12-Month)</h4>
+                        <div class="projection-summary" style="flex-wrap: wrap;">
+                            <div class="proj-item">
+                                <span class="proj-label">Gross Revenue</span>
+                                <span class="proj-value">$58M</span>
+                            </div>
+                            <div class="proj-item">
+                                <span class="proj-label">COGS (~45%)</span>
+                                <span class="proj-value" style="color: var(--accent-danger);">-$26M</span>
+                            </div>
+                            <div class="proj-item">
+                                <span class="proj-label">Gross Profit</span>
+                                <span class="proj-value">$32M</span>
+                            </div>
+                            <div class="proj-item">
+                                <span class="proj-label">OpEx</span>
+                                <span class="proj-value" style="color: var(--accent-danger);">-$16.5M</span>
+                            </div>
+                            <div class="proj-item" style="border: 2px solid var(--accent-success); border-radius: 12px; padding: 16px;">
+                                <span class="proj-label">Net Income</span>
+                                <span class="proj-value">$15.5M</span>
+                            </div>
+                        </div>
+
+                        <div class="callout warning" style="margin-top: 24px;">
+                            <p><strong>Key assumptions to validate:</strong></p>
+                            <ul style="margin-top: 8px; padding-left: 20px; font-size: 13px;">
+                                <li>30% add-on attach rate by Q3 — aggressive, needs validation</li>
+                                <li>Churn reduction to 6% — requires journey improvements</li>
+                                <li>CAC staying at $300 with vertical funnels</li>
+                                <li>Customer growth ramp to 3,500/mo by Sep</li>
+                            </ul>
                         </div>
                     </div>
                     <div class="annotation-area">
@@ -958,6 +1059,188 @@
                             <button class="reaction-btn" data-reaction="idea">💡 Idea</button>
                         </div>
                         <textarea class="comment-input" placeholder="Is this the right message for the board? What's missing?"></textarea>
+                        <div class="annotation-actions">
+                            <button class="btn-save-annotation">Save Annotation</button>
+                            <span class="save-status"></span>
+                        </div>
+                        <div class="existing-annotations"></div>
+                    </div>
+                </section>
+
+                <!-- Section 9: Enterprise Strategy -->
+                <section class="content-section" data-section="9" id="section-9">
+                    <div class="section-header">
+                        <span class="section-number">9</span>
+                        <h2>Enterprise Strategy & B2B Revenue</h2>
+                        <span class="section-status" data-status="pending">⏳ Pending</span>
+                    </div>
+                    <div class="section-body">
+                        <div class="callout">
+                            <p><strong>🏢 The Enterprise Opportunity:</strong> While B2C drives near-term growth, enterprise/B2B creates diversified revenue, longer contracts, and strategic optionality.</p>
+                        </div>
+
+                        <h3>Enterprise Revenue Channels</h3>
+                        <div class="pod-grid">
+                            <div class="pod-card" style="border-left: 4px solid #6366f1;">
+                                <span class="pod-icon">🏥</span>
+                                <h4>Healthcare Provider Partnerships</h4>
+                                <p>Clinics, weight loss centers, and health systems offering CGM as part of their care</p>
+                                <ul>
+                                    <li><strong>Model:</strong> Per-patient licensing or white-label</li>
+                                    <li><strong>Target:</strong> Obesity clinics, functional medicine practices</li>
+                                    <li><strong>Revenue:</strong> $30-50/patient/month</li>
+                                    <li><strong>Pipeline:</strong> 15+ active conversations</li>
+                                </ul>
+                            </div>
+                            <div class="pod-card" style="border-left: 4px solid #8b5cf6;">
+                                <span class="pod-icon">🏢</span>
+                                <h4>Employer/Payer Wellness</h4>
+                                <p>Employers and insurers seeking metabolic health solutions for populations</p>
+                                <ul>
+                                    <li><strong>Model:</strong> Per-employee per month (PEPM)</li>
+                                    <li><strong>Target:</strong> Self-insured employers, health plans</li>
+                                    <li><strong>Revenue:</strong> $15-25 PEPM</li>
+                                    <li><strong>Pipeline:</strong> 5 pilots in discussion</li>
+                                </ul>
+                            </div>
+                            <div class="pod-card" style="border-left: 4px solid #ec4899;">
+                                <span class="pod-icon">💊</span>
+                                <h4>Pharma/Research Partnerships</h4>
+                                <p>CGM data for clinical trials and real-world evidence studies</p>
+                                <ul>
+                                    <li><strong>Model:</strong> Data licensing, study support</li>
+                                    <li><strong>Target:</strong> GLP-1 manufacturers, research CROs</li>
+                                    <li><strong>Revenue:</strong> Project-based ($100K-$1M+)</li>
+                                    <li><strong>Pipeline:</strong> Early stage discussions</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <h3>Enterprise Pod Focus (4 FTEs)</h3>
+                        <div class="economics-table">
+                            <div class="econ-row header" style="grid-template-columns: 120px 1fr;">
+                                <span>Role</span>
+                                <span>Focus</span>
+                            </div>
+                            <div class="econ-row" style="grid-template-columns: 120px 1fr;">
+                                <span>Colin Rogers (VP)</span>
+                                <span>Enterprise strategy, key accounts, partnership development</span>
+                            </div>
+                            <div class="econ-row" style="grid-template-columns: 120px 1fr;">
+                                <span>Sales (2)</span>
+                                <span>Provider outreach, employer sales, proposal development</span>
+                            </div>
+                            <div class="econ-row" style="grid-template-columns: 120px 1fr;">
+                                <span>Customer Success</span>
+                                <span>Implementation, account management, expansion</span>
+                            </div>
+                        </div>
+
+                        <h3>2026 Enterprise Targets</h3>
+                        <div class="revenue-grid">
+                            <div class="revenue-card">
+                                <div class="revenue-label">Q2 Target</div>
+                                <div class="revenue-value">3 Pilots</div>
+                                <div class="revenue-note">Healthcare providers</div>
+                            </div>
+                            <div class="revenue-card">
+                                <div class="revenue-label">Q3 Target</div>
+                                <div class="revenue-value">$200K ARR</div>
+                                <div class="revenue-note">First contracts closed</div>
+                            </div>
+                            <div class="revenue-card">
+                                <div class="revenue-label">Q4 Target</div>
+                                <div class="revenue-value">$500K ARR</div>
+                                <div class="revenue-note">Pipeline expansion</div>
+                            </div>
+                            <div class="revenue-card highlight">
+                                <div class="revenue-label">2027 Potential</div>
+                                <div class="revenue-value">$2-5M</div>
+                                <div class="revenue-note">If pilots convert</div>
+                            </div>
+                        </div>
+
+                        <div class="callout warning">
+                            <p><strong>Key Decision:</strong> How much resource do we allocate to enterprise vs B2C? Enterprise is slower but creates strategic moat and revenue diversification.</p>
+                        </div>
+                    </div>
+                    <div class="annotation-area">
+                        <div class="annotation-header">
+                            <span>💬 Your Feedback on This Section</span>
+                        </div>
+                        <div class="reaction-buttons">
+                            <button class="reaction-btn" data-reaction="agree">✅ Agree</button>
+                            <button class="reaction-btn" data-reaction="question">❓ Question</button>
+                            <button class="reaction-btn" data-reaction="concern">⚠️ Concern</button>
+                            <button class="reaction-btn" data-reaction="idea">💡 Idea</button>
+                        </div>
+                        <textarea class="comment-input" placeholder="What's your view on enterprise vs B2C resource allocation?"></textarea>
+                        <div class="annotation-actions">
+                            <button class="btn-save-annotation">Save Annotation</button>
+                            <span class="save-status"></span>
+                        </div>
+                        <div class="existing-annotations"></div>
+                    </div>
+                </section>
+
+                <!-- Section 10: General Feedback -->
+                <section class="content-section" data-section="10" id="section-10">
+                    <div class="section-header">
+                        <span class="section-number">10</span>
+                        <h2>General Thoughts & Feedback</h2>
+                        <span class="section-status" data-status="pending">⏳ Pending</span>
+                    </div>
+                    <div class="section-body">
+                        <div class="callout success">
+                            <p><strong>📝 Final Thoughts:</strong> Use this section to capture any overarching thoughts, concerns, or ideas that span multiple sections or don't fit elsewhere.</p>
+                        </div>
+
+                        <h3>Your General Feedback</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 16px;">This is your space to share broader strategic thoughts, cross-cutting concerns, or anything else on your mind as we head into the offsite.</p>
+
+                        <div class="general-feedback-area">
+                            <div class="feedback-input-group">
+                                <label class="feedback-label">🎯 Top Strategic Priorities</label>
+                                <textarea id="general-priorities" class="feedback-textarea" placeholder="What do you think should be our #1, #2, #3 priorities coming out of this offsite?"></textarea>
+                            </div>
+                            <div class="feedback-input-group">
+                                <label class="feedback-label">⚠️ Biggest Risks or Concerns</label>
+                                <textarea id="general-risks" class="feedback-textarea" placeholder="What keeps you up at night? What are we not addressing?"></textarea>
+                            </div>
+                            <div class="feedback-input-group">
+                                <label class="feedback-label">💡 Ideas or Suggestions</label>
+                                <textarea id="general-ideas" class="feedback-textarea" placeholder="Any ideas we haven't discussed? Things we should consider?"></textarea>
+                            </div>
+                            <div class="feedback-input-group">
+                                <label class="feedback-label">❓ Questions for the Team</label>
+                                <textarea id="general-questions" class="feedback-textarea" placeholder="What questions do you want answered during the offsite?"></textarea>
+                            </div>
+                            <div class="feedback-input-group">
+                                <label class="feedback-label">📋 Anything Else</label>
+                                <textarea id="general-other" class="feedback-textarea" placeholder="Any other thoughts, feedback, or comments..."></textarea>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 24px; text-align: center;">
+                            <button id="saveGeneralFeedback" class="btn-save-annotation" style="padding: 12px 32px; font-size: 16px;">💾 Save General Feedback</button>
+                            <span id="generalFeedbackStatus" class="save-status"></span>
+                        </div>
+
+                        <div class="callout" style="margin-top: 24px;">
+                            <p><strong>Note:</strong> Your general feedback will be saved and visible in the admin dashboard. You can update it anytime before the offsite—your previous inputs will remain here.</p>
+                        </div>
+                    </div>
+                    <div class="annotation-area">
+                        <div class="annotation-header">
+                            <span>💬 Additional Comments</span>
+                        </div>
+                        <div class="reaction-buttons">
+                            <button class="reaction-btn" data-reaction="agree">✅ Ready</button>
+                            <button class="reaction-btn" data-reaction="question">❓ Need Clarification</button>
+                            <button class="reaction-btn" data-reaction="concern">⚠️ Not Ready</button>
+                            <button class="reaction-btn" data-reaction="idea">💡 More Ideas</button>
+                        </div>
+                        <textarea class="comment-input" placeholder="Any final thoughts before the offsite?"></textarea>
                         <div class="annotation-actions">
                             <button class="btn-save-annotation">Save Annotation</button>
                             <span class="save-status"></span>
