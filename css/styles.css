@@ -1417,3 +1417,17 @@ body {
     font-size: 14px;
     font-weight: 500;
 }
+
+/* Highlight user's own annotation */
+.annotation-item.my-annotation {
+    background: rgba(96, 165, 250, 0.1);
+    border: 1px solid rgba(96, 165, 250, 0.3);
+    border-radius: 8px;
+    padding: 12px;
+    margin: 8px 0;
+}
+
+.annotation-item.my-annotation .annotation-exec {
+    color: var(--accent-primary);
+    font-weight: 600;
+}

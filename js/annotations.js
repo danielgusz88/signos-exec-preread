@@ -75,20 +75,18 @@ class AnnotationManager {
                     
                     // Update UI
                     statusEl.textContent = '✓ Saved!';
-                    setTimeout(() => { statusEl.textContent = ''; }, 2000);
+                    setTimeout(() => { statusEl.textContent = ''; }, 3000);
                     
-                    // Clear inputs
-                    textarea.value = '';
-                    section.querySelectorAll('.reaction-btn').forEach(b => b.classList.remove('selected'));
-                    delete this.selectedReactions[sectionId];
+                    // DON'T clear the textarea - keep the user's text visible
+                    // so they can see and edit their submission
                     
                     // Mark section as reviewed
                     this.markSectionReviewed(sectionId);
                     
-                    // Reload annotations for this section
+                    // Reload annotations for this section (shows in Team Feedback)
                     this.loadSectionAnnotations(sectionId);
                     
-                    this.showToast('Annotation saved!');
+                    this.showToast('Annotation saved! Your feedback is visible below.');
                     
                 } catch (error) {
                     console.error('Error saving:', error);
@@ -115,6 +113,27 @@ class AnnotationManager {
         if (!section) return;
         
         const container = section.querySelector('.existing-annotations');
+        const textarea = section.querySelector('.comment-input');
+        
+        // Find current user's annotation and pre-populate the input
+        if (this.currentExec && textarea) {
+            const myAnnotation = annotations.find(a => a.exec_name === this.currentExec);
+            if (myAnnotation) {
+                // Pre-populate textarea with user's existing comment
+                if (myAnnotation.comment_text && !textarea.value) {
+                    textarea.value = myAnnotation.comment_text;
+                }
+                // Pre-select their reaction button
+                if (myAnnotation.reaction_type) {
+                    const reactionBtn = section.querySelector(`.reaction-btn[data-reaction="${myAnnotation.reaction_type}"]`);
+                    if (reactionBtn) {
+                        section.querySelectorAll('.reaction-btn').forEach(b => b.classList.remove('selected'));
+                        reactionBtn.classList.add('selected');
+                        this.selectedReactions[sectionId] = myAnnotation.reaction_type;
+                    }
+                }
+            }
+        }
         
         if (annotations.length === 0) {
             container.innerHTML = '';
@@ -126,11 +145,12 @@ class AnnotationManager {
         annotations.forEach(a => {
             const reactionInfo = CONFIG.REACTIONS[a.reaction_type] || { emoji: '', label: '' };
             const time = a.created_at ? new Date(a.created_at).toLocaleString() : '';
+            const isCurrentUser = a.exec_name === this.currentExec;
             
             html += `
-                <div class="annotation-item ${a.reaction_type || ''}">
+                <div class="annotation-item ${a.reaction_type || ''} ${isCurrentUser ? 'my-annotation' : ''}">
                     <div class="annotation-meta">
-                        <span class="annotation-exec">${a.exec_name}</span>
+                        <span class="annotation-exec">${a.exec_name}${isCurrentUser ? ' (you)' : ''}</span>
                         ${a.reaction_type ? `<span class="annotation-reaction">${reactionInfo.emoji} ${reactionInfo.label}</span>` : ''}
                         <span class="annotation-time">${time}</span>
                     </div>
