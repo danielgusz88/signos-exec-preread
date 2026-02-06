@@ -939,78 +939,114 @@
             const container = document.getElementById('teamRosterSummary');
             const supabaseClient = window.annotationStore?.supabase;
             
-            if (!supabaseClient || !window.annotationStore?.useSupabase) {
-                container.innerHTML = '<div class="no-feedback">Team assignments require Supabase connection.</div>';
-                return;
+            const teamMembers = CONFIG.TEAM_ROSTER || [];
+            const execColors = {
+                'Sharam': '#60a5fa', 'Roger': '#34d399', 'Lindsay': '#fbbf24',
+                'Emma': '#f87171', 'Colin': '#a78bfa', 'Dan': '#ec4899'
+            };
+            
+            // Pod definitions with IDs
+            const pods = [
+                { id: 'growth', name: 'Growth Pod', color: '#34d399' },
+                { id: 'acquisition', name: 'Acquisition Pod', color: '#60a5fa' },
+                { id: 'retention', name: 'Retention Pod', color: '#a78bfa' },
+                { id: 'platform', name: 'Platform Pod', color: '#fbbf24' },
+                { id: 'infrastructure', name: 'Infrastructure Pod', color: '#9ca3af' },
+                { id: 'enterprise', name: 'Enterprise Pod', color: '#ec4899' },
+                { id: 'ops', name: 'Ops / G&A', color: '#f87171' },
+                { id: 'offboard', name: 'Offboard / TBD', color: '#6b7280' }
+            ];
+            
+            let data = [];
+            
+            if (supabaseClient && window.annotationStore?.useSupabase) {
+                try {
+                    const result = await supabaseClient
+                        .from('team_assignments')
+                        .select('*')
+                        .order('updated_at', { ascending: false });
+                    
+                    if (!result.error) {
+                        data = result.data || [];
+                    }
+                } catch (error) {
+                    console.error('Error loading team assignments:', error);
+                }
             }
             
-            try {
-                const { data, error } = await supabaseClient
-                    .from('team_assignments')
-                    .select('*')
-                    .order('updated_at', { ascending: false });
-                
-                if (error && error.code !== '42P01') throw error; // 42P01 = table doesn't exist
-                
-                if (!data || data.length === 0) {
-                    container.innerHTML = '<div class="no-feedback">No team assignments submitted yet. Executives can assign team members in Section 12.</div>';
-                    return;
-                }
-                
-                const execColors = {
-                    'Sharam': '#60a5fa', 'Roger': '#34d399', 'Lindsay': '#fbbf24',
-                    'Emma': '#f87171', 'Colin': '#a78bfa', 'Dan': '#ec4899'
+            // Build a consolidated view of all assignments
+            const podAssignments = {};
+            
+            // Initialize with defaults
+            teamMembers.forEach(member => {
+                podAssignments[member.name] = {
+                    defaultPod: member.defaultPod || '',
+                    execAssignments: {}
                 };
-                
-                // Build a consolidated view of all assignments
-                const teamMembers = CONFIG.TEAM_ROSTER || [];
-                const podAssignments = {};
-                
-                // Aggregate assignments by team member
+            });
+            
+            // Add exec assignments from database
+            data.forEach(entry => {
                 teamMembers.forEach(member => {
-                    podAssignments[member.name] = {};
-                    data.forEach(entry => {
-                        const assignment = entry.assignments?.[member.name];
-                        if (assignment && assignment.pod) {
-                            podAssignments[member.name][entry.exec_name] = {
-                                pod: assignment.pod,
-                                notes: assignment.notes
-                            };
-                        }
-                    });
+                    const assignment = entry.assignments?.[member.name];
+                    if (assignment && assignment.pod) {
+                        podAssignments[member.name].execAssignments[entry.exec_name] = {
+                            pod: assignment.pod,
+                            notes: assignment.notes
+                        };
+                    }
                 });
-                
-                // Create a grid view by pod
-                const pods = ['Growth', 'Acquisition', 'Retention', 'Platform', 'Infrastructure', 'Enterprise', 'Ops/G&A'];
-                
-                container.innerHTML = `
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-                        ${pods.map(pod => {
-                            // Count how many execs assigned each person to this pod
-                            const membersInPod = teamMembers.filter(member => {
-                                const assignments = podAssignments[member.name];
-                                const votes = Object.values(assignments).filter(a => a.pod === pod).length;
-                                return votes > 0;
-                            });
+            });
+            
+            // Count submissions
+            const submissionCount = data.length;
+            
+            // Create grid view by pod
+            container.innerHTML = `
+                <div style="margin-bottom: 16px; font-size: 13px; color: var(--text-muted);">
+                    ${submissionCount > 0 
+                        ? `<strong>${submissionCount}</strong> executive${submissionCount > 1 ? 's have' : ' has'} submitted team assignments.`
+                        : 'Showing default pod assignments. No executives have submitted changes yet.'}
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+                    ${pods.map(pod => {
+                        // Get members assigned to this pod (by exec or by default)
+                        const membersInPod = teamMembers.filter(member => {
+                            const memberData = podAssignments[member.name];
+                            const execAssignments = Object.values(memberData.execAssignments);
                             
-                            return `
-                                <div style="background: var(--bg-card); border-radius: 12px; padding: 16px; border: 1px solid var(--border-color);">
-                                    <h4 style="margin-bottom: 12px; font-size: 14px; color: var(--accent-primary);">${pod} Pod</h4>
-                                    ${membersInPod.length > 0 ? membersInPod.map(member => {
-                                        const assignments = podAssignments[member.name];
-                                        const voteCount = Object.values(assignments).filter(a => a.pod === pod).length;
-                                        return `<div style="font-size: 12px; padding: 4px 0; color: var(--text-secondary);">${member.name} <span style="color: var(--text-muted);">(${voteCount})</span></div>`;
-                                    }).join('') : '<div style="font-size: 12px; color: var(--text-muted);">No assignments yet</div>'}
-                                </div>
-                            `;
-                        }).join('')}
-                    </div>
-                `;
-                
-            } catch (error) {
-                console.error('Error loading team assignments:', error);
-                container.innerHTML = `<div class="no-feedback" style="color: var(--accent-danger);">Error loading team assignments: ${error.message}</div>`;
-            }
+                            // If any exec assigned, check if majority/any assigned to this pod
+                            if (execAssignments.length > 0) {
+                                return execAssignments.some(a => a.pod === pod.id);
+                            }
+                            // Otherwise use default
+                            return memberData.defaultPod === pod.id;
+                        });
+                        
+                        return `
+                            <div style="background: var(--bg-card); border-radius: 12px; padding: 16px; border: 1px solid var(--border-color); border-top: 3px solid ${pod.color};">
+                                <h4 style="margin-bottom: 12px; font-size: 14px; color: ${pod.color};">${pod.name}</h4>
+                                <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">${membersInPod.length} people</div>
+                                ${membersInPod.length > 0 ? membersInPod.map(member => {
+                                    const memberData = podAssignments[member.name];
+                                    const execAssignments = Object.entries(memberData.execAssignments).filter(([_, a]) => a.pod === pod.id);
+                                    const isDefault = execAssignments.length === 0;
+                                    const hasNotes = execAssignments.some(([_, a]) => a.notes);
+                                    
+                                    return `
+                                        <div style="font-size: 12px; padding: 4px 0; color: var(--text-secondary); display: flex; justify-content: space-between; align-items: center;">
+                                            <span>${member.name}</span>
+                                            <span style="font-size: 10px; color: var(--text-muted);">
+                                                ${isDefault ? '(default)' : `(${execAssignments.length} vote${execAssignments.length > 1 ? 's' : ''})`}
+                                            </span>
+                                        </div>
+                                    `;
+                                }).join('') : '<div style="font-size: 12px; color: var(--text-muted); font-style: italic;">No one assigned</div>'}
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
         }
         
         function updateStats() {

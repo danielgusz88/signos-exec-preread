@@ -427,6 +427,7 @@ function initTeamRoster() {
         
         departments[dept].forEach(member => {
             const memberId = member.name.toLowerCase().replace(/[^a-z0-9]/g, '-');
+            const defaultPod = member.defaultPod || '';
             html += `
                 <div class="team-member-row" data-member="${member.name}">
                     <div class="team-member-info">
@@ -434,9 +435,11 @@ function initTeamRoster() {
                         <div class="team-member-role">${member.currentRole}</div>
                     </div>
                     <div class="team-member-dept">${member.department}</div>
-                    <select class="pod-select" id="pod-${memberId}">
+                    <select class="pod-select" id="pod-${memberId}" data-default="${defaultPod}">
                         <option value="">-- Select Pod --</option>
-                        ${podOptions}
+                        ${CONFIG.PODS.map(pod => 
+                            `<option value="${pod.id}" ${pod.id === defaultPod ? 'selected' : ''}>${pod.name}</option>`
+                        ).join('')}
                     </select>
                     <input type="text" class="team-member-notes" id="notes-${memberId}" placeholder="Notes (optional)">
                 </div>

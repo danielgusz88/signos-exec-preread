@@ -58,86 +58,87 @@ const CONFIG = {
     ],
     
     // Current Signos Team Roster (as of Feb 6, 2026)
+    // defaultPod: growth, acquisition, retention, platform, infrastructure, enterprise, ops, offboard
     TEAM_ROSTER: [
         // Executive Leadership
-        { name: 'Sharam Fouladgar-Mercer', currentRole: 'CEO', department: 'Leadership' },
-        { name: 'Dan Gusz', currentRole: 'Chief of Staff', department: 'Leadership' },
-        { name: 'Lindsay Peterson', currentRole: 'VP of Finance & Operations', department: 'Leadership' },
-        { name: 'Colin Rogers', currentRole: 'VP of Healthcare', department: 'Leadership' },
-        { name: 'Roger Neel', currentRole: 'Chief Technology Officer', department: 'Leadership' },
-        { name: 'Emma Allison', currentRole: 'VP of Product', department: 'Leadership' },
+        { name: 'Sharam Fouladgar-Mercer', currentRole: 'CEO', department: 'Leadership', defaultPod: 'ops' },
+        { name: 'Dan Gusz', currentRole: 'Chief of Staff', department: 'Leadership', defaultPod: 'ops' },
+        { name: 'Lindsay Peterson', currentRole: 'VP of Finance & Operations', department: 'Leadership', defaultPod: 'ops' },
+        { name: 'Colin Rogers', currentRole: 'VP of Healthcare', department: 'Leadership', defaultPod: 'enterprise' },
+        { name: 'Roger Neel', currentRole: 'Chief Technology Officer', department: 'Leadership', defaultPod: 'growth' },
+        { name: 'Emma Allison', currentRole: 'VP of Product', department: 'Leadership', defaultPod: 'retention' },
         
         // Engineering - Management
-        { name: 'Pierre Wehbe', currentRole: 'Chief Architect Officer', department: 'Engineering' },
-        { name: 'Dmitri Levonian', currentRole: 'Head of Machine Learning', department: 'Engineering' },
-        { name: 'Jacob Smith', currentRole: 'Engineering Manager', department: 'Engineering' },
-        { name: 'Prashanth Nambiar', currentRole: 'Engineering Manager', department: 'Engineering' },
-        { name: 'Valerie Lord', currentRole: 'Quality Engineering Manager', department: 'Engineering' },
+        { name: 'Pierre Wehbe', currentRole: 'Chief Architect Officer', department: 'Engineering', defaultPod: 'infrastructure' },
+        { name: 'Dmitri Levonian', currentRole: 'Head of Machine Learning', department: 'Engineering', defaultPod: 'retention' },
+        { name: 'Jacob Smith', currentRole: 'Engineering Manager', department: 'Engineering', defaultPod: 'acquisition' },
+        { name: 'Prashanth Nambiar', currentRole: 'Engineering Manager', department: 'Engineering', defaultPod: 'retention' },
+        { name: 'Valerie Lord', currentRole: 'Quality Engineering Manager', department: 'Engineering', defaultPod: 'platform' },
         
         // Engineering - Individual Contributors
-        { name: 'Artur Ergashev', currentRole: 'Principal Software Engineer', department: 'Engineering' },
-        { name: 'Tomas Jonasson', currentRole: 'Principal Software Engineer', department: 'Engineering' },
-        { name: 'Andrew Bloom', currentRole: 'Senior Android Engineer', department: 'Engineering' },
-        { name: 'Christopher Liotta', currentRole: 'Senior Software Engineer', department: 'Engineering' },
-        { name: 'Ethan Ransom', currentRole: 'Senior Software Engineer', department: 'Engineering' },
-        { name: 'Melissa Hanson', currentRole: 'Senior Software Engineer', department: 'Engineering' },
-        { name: 'Noah Kellem', currentRole: 'Senior Software Engineer', department: 'Engineering' },
-        { name: 'Jossi Cruz', currentRole: 'Software Engineer', department: 'Engineering' },
-        { name: 'Rebecca Anderson', currentRole: 'Software Engineer', department: 'Engineering' },
-        { name: 'Tyler Grant', currentRole: 'Software Engineer', department: 'Engineering' },
-        { name: 'Maggie Falkenberg', currentRole: 'Quality Engineering Analyst', department: 'Engineering' },
-        { name: 'Julien (Contractor)', currentRole: 'Full Stack Engineer', department: 'Engineering' },
-        { name: 'Antonio (Contractor)', currentRole: 'iOS Engineer', department: 'Engineering' },
-        { name: 'Leo (Contractor)', currentRole: 'iOS Engineer', department: 'Engineering' },
-        { name: 'Agustin (Contractor)', currentRole: 'Android Engineer', department: 'Engineering' },
+        { name: 'Artur Ergashev', currentRole: 'Principal Software Engineer', department: 'Engineering', defaultPod: 'infrastructure' },
+        { name: 'Tomas Jonasson', currentRole: 'Principal Software Engineer', department: 'Engineering', defaultPod: 'acquisition' },
+        { name: 'Andrew Bloom', currentRole: 'Senior Android Engineer', department: 'Engineering', defaultPod: 'acquisition' },
+        { name: 'Christopher Liotta', currentRole: 'Senior Software Engineer', department: 'Engineering', defaultPod: 'retention' },
+        { name: 'Ethan Ransom', currentRole: 'Senior Software Engineer', department: 'Engineering', defaultPod: 'retention' },
+        { name: 'Melissa Hanson', currentRole: 'Senior Software Engineer', department: 'Engineering', defaultPod: 'acquisition' },
+        { name: 'Noah Kellem', currentRole: 'Senior Software Engineer', department: 'Engineering', defaultPod: 'platform' },
+        { name: 'Jossi Cruz', currentRole: 'Software Engineer', department: 'Engineering', defaultPod: 'retention' },
+        { name: 'Rebecca Anderson', currentRole: 'Software Engineer', department: 'Engineering', defaultPod: 'acquisition' },
+        { name: 'Tyler Grant', currentRole: 'Software Engineer', department: 'Engineering', defaultPod: 'platform' },
+        { name: 'Maggie Falkenberg', currentRole: 'Quality Engineering Analyst', department: 'Engineering', defaultPod: 'platform' },
+        { name: 'Julien (Contractor)', currentRole: 'Full Stack Engineer', department: 'Engineering', defaultPod: 'acquisition' },
+        { name: 'Antonio (Contractor)', currentRole: 'iOS Engineer', department: 'Engineering', defaultPod: 'acquisition' },
+        { name: 'Leo (Contractor)', currentRole: 'iOS Engineer', department: 'Engineering', defaultPod: 'retention' },
+        { name: 'Agustin (Contractor)', currentRole: 'Android Engineer', department: 'Engineering', defaultPod: 'acquisition' },
         
         // Product
-        { name: 'Brent Williams', currentRole: 'Principal Product Manager', department: 'Product' },
-        { name: 'Claudia Wasch', currentRole: 'Principal PM, Machine Learning', department: 'Product' },
-        { name: 'Jeff Steele', currentRole: 'Product Analyst', department: 'Product' },
-        { name: 'David Forsythe', currentRole: 'Principal Product Content Designer', department: 'Product' },
-        { name: 'Pawel Kozinski', currentRole: 'Principal B2B', department: 'Product' },
+        { name: 'Brent Williams', currentRole: 'Principal Product Manager', department: 'Product', defaultPod: 'acquisition' },
+        { name: 'Claudia Wasch', currentRole: 'Principal PM, Machine Learning', department: 'Product', defaultPod: 'retention' },
+        { name: 'Jeff Steele', currentRole: 'Product Analyst', department: 'Product', defaultPod: 'growth' },
+        { name: 'David Forsythe', currentRole: 'Principal Product Content Designer', department: 'Product', defaultPod: 'acquisition' },
+        { name: 'Pawel Kozinski', currentRole: 'Principal B2B', department: 'Product', defaultPod: 'enterprise' },
         
         // Design
-        { name: 'Benji Michalek', currentRole: 'VP of Design', department: 'Design' },
-        { name: 'Lizzie Peterson', currentRole: 'Product Design Lead', department: 'Design' },
-        { name: 'Nicole Ulgado', currentRole: 'Lead Product Designer', department: 'Design' },
-        { name: 'Nadin Radwan', currentRole: 'Art Director', department: 'Design' },
-        { name: 'Marquel Coaxum', currentRole: 'Videographer/Multimedia Producer', department: 'Design' },
-        { name: 'Laz (Contractor)', currentRole: 'Designer', department: 'Design' },
+        { name: 'Benji Michalek', currentRole: 'VP of Design', department: 'Design', defaultPod: 'acquisition' },
+        { name: 'Lizzie Peterson', currentRole: 'Product Design Lead', department: 'Design', defaultPod: 'retention' },
+        { name: 'Nicole Ulgado', currentRole: 'Lead Product Designer', department: 'Design', defaultPod: 'acquisition' },
+        { name: 'Nadin Radwan', currentRole: 'Art Director', department: 'Design', defaultPod: 'acquisition' },
+        { name: 'Marquel Coaxum', currentRole: 'Videographer/Multimedia Producer', department: 'Design', defaultPod: 'acquisition' },
+        { name: 'Laz (Contractor)', currentRole: 'Designer', department: 'Design', defaultPod: 'acquisition' },
         
         // Marketing
-        { name: 'Tiffani Davidson', currentRole: 'VP Marketing', department: 'Marketing' },
-        { name: 'Serina Stow', currentRole: 'Director of Growth', department: 'Marketing' },
-        { name: 'Brittany Barry', currentRole: 'Senior Content Manager', department: 'Marketing' },
-        { name: 'Alyssa Fackler', currentRole: 'Social Media Manager', department: 'Marketing' },
-        { name: 'Gwyneth Ramsey', currentRole: 'Lifecycle Marketing Manager', department: 'Marketing' },
-        { name: 'Bill Tancer', currentRole: 'Chief Data Scientist', department: 'Marketing' },
+        { name: 'Tiffani Davidson', currentRole: 'VP Marketing', department: 'Marketing', defaultPod: 'acquisition' },
+        { name: 'Serina Stow', currentRole: 'Director of Growth', department: 'Marketing', defaultPod: 'growth' },
+        { name: 'Brittany Barry', currentRole: 'Senior Content Manager', department: 'Marketing', defaultPod: 'acquisition' },
+        { name: 'Alyssa Fackler', currentRole: 'Social Media Manager', department: 'Marketing', defaultPod: 'acquisition' },
+        { name: 'Gwyneth Ramsey', currentRole: 'Lifecycle Marketing Manager', department: 'Marketing', defaultPod: 'retention' },
+        { name: 'Bill Tancer', currentRole: 'Chief Data Scientist', department: 'Marketing', defaultPod: 'growth' },
         
         // Enterprise Sales
-        { name: 'David Lucarelli', currentRole: 'Director of Enterprise Sales', department: 'Enterprise' },
-        { name: 'Richard Yax', currentRole: 'Director of Enterprise Sales', department: 'Enterprise' },
-        { name: 'Keriann Granato', currentRole: 'Enterprise Account Manager', department: 'Enterprise' },
-        { name: 'Carli Grant', currentRole: 'Sales Operations Manager', department: 'Enterprise' },
+        { name: 'David Lucarelli', currentRole: 'Director of Enterprise Sales', department: 'Enterprise', defaultPod: 'enterprise' },
+        { name: 'Richard Yax', currentRole: 'Director of Enterprise Sales', department: 'Enterprise', defaultPod: 'enterprise' },
+        { name: 'Keriann Granato', currentRole: 'Enterprise Account Manager', department: 'Enterprise', defaultPod: 'enterprise' },
+        { name: 'Carli Grant', currentRole: 'Sales Operations Manager', department: 'Enterprise', defaultPod: 'enterprise' },
         
         // Operations & G&A
-        { name: 'Karen Morris', currentRole: 'Head of Talent', department: 'Operations' },
-        { name: 'Samantha Willden', currentRole: 'Sr. Manager, People Ops', department: 'Operations' },
-        { name: 'Zhang Bin Wu', currentRole: 'Sr. Manager Supply Chain', department: 'Operations' },
-        { name: 'Trevor Denbo', currentRole: 'Head of QA and Reg Affairs', department: 'Operations' },
+        { name: 'Karen Morris', currentRole: 'Head of Talent', department: 'Operations', defaultPod: 'ops' },
+        { name: 'Samantha Willden', currentRole: 'Sr. Manager, People Ops', department: 'Operations', defaultPod: 'ops' },
+        { name: 'Zhang Bin Wu', currentRole: 'Sr. Manager Supply Chain', department: 'Operations', defaultPod: 'ops' },
+        { name: 'Trevor Denbo', currentRole: 'Head of QA and Reg Affairs', department: 'Operations', defaultPod: 'ops' },
         
         // Customer Success
-        { name: 'Gwen Pflumm', currentRole: 'Sr. Manager, Client Success', department: 'Customer Success' },
-        { name: 'Hannah Gadient', currentRole: 'Customer Success Agent', department: 'Customer Success' },
-        { name: 'Bettina Morando', currentRole: 'Customer Success Agent', department: 'Customer Success' },
-        { name: 'Laura Decher', currentRole: 'Customer Success Agent', department: 'Customer Success' },
-        { name: 'Zachary Derade', currentRole: 'Customer Success Agent', department: 'Customer Success' },
-        { name: 'Ian (Contractor)', currentRole: 'Customer Service', department: 'Customer Success' },
-        { name: 'Juliyanna (Contractor)', currentRole: 'Customer Service', department: 'Customer Success' },
+        { name: 'Gwen Pflumm', currentRole: 'Sr. Manager, Client Success', department: 'Customer Success', defaultPod: 'retention' },
+        { name: 'Hannah Gadient', currentRole: 'Customer Success Agent', department: 'Customer Success', defaultPod: 'retention' },
+        { name: 'Bettina Morando', currentRole: 'Customer Success Agent', department: 'Customer Success', defaultPod: 'retention' },
+        { name: 'Laura Decher', currentRole: 'Customer Success Agent', department: 'Customer Success', defaultPod: 'retention' },
+        { name: 'Zachary Derade', currentRole: 'Customer Success Agent', department: 'Customer Success', defaultPod: 'retention' },
+        { name: 'Ian (Contractor)', currentRole: 'Customer Service', department: 'Customer Success', defaultPod: 'retention' },
+        { name: 'Juliyanna (Contractor)', currentRole: 'Customer Service', department: 'Customer Success', defaultPod: 'retention' },
         
         // Clinical
-        { name: 'Grace Shryack', currentRole: 'Clinical Lead', department: 'Clinical' },
-        { name: 'Sarah Steele', currentRole: 'Metabolic Wellness Program Manager', department: 'Clinical' }
+        { name: 'Grace Shryack', currentRole: 'Clinical Lead', department: 'Clinical', defaultPod: 'retention' },
+        { name: 'Sarah Steele', currentRole: 'Metabolic Wellness Program Manager', department: 'Clinical', defaultPod: 'retention' }
     ]
 };
 
