@@ -815,25 +815,24 @@
                 return;
             }
             
-            // Use CONFIG key if available, otherwise check localStorage, otherwise prompt
-            // Clear any old localStorage key to ensure we use the config
-            let apiKey = CONFIG.CLAUDE_API_KEY;
+            // Use localStorage key (more secure than hardcoding in repo)
+            let apiKey = localStorage.getItem('claude_api_key');
             
             // #region agent log - console based for debugging
             console.log('[DEBUG] API Key Check:', {
-                configKeyExists: !!CONFIG.CLAUDE_API_KEY,
-                configKeyPrefix: CONFIG.CLAUDE_API_KEY ? CONFIG.CLAUDE_API_KEY.substring(0, 25) + '...' : null,
-                configKeyLength: CONFIG.CLAUDE_API_KEY?.length
+                localStorageKeyExists: !!apiKey,
+                keyPrefix: apiKey ? apiKey.substring(0, 25) + '...' : null,
+                keyLength: apiKey?.length
             });
             // #endregion
             
             if (!apiKey) {
-                // Only prompt if no config key
-                apiKey = prompt('Enter your Claude API key (sk-ant-...):\n\nThis will be stored in your browser for this session.');
+                apiKey = prompt('Enter your Claude API key (sk-ant-...):\n\nThis will be stored securely in your browser.');
                 if (!apiKey) {
                     showToast('API key required');
                     return;
                 }
+                localStorage.setItem('claude_api_key', apiKey);
             }
             
             btn.disabled = true;
@@ -963,11 +962,15 @@ Be specific and cite which executives said what. Keep the tone professional and 
                 
             } catch (error) {
                 console.error('AI Summary error:', error);
+                // If auth error, clear the stored key so user can try again
+                if (error.message.includes('401')) {
+                    localStorage.removeItem('claude_api_key');
+                }
                 content.innerHTML = `<div class="ai-placeholder" style="color: var(--accent-danger);">
                     <p>Error generating summary: ${error.message}</p>
-                    <p style="font-size: 12px; margin-top: 8px;">Make sure the Claude API key is configured correctly.</p>
+                    <p style="font-size: 12px; margin-top: 8px;">Click "Generate AI Summary" again to enter a new API key.</p>
                 </div>`;
-                status.textContent = 'Error generating summary';
+                status.textContent = 'Error - click to retry with new key';
             }
             
             btn.disabled = false;
