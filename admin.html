@@ -437,6 +437,162 @@
             border: 1px solid var(--border-color);
             grid-column: 1 / -1;
         }
+        
+        /* Decision Summary Styles */
+        .decision-summary-section {
+            margin-bottom: 32px;
+        }
+        
+        .decision-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+        }
+        
+        .decision-summary-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+        
+        .decision-summary-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-warning), var(--accent-primary));
+            border-radius: 16px 16px 0 0;
+        }
+        
+        .decision-summary-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .decision-summary-header h4 {
+            font-size: 15px;
+            margin: 0;
+        }
+        
+        .decision-number-badge {
+            width: 28px;
+            height: 28px;
+            background: var(--accent-warning);
+            color: var(--bg-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+        }
+        
+        .vote-summary {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .vote-option {
+            background: var(--bg-secondary);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+        }
+        
+        .vote-option .count {
+            color: var(--accent-primary);
+            font-weight: 700;
+            margin-left: 4px;
+        }
+        
+        .vote-option.leading {
+            background: rgba(96, 165, 250, 0.2);
+            border: 1px solid var(--accent-primary);
+        }
+        
+        .decision-inputs-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .decision-input-item {
+            background: var(--bg-secondary);
+            padding: 10px 12px;
+            border-radius: 8px;
+        }
+        
+        .decision-input-item .exec-name {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .decision-input-item .input-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        
+        .no-decisions {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            grid-column: 1 / -1;
+        }
+        
+        /* Team Roster Admin Styles */
+        .team-roster-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        
+        .pod-summary-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .pod-summary-card h4 {
+            font-size: 14px;
+            color: var(--accent-primary);
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .pod-member-item {
+            font-size: 12px;
+            padding: 4px 0;
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .pod-member-item .vote-count {
+            font-size: 11px;
+            color: var(--text-muted);
+            background: var(--bg-secondary);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
@@ -490,6 +646,24 @@
             <div class="loading">
                 <div class="spinner"></div>
                 Loading general feedback...
+            </div>
+        </div>
+        
+        <!-- Decision Summary Section -->
+        <h3 style="margin-bottom: 16px; margin-top: 24px;">🎯 Decision Inputs from Executives</h3>
+        <div class="decision-summary-grid" id="decisionSummaryGrid" style="margin-bottom: 32px;">
+            <div class="loading">
+                <div class="spinner"></div>
+                Loading decision inputs...
+            </div>
+        </div>
+        
+        <!-- Team Roster Section -->
+        <h3 style="margin-bottom: 16px; margin-top: 24px;">👥 Team Roster & Pod Assignments</h3>
+        <div class="team-roster-summary" id="teamRosterSummary" style="margin-bottom: 32px;">
+            <div class="loading">
+                <div class="spinner"></div>
+                Loading team assignments...
             </div>
         </div>
         
@@ -584,6 +758,8 @@
                 updateExecBreakdown();
                 renderAnnotations();
                 await loadGeneralFeedback();
+                await loadDecisionInputs();
+                await loadTeamAssignments();
             } catch (error) {
                 console.error('Error loading data:', error);
                 showToast('Error loading annotations');
@@ -666,6 +842,173 @@
             } catch (error) {
                 console.error('Error loading general feedback:', error);
                 container.innerHTML = `<div class="no-feedback" style="color: var(--accent-danger);">Error loading general feedback: ${error.message}</div>`;
+            }
+        }
+        
+        // Decision data for reference
+        const DECISIONS = [
+            { id: 'growth-pod', title: 'Growth Pod with Roger as Lead', options: { 'yes-full': 'Yes - Full (Roger + 3)', 'yes-light': 'Yes - Light (Roger + 1)', 'no': 'No - Pods independent' }},
+            { id: 'team-allocation', title: 'Team Allocation (31 FTEs)', options: { 'current': 'Keep current', 'acquisition-heavy': 'Shift 2 to Acquisition', 'retention-heavy': 'Shift 2 to Retention' }},
+            { id: 'glp1-launch', title: 'GLP-1 Launch Date', options: { 'march1': 'March 1 (aggressive)', 'march15': 'March 15 (buffer)', 'april1': 'April 1 (safe)' }},
+            { id: 'enterprise-allocation', title: 'Enterprise vs D2C Focus', options: { 'maintain': 'Maintain (5 FTEs)', 'increase': 'Increase to 7', 'decrease': 'Reduce to 3' }},
+            { id: 'attach-rate', title: 'Add-on Attach Rate Target', options: { '30': '30% by Q3', '20': '20% by Q3', '15': '15% by Q3' }},
+            { id: 'board-ask', title: 'Board Ask', options: { 'nothing': 'No ask - update only', 'runway': 'Request runway extension', 'strategic': 'Request strategic support' }}
+        ];
+        
+        async function loadDecisionInputs() {
+            const container = document.getElementById('decisionSummaryGrid');
+            const supabaseClient = window.annotationStore?.supabase;
+            
+            if (!supabaseClient || !window.annotationStore?.useSupabase) {
+                container.innerHTML = '<div class="no-decisions">Decision inputs require Supabase connection.</div>';
+                return;
+            }
+            
+            try {
+                const { data, error } = await supabaseClient
+                    .from('decision_inputs')
+                    .select('*')
+                    .order('updated_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<div class="no-decisions">No decision inputs submitted yet.</div>';
+                    return;
+                }
+                
+                const execColors = {
+                    'Sharam': '#60a5fa', 'Roger': '#34d399', 'Lindsay': '#fbbf24',
+                    'Emma': '#f87171', 'Colin': '#a78bfa', 'Dan': '#ec4899'
+                };
+                
+                // Aggregate decisions by decision type
+                container.innerHTML = DECISIONS.map((decision, idx) => {
+                    const votes = {};
+                    const inputs = [];
+                    
+                    data.forEach(entry => {
+                        const execDecision = entry.decisions?.[decision.id];
+                        if (execDecision) {
+                            if (execDecision.option) {
+                                votes[execDecision.option] = (votes[execDecision.option] || 0) + 1;
+                            }
+                            if (execDecision.input && execDecision.input.trim()) {
+                                inputs.push({ exec: entry.exec_name, text: execDecision.input, color: execColors[entry.exec_name] || '#60a5fa' });
+                            }
+                        }
+                    });
+                    
+                    const maxVotes = Math.max(...Object.values(votes), 0);
+                    
+                    return `
+                        <div class="decision-summary-card">
+                            <div class="decision-summary-header">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div class="decision-number-badge">${idx + 1}</div>
+                                    <h4>${decision.title}</h4>
+                                </div>
+                            </div>
+                            <div class="vote-summary">
+                                ${Object.entries(decision.options).map(([key, label]) => {
+                                    const count = votes[key] || 0;
+                                    const isLeading = count === maxVotes && count > 0;
+                                    return `<div class="vote-option ${isLeading ? 'leading' : ''}">${label}<span class="count">${count}</span></div>`;
+                                }).join('')}
+                            </div>
+                            <div class="decision-inputs-list">
+                                ${inputs.length > 0 ? inputs.map(input => `
+                                    <div class="decision-input-item">
+                                        <div class="exec-name" style="color: ${input.color};">${input.exec}</div>
+                                        <div class="input-text">${escapeHtml(input.text)}</div>
+                                    </div>
+                                `).join('') : '<div style="font-size: 12px; color: var(--text-muted);">No comments yet</div>'}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+            } catch (error) {
+                console.error('Error loading decision inputs:', error);
+                container.innerHTML = `<div class="no-decisions" style="color: var(--accent-danger);">Error loading decision inputs: ${error.message}</div>`;
+            }
+        }
+        
+        async function loadTeamAssignments() {
+            const container = document.getElementById('teamRosterSummary');
+            const supabaseClient = window.annotationStore?.supabase;
+            
+            if (!supabaseClient || !window.annotationStore?.useSupabase) {
+                container.innerHTML = '<div class="no-feedback">Team assignments require Supabase connection.</div>';
+                return;
+            }
+            
+            try {
+                const { data, error } = await supabaseClient
+                    .from('team_assignments')
+                    .select('*')
+                    .order('updated_at', { ascending: false });
+                
+                if (error && error.code !== '42P01') throw error; // 42P01 = table doesn't exist
+                
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<div class="no-feedback">No team assignments submitted yet. Executives can assign team members in Section 12.</div>';
+                    return;
+                }
+                
+                const execColors = {
+                    'Sharam': '#60a5fa', 'Roger': '#34d399', 'Lindsay': '#fbbf24',
+                    'Emma': '#f87171', 'Colin': '#a78bfa', 'Dan': '#ec4899'
+                };
+                
+                // Build a consolidated view of all assignments
+                const teamMembers = CONFIG.TEAM_ROSTER || [];
+                const podAssignments = {};
+                
+                // Aggregate assignments by team member
+                teamMembers.forEach(member => {
+                    podAssignments[member.name] = {};
+                    data.forEach(entry => {
+                        const assignment = entry.assignments?.[member.name];
+                        if (assignment && assignment.pod) {
+                            podAssignments[member.name][entry.exec_name] = {
+                                pod: assignment.pod,
+                                notes: assignment.notes
+                            };
+                        }
+                    });
+                });
+                
+                // Create a grid view by pod
+                const pods = ['Growth', 'Acquisition', 'Retention', 'Platform', 'Infrastructure', 'Enterprise', 'Ops/G&A'];
+                
+                container.innerHTML = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                        ${pods.map(pod => {
+                            // Count how many execs assigned each person to this pod
+                            const membersInPod = teamMembers.filter(member => {
+                                const assignments = podAssignments[member.name];
+                                const votes = Object.values(assignments).filter(a => a.pod === pod).length;
+                                return votes > 0;
+                            });
+                            
+                            return `
+                                <div style="background: var(--bg-card); border-radius: 12px; padding: 16px; border: 1px solid var(--border-color);">
+                                    <h4 style="margin-bottom: 12px; font-size: 14px; color: var(--accent-primary);">${pod} Pod</h4>
+                                    ${membersInPod.length > 0 ? membersInPod.map(member => {
+                                        const assignments = podAssignments[member.name];
+                                        const voteCount = Object.values(assignments).filter(a => a.pod === pod).length;
+                                        return `<div style="font-size: 12px; padding: 4px 0; color: var(--text-secondary);">${member.name} <span style="color: var(--text-muted);">(${voteCount})</span></div>`;
+                                    }).join('') : '<div style="font-size: 12px; color: var(--text-muted);">No assignments yet</div>'}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+                
+            } catch (error) {
+                console.error('Error loading team assignments:', error);
+                container.innerHTML = `<div class="no-feedback" style="color: var(--accent-danger);">Error loading team assignments: ${error.message}</div>`;
             }
         }
         

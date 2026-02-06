@@ -52,7 +52,7 @@
             <div class="progress-bar">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
-            <span class="progress-text" id="progressText">0 of 10 sections reviewed</span>
+            <span class="progress-text" id="progressText">0 of 12 sections reviewed</span>
         </div>
 
         <!-- Main Content -->
@@ -1249,6 +1249,367 @@
                             <button class="reaction-btn" data-reaction="idea">💡 More Ideas</button>
                         </div>
                         <textarea class="comment-input" placeholder="Any final thoughts before the offsite?"></textarea>
+                        <div class="annotation-actions">
+                            <button class="btn-save-annotation">Save Annotation</button>
+                            <span class="save-status"></span>
+                        </div>
+                        <div class="existing-annotations"></div>
+                    </div>
+                </section>
+
+                <!-- Section 11: Decisions -->
+                <section class="content-section" data-section="11" id="section-11">
+                    <div class="section-header">
+                        <span class="section-number">11</span>
+                        <h2>🎯 Decisions to Make</h2>
+                        <span class="section-status" data-status="pending">⏳ Pending</span>
+                    </div>
+                    <div class="section-body">
+                        <div class="callout warning">
+                            <p><strong>📋 Decision Checklist:</strong> These are the key decisions we need to make during the offsite. Review the context, consider the options, and record your input. Final decisions will be made together on Monday/Tuesday.</p>
+                        </div>
+
+                        <div class="decisions-container" id="decisionsContainer">
+                            
+                            <!-- Decision 1: Growth Pod -->
+                            <div class="decision-card" data-decision="growth-pod">
+                                <div class="decision-header">
+                                    <span class="decision-number">1</span>
+                                    <div class="decision-status" data-status="pending">⏳ Pending</div>
+                                </div>
+                                <h3 class="decision-question">Do we create a Growth Pod with Roger as lead?</h3>
+                                <div class="decision-context">
+                                    <h4>📊 Context & Inputs</h4>
+                                    <ul>
+                                        <li>Need a "nerve center" to coordinate acquisition + retention</li>
+                                        <li>Roger has marketing intelligence dashboard expertise</li>
+                                        <li>Significant engineering investment needed for full funnel visibility</li>
+                                        <li>Alternative: Pods operate independently with weekly sync</li>
+                                    </ul>
+                                </div>
+                                <div class="decision-options">
+                                    <h4>🔀 Options</h4>
+                                    <div class="options-grid">
+                                        <label class="option-item">
+                                            <input type="radio" name="decision-growth-pod" value="yes-full">
+                                            <span><strong>A:</strong> Yes - Full Growth Pod (Roger + 3)</span>
+                                        </label>
+                                        <label class="option-item">
+                                            <input type="radio" name="decision-growth-pod" value="yes-light">
+                                            <span><strong>B:</strong> Yes - Light version (Roger + 1)</span>
+                                        </label>
+                                        <label class="option-item">
+                                            <input type="radio" name="decision-growth-pod" value="no">
+                                            <span><strong>C:</strong> No - Pods coordinate independently</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="decision-input">
+                                    <h4>✏️ Your Input</h4>
+                                    <textarea class="decision-textarea" id="input-growth-pod" placeholder="Share your thoughts on this decision..."></textarea>
+                                </div>
+                                <div class="decision-final">
+                                    <h4>✅ Final Decision (to be made at offsite)</h4>
+                                    <textarea class="decision-textarea final" id="final-growth-pod" placeholder="Decision will be recorded here during the offsite..." disabled></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Decision 2: Team Allocation -->
+                            <div class="decision-card" data-decision="team-allocation">
+                                <div class="decision-header">
+                                    <span class="decision-number">2</span>
+                                    <div class="decision-status" data-status="pending">⏳ Pending</div>
+                                </div>
+                                <h3 class="decision-question">How do we allocate our 31 FTEs across pods?</h3>
+                                <div class="decision-context">
+                                    <h4>📊 Context & Inputs</h4>
+                                    <ul>
+                                        <li>Current proposal: Growth (3), Acquisition (6), Retention (5), Platform (4), Infrastructure (3), Ops/G&A (5), Enterprise (5)</li>
+                                        <li>GLP-1 launch needs heavy Acquisition support in Q1</li>
+                                        <li>Retention improvements critical for churn reduction</li>
+                                        <li>Enterprise has 5 people (Colin, Dave, Richard, Keriann, Carli)</li>
+                                    </ul>
+                                </div>
+                                <div class="decision-options">
+                                    <h4>🔀 Options</h4>
+                                    <div class="options-grid">
+                                        <label class="option-item">
+                                            <input type="radio" name="decision-team-allocation" value="current">
+                                            <span><strong>A:</strong> Keep current allocation</span>
+                                        </label>
+                                        <label class="option-item">
+                                            <input type="radio" name="decision-team-allocation" value="acquisition-heavy">
+                                            <span><strong>B:</strong> Shift 2 to Acquisition (reduce elsewhere)</span>
+                                        </label>
+                                        <label class="option-item">
+                                            <input type="radio" name="decision-team-allocation" value="retention-heavy">
+                                            <span><strong>C:</strong> Shift 2 to Retention (reduce elsewhere)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="decision-input">
+                                    <h4>✏️ Your Input</h4>
+                                    <textarea class="decision-textarea" id="input-team-allocation" placeholder="Share your thoughts on team allocation..."></textarea>
+                                </div>
+                                <div class="decision-final">
+                                    <h4>✅ Final Decision (to be made at offsite)</h4>
+                                    <textarea class="decision-textarea final" id="final-team-allocation" placeholder="Decision will be recorded here during the offsite..." disabled></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Decision 3: GLP-1 Launch Date -->
+                            <div class="decision-card" data-decision="glp1-launch">
+                                <div class="decision-header">
+                                    <span class="decision-number">3</span>
+                                    <div class="decision-status" data-status="pending">⏳ Pending</div>
+                                </div>
+                                <h3 class="decision-question">Is March 1 realistic for GLP-1 launch?</h3>
+                                <div class="decision-context">
+                                    <h4>📊 Context & Inputs</h4>
+                                    <ul>
+                                        <li>OpenLoop integration is key dependency</li>
+                                        <li>Sprint demos show progress but timeline pressure</li>
+                                        <li>GLP-1 is critical for acquisition growth</li>
+                                        <li>Delay impacts Q2 revenue projections</li>
+                                    </ul>
+                                </div>
+                                <div class="decision-options">
+                                    <h4>🔀 Options</h4>
+                                    <div class="options-grid">
+                                        <label class="option-item">
+                                            <input type="radio" name="decision-glp1-launch" value="march1">
+                                            <span><strong>A:</strong> Commit to March 1 (aggressive)</span>
+                                        </label>
+                                        <label class="option-item">
+                                            <input type="radio" name="decision-glp1-launch" value="march15">
+                                            <span><strong>B:</strong> Target March 15 (buffer)</span>
+                                        </label>
+                                        <label class="option-item">
+                                            <input type="radio" name="decision-glp1-launch" value="april1">
+                                            <span><strong>C:</strong> Move to April 1 (safe)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="decision-input">
+                                    <h4>✏️ Your Input</h4>
+                                    <textarea class="decision-textarea" id="input-glp1-launch" placeholder="Share your thoughts on the launch timeline..."></textarea>
+                                </div>
+                                <div class="decision-final">
+                                    <h4>✅ Final Decision (to be made at offsite)</h4>
+                                    <textarea class="decision-textarea final" id="final-glp1-launch" placeholder="Decision will be recorded here during the offsite..." disabled></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Decision 4: Enterprise Resource Allocation -->
+                            <div class="decision-card" data-decision="enterprise-allocation">
+                                <div class="decision-header">
+                                    <span class="decision-number">4</span>
+                                    <div class="decision-status" data-status="pending">⏳ Pending</div>
+                                </div>
+                                <h3 class="decision-question">How much do we invest in Enterprise vs D2C?</h3>
+                                <div class="decision-context">
+                                    <h4>📊 Context & Inputs</h4>
+                                    <ul>
+                                        <li>Enterprise: Slower sales cycle but longer contracts, diversification</li>
+                                        <li>D2C: Faster revenue but higher churn, CAC pressure</li>
+                                        <li>Current: 5 FTEs on Enterprise (Colin's team)</li>
+                                        <li>2026 Enterprise target: $500K ARR by Q4</li>
+                                    </ul>
+                                </div>
+                                <div class="decision-options">
+                                    <h4>🔀 Options</h4>
+                                    <div class="options-grid">
+                                        <label class="option-item">
+                                            <input type="radio" name="decision-enterprise-allocation" value="maintain">
+                                            <span><strong>A:</strong> Maintain current (5 FTEs)</span>
+                                        </label>
+                                        <label class="option-item">
+                                            <input type="radio" name="decision-enterprise-allocation" value="increase">
+                                            <span><strong>B:</strong> Increase to 7 FTEs (from D2C)</span>
+                                        </label>
+                                        <label class="option-item">
+                                            <input type="radio" name="decision-enterprise-allocation" value="decrease">
+                                            <span><strong>C:</strong> Reduce to 3 FTEs (focus D2C)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="decision-input">
+                                    <h4>✏️ Your Input</h4>
+                                    <textarea class="decision-textarea" id="input-enterprise-allocation" placeholder="Share your thoughts on Enterprise vs D2C focus..."></textarea>
+                                </div>
+                                <div class="decision-final">
+                                    <h4>✅ Final Decision (to be made at offsite)</h4>
+                                    <textarea class="decision-textarea final" id="final-enterprise-allocation" placeholder="Decision will be recorded here during the offsite..." disabled></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Decision 5: Add-on Attach Rate Target -->
+                            <div class="decision-card" data-decision="attach-rate">
+                                <div class="decision-header">
+                                    <span class="decision-number">5</span>
+                                    <div class="decision-status" data-status="pending">⏳ Pending</div>
+                                </div>
+                                <h3 class="decision-question">What add-on attach rate target do we commit to?</h3>
+                                <div class="decision-context">
+                                    <h4>📊 Context & Inputs</h4>
+                                    <ul>
+                                        <li>Current attach rate: ~0%</li>
+                                        <li>30% target drives $1,000+ blended LTV</li>
+                                        <li>15% is more conservative but still meaningful</li>
+                                        <li>Affects revenue projections and board messaging</li>
+                                    </ul>
+                                </div>
+                                <div class="decision-options">
+                                    <h4>🔀 Options</h4>
+                                    <div class="options-grid">
+                                        <label class="option-item">
+                                            <input type="radio" name="decision-attach-rate" value="30">
+                                            <span><strong>A:</strong> 30% by Q3 (aggressive)</span>
+                                        </label>
+                                        <label class="option-item">
+                                            <input type="radio" name="decision-attach-rate" value="20">
+                                            <span><strong>B:</strong> 20% by Q3 (balanced)</span>
+                                        </label>
+                                        <label class="option-item">
+                                            <input type="radio" name="decision-attach-rate" value="15">
+                                            <span><strong>C:</strong> 15% by Q3 (conservative)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="decision-input">
+                                    <h4>✏️ Your Input</h4>
+                                    <textarea class="decision-textarea" id="input-attach-rate" placeholder="Share your thoughts on attach rate targets..."></textarea>
+                                </div>
+                                <div class="decision-final">
+                                    <h4>✅ Final Decision (to be made at offsite)</h4>
+                                    <textarea class="decision-textarea final" id="final-attach-rate" placeholder="Decision will be recorded here during the offsite..." disabled></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Decision 6: Board Ask -->
+                            <div class="decision-card" data-decision="board-ask">
+                                <div class="decision-header">
+                                    <span class="decision-number">6</span>
+                                    <div class="decision-status" data-status="pending">⏳ Pending</div>
+                                </div>
+                                <h3 class="decision-question">What is our "ask" to the board (if any)?</h3>
+                                <div class="decision-context">
+                                    <h4>📊 Context & Inputs</h4>
+                                    <ul>
+                                        <li>Current runway: ~8 months</li>
+                                        <li>Board meeting: Wednesday, Feb 11</li>
+                                        <li>Options: additional funding, strategic guidance, introductions, or nothing</li>
+                                        <li>Narrative: "Execution has already started"</li>
+                                    </ul>
+                                </div>
+                                <div class="decision-options">
+                                    <h4>🔀 Options</h4>
+                                    <div class="options-grid">
+                                        <label class="option-item">
+                                            <input type="radio" name="decision-board-ask" value="nothing">
+                                            <span><strong>A:</strong> No ask - update only</span>
+                                        </label>
+                                        <label class="option-item">
+                                            <input type="radio" name="decision-board-ask" value="runway">
+                                            <span><strong>B:</strong> Request runway extension</span>
+                                        </label>
+                                        <label class="option-item">
+                                            <input type="radio" name="decision-board-ask" value="strategic">
+                                            <span><strong>C:</strong> Request strategic support/intros</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="decision-input">
+                                    <h4>✏️ Your Input</h4>
+                                    <textarea class="decision-textarea" id="input-board-ask" placeholder="Share your thoughts on what we should ask the board..."></textarea>
+                                </div>
+                                <div class="decision-final">
+                                    <h4>✅ Final Decision (to be made at offsite)</h4>
+                                    <textarea class="decision-textarea final" id="final-board-ask" placeholder="Decision will be recorded here during the offsite..." disabled></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div style="margin-top: 32px; text-align: center;">
+                            <button id="saveDecisionInputs" class="btn-save-annotation" style="padding: 14px 40px; font-size: 16px; background: linear-gradient(135deg, var(--accent-warning), var(--accent-danger));">💾 Save My Decision Inputs</button>
+                            <span id="decisionSaveStatus" class="save-status"></span>
+                        </div>
+
+                        <div class="callout success" style="margin-top: 24px;">
+                            <p><strong>🎯 Goal:</strong> Come out of the offsite with clear decisions on all 6 items. Your inputs here will help drive the discussion.</p>
+                        </div>
+                    </div>
+                    <div class="annotation-area">
+                        <div class="annotation-header">
+                            <span>💬 Additional Comments on Decisions</span>
+                        </div>
+                        <div class="reaction-buttons">
+                            <button class="reaction-btn" data-reaction="agree">✅ Clear on Decisions</button>
+                            <button class="reaction-btn" data-reaction="question">❓ Need More Info</button>
+                            <button class="reaction-btn" data-reaction="concern">⚠️ Missing Decisions</button>
+                            <button class="reaction-btn" data-reaction="idea">💡 Other Decisions Needed</button>
+                        </div>
+                        <textarea class="comment-input" placeholder="Any other decisions we should be making? Comments on the options?"></textarea>
+                        <div class="annotation-actions">
+                            <button class="btn-save-annotation">Save Annotation</button>
+                            <span class="save-status"></span>
+                        </div>
+                        <div class="existing-annotations"></div>
+                    </div>
+                </section>
+
+                <!-- Section 12: Team Roster -->
+                <section class="content-section" data-section="12" id="section-12">
+                    <div class="section-header">
+                        <span class="section-number">12</span>
+                        <h2>👥 Team Roster & Pod Assignments</h2>
+                        <span class="section-status" data-status="pending">⏳ Pending</span>
+                    </div>
+                    <div class="section-body">
+                        <div class="callout warning">
+                            <p><strong>🏗️ Team Builder:</strong> Review the current Signos team roster and suggest which pod each person should be assigned to in the go-forward structure. Your assignments will be aggregated to help inform the final team decisions at the offsite.</p>
+                        </div>
+
+                        <h3>Current Team Structure → Go-Forward Pods</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 20px;">For each team member, select which pod they should be assigned to. Add notes if you have specific thoughts on their role or fit.</p>
+
+                        <div class="pod-legend" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; padding: 16px; background: var(--bg-card); border-radius: 12px;">
+                            <span style="font-size: 12px; color: var(--text-muted); width: 100%; margin-bottom: 8px;">Pod Options:</span>
+                            <span class="pod-tag growth">Growth</span>
+                            <span class="pod-tag acquisition">Acquisition</span>
+                            <span class="pod-tag retention">Retention</span>
+                            <span class="pod-tag platform">Platform</span>
+                            <span class="pod-tag infrastructure">Infrastructure</span>
+                            <span class="pod-tag enterprise">Enterprise</span>
+                            <span class="pod-tag ops">Ops/G&A</span>
+                            <span class="pod-tag offboard">Offboard/TBD</span>
+                        </div>
+
+                        <div class="team-roster-container" id="teamRosterContainer">
+                            <!-- Populated by JavaScript -->
+                        </div>
+
+                        <div style="margin-top: 32px; text-align: center;">
+                            <button id="saveTeamAssignments" class="btn-save-annotation" style="padding: 14px 40px; font-size: 16px; background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));">💾 Save My Team Assignments</button>
+                            <span id="teamAssignmentStatus" class="save-status"></span>
+                        </div>
+
+                        <div class="callout success" style="margin-top: 24px;">
+                            <p><strong>💡 Note:</strong> Your assignments are confidential until aggregated. The admin dashboard will show a consolidated view of all executives' recommendations to help guide the final team structure discussions.</p>
+                        </div>
+                    </div>
+                    <div class="annotation-area">
+                        <div class="annotation-header">
+                            <span>💬 Team Structure Comments</span>
+                        </div>
+                        <div class="reaction-buttons">
+                            <button class="reaction-btn" data-reaction="agree">✅ Team Looks Good</button>
+                            <button class="reaction-btn" data-reaction="question">❓ Questions on Roles</button>
+                            <button class="reaction-btn" data-reaction="concern">⚠️ Concerns</button>
+                            <button class="reaction-btn" data-reaction="idea">💡 Hiring/Changes Needed</button>
+                        </div>
+                        <textarea class="comment-input" placeholder="Any thoughts on the team structure, hiring needs, or role changes?"></textarea>
                         <div class="annotation-actions">
                             <button class="btn-save-annotation">Save Annotation</button>
                             <span class="save-status"></span>

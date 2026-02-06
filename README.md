@@ -33,17 +33,41 @@ create table general_feedback (
   updated_at timestamp with time zone default now()
 );
 
+-- Create decision_inputs table
+create table decision_inputs (
+  id uuid default gen_random_uuid() primary key,
+  exec_name text not null unique,
+  decisions jsonb not null default '{}',
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now()
+);
+
+-- Create team_assignments table
+create table team_assignments (
+  id uuid default gen_random_uuid() primary key,
+  exec_name text not null unique,
+  assignments jsonb not null default '{}',
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now()
+);
+
 -- Enable Row Level Security (optional but recommended)
 alter table annotations enable row level security;
 alter table general_feedback enable row level security;
+alter table decision_inputs enable row level security;
+alter table team_assignments enable row level security;
 
 -- Allow all operations for now (you can tighten this later)
 create policy "Allow all" on annotations for all using (true);
 create policy "Allow all" on general_feedback for all using (true);
+create policy "Allow all" on decision_inputs for all using (true);
+create policy "Allow all" on team_assignments for all using (true);
 
 -- Enable real-time
 alter publication supabase_realtime add table annotations;
 alter publication supabase_realtime add table general_feedback;
+alter publication supabase_realtime add table decision_inputs;
+alter publication supabase_realtime add table team_assignments;
 ```
 
 4. Update `js/config.js` with your Supabase credentials:
@@ -70,7 +94,19 @@ npx netlify-cli deploy --prod
 ## Features
 
 ### For Executives (index.html)
-- 10 sections covering offsite topics
+- 12 sections covering offsite topics:
+  1. Current State & Urgency
+  2. Sprint Review
+  3. Competitive Landscape
+  4. Go-Forward Strategy
+  5. Operating Structure (Pods)
+  6. Team Size & Capacity
+  7. D2C Revenue Plan
+  8. Enterprise Strategy
+  9. Board Messaging
+  10. General Feedback
+  11. **Decision Tracker** - Vote on 6 key decisions with rationale
+  12. **Team Roster** - Assign team members to pods
 - Reaction buttons (Agree, Question, Concern, Idea)
 - Freeform comments per section
 - Progress tracking
@@ -79,13 +115,15 @@ npx netlify-cli deploy --prod
 ### For Admin (admin.html)
 - Overview stats (total comments, by reaction type)
 - Executive participation breakdown
+- **General Feedback Summary** - View feedback from all execs
+- **Decision Summary** - See how execs voted on each decision + their rationale
+- **Team Roster Summary** - See aggregated pod assignments
 - Filter by section or reaction type
 - **AI-Powered Summary** - Claude analyzes all feedback and provides:
-  - Key themes
-  - Areas of consensus
-  - Areas of friction
-  - Recommended discussion topics
-  - Board meeting considerations
+  - Executive Summary Narrative
+  - Feedback by Executive
+  - Feedback by Section
+  - Strategic Synthesis
 
 ## Files
 
@@ -115,11 +153,14 @@ For the offsite, Supabase is recommended for real-time sync across all execs.
 
 ## Claude API
 
-The AI summary feature uses Claude API. The key is already configured. If you need to change it, update `js/config.js`:
+The AI summary feature uses Claude API. For security, the key is stored in your browser's localStorage (not in the code):
 
-```javascript
-CLAUDE_API_KEY: 'your-claude-api-key',
-```
+1. Go to the admin dashboard (`/admin.html`)
+2. Click "Generate AI Summary"
+3. Enter your Claude API key when prompted (first time only)
+4. The key is saved in localStorage for future use
+
+To change the API key, clear your browser's localStorage or use browser developer tools.
 
 ## Support
 

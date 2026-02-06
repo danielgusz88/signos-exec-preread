@@ -248,4 +248,324 @@ async function loadGeneralFeedback(execName) {
     } catch (error) {
         console.error('Error loading general feedback:', error);
     }
+    
+    // Also load decision inputs
+    loadDecisionInputs(execName);
 }
+
+// Save decision inputs to Supabase
+async function saveDecisionInputs() {
+    const execName = window.annotationManager?.currentExec || localStorage.getItem('current_exec');
+    if (!execName) {
+        alert('Please log in first');
+        return;
+    }
+    
+    const saveBtn = document.getElementById('saveDecisionInputs');
+    const statusEl = document.getElementById('decisionSaveStatus');
+    
+    saveBtn.disabled = true;
+    statusEl.textContent = 'Saving...';
+    statusEl.style.color = 'var(--text-muted)';
+    
+    // Gather all decision inputs
+    const decisions = {};
+    const decisionIds = ['growth-pod', 'team-allocation', 'glp1-launch', 'enterprise-allocation', 'attach-rate', 'board-ask'];
+    
+    decisionIds.forEach(decisionId => {
+        const selectedOption = document.querySelector(`input[name="decision-${decisionId}"]:checked`);
+        const inputText = document.getElementById(`input-${decisionId}`)?.value || '';
+        
+        decisions[decisionId] = {
+            option: selectedOption ? selectedOption.value : null,
+            input: inputText
+        };
+    });
+    
+    try {
+        // Check if entry exists for this exec
+        const { data: existing } = await window.supabase
+            .from('decision_inputs')
+            .select('id')
+            .eq('exec_name', execName)
+            .single();
+        
+        if (existing) {
+            // Update existing
+            const { error } = await window.supabase
+                .from('decision_inputs')
+                .update({ 
+                    decisions: decisions,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('exec_name', execName);
+            if (error) throw error;
+        } else {
+            // Insert new
+            const { error } = await window.supabase
+                .from('decision_inputs')
+                .insert({ 
+                    exec_name: execName, 
+                    decisions: decisions,
+                    updated_at: new Date().toISOString()
+                });
+            if (error) throw error;
+        }
+        
+        statusEl.textContent = '✓ Saved!';
+        statusEl.style.color = 'var(--accent-success)';
+        window.annotationManager?.showToast('Decision inputs saved successfully!');
+        
+        setTimeout(() => {
+            statusEl.textContent = '';
+        }, 3000);
+        
+    } catch (error) {
+        console.error('Error saving decision inputs:', error);
+        statusEl.textContent = '✗ Error saving';
+        statusEl.style.color = 'var(--accent-danger)';
+        window.annotationManager?.showToast('Error saving decision inputs. Please try again.');
+    } finally {
+        saveBtn.disabled = false;
+    }
+}
+
+// Load decision inputs from Supabase
+async function loadDecisionInputs(execName) {
+    if (!execName || !window.supabase) return;
+    
+    try {
+        const { data, error } = await window.supabase
+            .from('decision_inputs')
+            .select('decisions')
+            .eq('exec_name', execName)
+            .single();
+        
+        if (error && error.code !== 'PGRST116') {
+            console.error('Error loading decision inputs:', error);
+            return;
+        }
+        
+        if (data && data.decisions) {
+            const decisions = data.decisions;
+            
+            Object.keys(decisions).forEach(decisionId => {
+                const decision = decisions[decisionId];
+                
+                // Set the selected option
+                if (decision.option) {
+                    const radio = document.querySelector(`input[name="decision-${decisionId}"][value="${decision.option}"]`);
+                    if (radio) radio.checked = true;
+                }
+                
+                // Set the input text
+                if (decision.input) {
+                    const textarea = document.getElementById(`input-${decisionId}`);
+                    if (textarea) textarea.value = decision.input;
+                }
+            });
+            
+            console.log('Loaded decision inputs for', execName);
+        }
+    } catch (error) {
+        console.error('Error loading decision inputs:', error);
+    }
+}
+
+// Initialize decision input save button
+document.getElementById('saveDecisionInputs')?.addEventListener('click', saveDecisionInputs);
+
+// Initialize team roster
+function initTeamRoster() {
+    const container = document.getElementById('teamRosterContainer');
+    if (!container || !CONFIG.TEAM_ROSTER) return;
+    
+    // Group by department
+    const departments = {};
+    CONFIG.TEAM_ROSTER.forEach(member => {
+        if (!departments[member.department]) {
+            departments[member.department] = [];
+        }
+        departments[member.department].push(member);
+    });
+    
+    // Department order
+    const deptOrder = ['Leadership', 'Engineering', 'Product', 'Design', 'Marketing', 'Enterprise', 'Clinical', 'Ops', 'Advisor'];
+    
+    // Pod options
+    const podOptions = CONFIG.PODS.map(pod => 
+        `<option value="${pod.id}">${pod.name}</option>`
+    ).join('');
+    
+    let html = '';
+    
+    deptOrder.forEach(dept => {
+        if (!departments[dept]) return;
+        
+        const deptIcons = {
+            'Leadership': '👑',
+            'Engineering': '💻',
+            'Product': '📱',
+            'Design': '🎨',
+            'Marketing': '📣',
+            'Enterprise': '🏢',
+            'Clinical': '🏥',
+            'Ops': '⚙️',
+            'Advisor': '🧠'
+        };
+        
+        html += `<div class="department-header">${deptIcons[dept] || '👤'} ${dept}</div>`;
+        
+        departments[dept].forEach(member => {
+            const memberId = member.name.toLowerCase().replace(/[^a-z0-9]/g, '-');
+            html += `
+                <div class="team-member-row" data-member="${member.name}">
+                    <div class="team-member-info">
+                        <div class="team-member-name">${member.name}</div>
+                        <div class="team-member-role">${member.currentRole}</div>
+                    </div>
+                    <div class="team-member-dept">${member.department}</div>
+                    <select class="pod-select" id="pod-${memberId}">
+                        <option value="">-- Select Pod --</option>
+                        ${podOptions}
+                    </select>
+                    <input type="text" class="team-member-notes" id="notes-${memberId}" placeholder="Notes (optional)">
+                </div>
+            `;
+        });
+    });
+    
+    container.innerHTML = html;
+    
+    // Load existing assignments
+    const execName = window.annotationManager?.currentExec || localStorage.getItem('current_exec');
+    if (execName) {
+        loadTeamAssignments(execName);
+    }
+}
+
+// Save team assignments to Supabase
+async function saveTeamAssignments() {
+    const execName = window.annotationManager?.currentExec || localStorage.getItem('current_exec');
+    if (!execName) {
+        alert('Please log in first');
+        return;
+    }
+    
+    const saveBtn = document.getElementById('saveTeamAssignments');
+    const statusEl = document.getElementById('teamAssignmentStatus');
+    
+    saveBtn.disabled = true;
+    statusEl.textContent = 'Saving...';
+    statusEl.style.color = 'var(--text-muted)';
+    
+    // Gather all assignments
+    const assignments = {};
+    
+    CONFIG.TEAM_ROSTER.forEach(member => {
+        const memberId = member.name.toLowerCase().replace(/[^a-z0-9]/g, '-');
+        const podSelect = document.getElementById(`pod-${memberId}`);
+        const notesInput = document.getElementById(`notes-${memberId}`);
+        
+        if (podSelect && podSelect.value) {
+            assignments[member.name] = {
+                pod: podSelect.value,
+                notes: notesInput?.value || ''
+            };
+        }
+    });
+    
+    try {
+        // Check if entry exists for this exec
+        const { data: existing } = await window.supabase
+            .from('team_assignments')
+            .select('id')
+            .eq('exec_name', execName)
+            .single();
+        
+        if (existing) {
+            // Update existing
+            const { error } = await window.supabase
+                .from('team_assignments')
+                .update({ 
+                    assignments: assignments,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('exec_name', execName);
+            if (error) throw error;
+        } else {
+            // Insert new
+            const { error } = await window.supabase
+                .from('team_assignments')
+                .insert({ 
+                    exec_name: execName, 
+                    assignments: assignments,
+                    updated_at: new Date().toISOString()
+                });
+            if (error) throw error;
+        }
+        
+        statusEl.textContent = '✓ Saved!';
+        statusEl.style.color = 'var(--accent-success)';
+        window.annotationManager?.showToast('Team assignments saved successfully!');
+        
+        setTimeout(() => {
+            statusEl.textContent = '';
+        }, 3000);
+        
+    } catch (error) {
+        console.error('Error saving team assignments:', error);
+        statusEl.textContent = '✗ Error saving';
+        statusEl.style.color = 'var(--accent-danger)';
+        window.annotationManager?.showToast('Error saving assignments. Please try again.');
+    } finally {
+        saveBtn.disabled = false;
+    }
+}
+
+// Load team assignments from Supabase
+async function loadTeamAssignments(execName) {
+    if (!execName || !window.supabase) return;
+    
+    try {
+        const { data, error } = await window.supabase
+            .from('team_assignments')
+            .select('assignments')
+            .eq('exec_name', execName)
+            .single();
+        
+        if (error && error.code !== 'PGRST116' && error.code !== '42P01') {
+            console.error('Error loading team assignments:', error);
+            return;
+        }
+        
+        if (data && data.assignments) {
+            const assignments = data.assignments;
+            
+            Object.keys(assignments).forEach(memberName => {
+                const assignment = assignments[memberName];
+                const memberId = memberName.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                
+                const podSelect = document.getElementById(`pod-${memberId}`);
+                const notesInput = document.getElementById(`notes-${memberId}`);
+                
+                if (podSelect && assignment.pod) {
+                    podSelect.value = assignment.pod;
+                }
+                if (notesInput && assignment.notes) {
+                    notesInput.value = assignment.notes;
+                }
+            });
+            
+            console.log('Loaded team assignments for', execName);
+        }
+    } catch (error) {
+        console.error('Error loading team assignments:', error);
+    }
+}
+
+// Initialize team roster and save button
+document.getElementById('saveTeamAssignments')?.addEventListener('click', saveTeamAssignments);
+
+// Wait for DOM and then initialize team roster
+setTimeout(initTeamRoster, 600);
