@@ -21,10 +21,18 @@ class AnnotationManager {
     // Setup reaction button handlers
     setupReactionButtons() {
         document.querySelectorAll('.reaction-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
+            btn.addEventListener('click', async (e) => {
                 const section = btn.closest('.content-section');
                 const sectionId = section.dataset.section;
                 const reaction = btn.dataset.reaction;
+                const textarea = section.querySelector('.comment-input');
+                const statusEl = section.querySelector('.save-status');
+                
+                if (!this.currentExec) {
+                    this.showToast('Please log in first');
+                    document.getElementById('execModal').classList.remove('hidden');
+                    return;
+                }
                 
                 // Toggle selection
                 const buttons = section.querySelectorAll('.reaction-btn');
@@ -32,6 +40,39 @@ class AnnotationManager {
                 btn.classList.add('selected');
                 
                 this.selectedReactions[sectionId] = reaction;
+                
+                // Auto-save the reaction immediately
+                btn.style.opacity = '0.7';
+                
+                try {
+                    const annotation = {
+                        section_id: sectionId,
+                        exec_name: this.currentExec,
+                        reaction_type: reaction,
+                        comment_text: textarea?.value?.trim() || null
+                    };
+                    
+                    await window.annotationStore.saveAnnotation(annotation);
+                    
+                    // Show saved feedback
+                    statusEl.textContent = '✓ Reaction saved!';
+                    statusEl.style.color = 'var(--accent-success)';
+                    setTimeout(() => { statusEl.textContent = ''; }, 2000);
+                    
+                    // Mark section as reviewed
+                    this.markSectionReviewed(sectionId);
+                    
+                    // Reload annotations
+                    this.loadSectionAnnotations(sectionId);
+                    
+                    this.showToast(`${CONFIG.REACTIONS[reaction].emoji} ${CONFIG.REACTIONS[reaction].label} saved!`);
+                    
+                } catch (error) {
+                    console.error('Error saving reaction:', error);
+                    this.showToast('Error saving reaction');
+                }
+                
+                btn.style.opacity = '1';
             });
         });
     }
