@@ -390,7 +390,7 @@ function initTeamRoster() {
     });
     
     // Department order
-    const deptOrder = ['Leadership', 'Engineering', 'Product', 'Design', 'Marketing', 'Enterprise', 'Clinical', 'Ops', 'Advisor'];
+    const deptOrder = ['Leadership', 'Engineering', 'Product', 'Design', 'Marketing', 'Enterprise', 'Operations', 'Customer Success', 'Clinical', 'Contractor'];
     
     // Pod options
     const podOptions = CONFIG.PODS.map(pod => 
@@ -409,9 +409,10 @@ function initTeamRoster() {
             'Design': '🎨',
             'Marketing': '📣',
             'Enterprise': '🏢',
+            'Operations': '⚙️',
+            'Customer Success': '💬',
             'Clinical': '🏥',
-            'Ops': '⚙️',
-            'Advisor': '🧠'
+            'Contractor': '📋'
         };
         
         html += `<div class="department-header">${deptIcons[dept] || '👤'} ${dept}</div>`;

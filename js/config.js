@@ -57,54 +57,89 @@ const CONFIG = {
         { id: 'offboard', name: 'Offboard / TBD', description: 'Role under review' }
     ],
     
-    // Current Signos Team Roster
-    // NOTE: Update this list with actual team members
+    // Current Signos Team Roster (as of Feb 6, 2026)
     TEAM_ROSTER: [
-        // Leadership
+        // Executive Leadership
         { name: 'Sharam Fouladgar-Mercer', currentRole: 'CEO', department: 'Leadership' },
-        { name: 'Roger Neel', currentRole: 'CTO/CMO', department: 'Leadership' },
-        { name: 'Lindsay Peterson', currentRole: 'VP Finance', department: 'Leadership' },
-        { name: 'Emma Allison', currentRole: 'VP Product', department: 'Leadership' },
-        { name: 'Colin Rogers', currentRole: 'VP Healthcare Sales', department: 'Leadership' },
+        { name: 'Roger Neel', currentRole: 'Chief Technology Officer', department: 'Leadership' },
+        { name: 'Lindsay Peterson', currentRole: 'VP of Finance & Operations', department: 'Leadership' },
+        { name: 'Emma Allison', currentRole: 'VP of Product', department: 'Leadership' },
+        { name: 'Colin Rogers', currentRole: 'VP of Healthcare', department: 'Leadership' },
+        { name: 'Tiffani Davidson', currentRole: 'VP Marketing', department: 'Leadership' },
+        { name: 'Benji Michalek', currentRole: 'VP of Design', department: 'Leadership' },
         
-        // Engineering
-        { name: 'Engineer 1', currentRole: 'Senior Engineer', department: 'Engineering' },
-        { name: 'Engineer 2', currentRole: 'Senior Engineer', department: 'Engineering' },
-        { name: 'Engineer 3', currentRole: 'Engineer', department: 'Engineering' },
-        { name: 'Engineer 4', currentRole: 'Engineer', department: 'Engineering' },
-        { name: 'Engineer 5', currentRole: 'Engineer', department: 'Engineering' },
-        { name: 'Engineer 6', currentRole: 'Engineer', department: 'Engineering' },
-        { name: 'Engineer 7', currentRole: 'Junior Engineer', department: 'Engineering' },
+        // Engineering - Management
+        { name: 'Pierre Wehbe', currentRole: 'Chief Architect Officer', department: 'Engineering' },
+        { name: 'Dmitri Levonian', currentRole: 'Head of Machine Learning', department: 'Engineering' },
+        { name: 'Jacob Smith', currentRole: 'Engineering Manager', department: 'Engineering' },
+        { name: 'Prashanth Nambiar', currentRole: 'Engineering Manager', department: 'Engineering' },
+        { name: 'Valerie Lord', currentRole: 'Quality Engineering Manager', department: 'Engineering' },
         
-        // Product & Design
-        { name: 'Product Manager 1', currentRole: 'Product Manager', department: 'Product' },
-        { name: 'Designer 1', currentRole: 'Product Designer', department: 'Design' },
-        { name: 'Designer 2', currentRole: 'UX Designer', department: 'Design' },
+        // Engineering - Individual Contributors
+        { name: 'Artur Ergashev', currentRole: 'Principal Software Engineer', department: 'Engineering' },
+        { name: 'Tomas Jonasson', currentRole: 'Principal Software Engineer', department: 'Engineering' },
+        { name: 'Andrew Bloom', currentRole: 'Senior Android Engineer', department: 'Engineering' },
+        { name: 'Christopher Liotta', currentRole: 'Senior Software Engineer', department: 'Engineering' },
+        { name: 'Ethan Ransom', currentRole: 'Senior Software Engineer', department: 'Engineering' },
+        { name: 'Melissa Hanson', currentRole: 'Senior Software Engineer', department: 'Engineering' },
+        { name: 'Noah Kellem', currentRole: 'Senior Software Engineer', department: 'Engineering' },
+        { name: 'Jossi Cruz', currentRole: 'Software Engineer', department: 'Engineering' },
+        { name: 'Rebecca Anderson', currentRole: 'Software Engineer', department: 'Engineering' },
+        { name: 'Tyler Grant', currentRole: 'Software Engineer', department: 'Engineering' },
+        { name: 'Maggie Falkenberg', currentRole: 'Quality Engineering Analyst', department: 'Engineering' },
+        
+        // Product
+        { name: 'Brent Williams', currentRole: 'Principal Product Manager', department: 'Product' },
+        { name: 'Claudia Wasch', currentRole: 'Principal PM, Machine Learning', department: 'Product' },
+        { name: 'Jeff Steele', currentRole: 'Product Analyst', department: 'Product' },
+        { name: 'David Forsythe', currentRole: 'Principal Product Content Designer', department: 'Product' },
+        { name: 'Pawel Kozinski', currentRole: 'Principal B2B', department: 'Product' },
+        
+        // Design
+        { name: 'Lizzie Peterson', currentRole: 'Product Design Lead', department: 'Design' },
+        { name: 'Nicole Ulgado', currentRole: 'Lead Product Designer', department: 'Design' },
+        { name: 'Nadin Radwan', currentRole: 'Art Director', department: 'Design' },
+        { name: 'Marquel Coaxum', currentRole: 'Videographer/Multimedia Producer', department: 'Design' },
         
         // Marketing
-        { name: 'Marketing 1', currentRole: 'Marketing Lead', department: 'Marketing' },
-        { name: 'Marketing 2', currentRole: 'Growth Marketing', department: 'Marketing' },
-        { name: 'Marketing 3', currentRole: 'Content', department: 'Marketing' },
+        { name: 'Serina Stow', currentRole: 'Director of Growth', department: 'Marketing' },
+        { name: 'Brittany Barry', currentRole: 'Senior Content Manager', department: 'Marketing' },
+        { name: 'Alyssa Fackler', currentRole: 'Social Media Manager', department: 'Marketing' },
+        { name: 'Gwyneth Ramsey', currentRole: 'Lifecycle Marketing Manager', department: 'Marketing' },
+        { name: 'Bill Tancer', currentRole: 'Chief Data Scientist', department: 'Marketing' },
         
         // Enterprise Sales
-        { name: 'Dave (Enterprise)', currentRole: 'Enterprise Sales', department: 'Enterprise' },
-        { name: 'Richard (Enterprise)', currentRole: 'Enterprise Sales', department: 'Enterprise' },
-        { name: 'Keriann (Enterprise)', currentRole: 'Enterprise', department: 'Enterprise' },
-        { name: 'Carli (Enterprise)', currentRole: 'Enterprise', department: 'Enterprise' },
+        { name: 'David Lucarelli', currentRole: 'Director of Enterprise Sales', department: 'Enterprise' },
+        { name: 'Richard Yax', currentRole: 'Director of Enterprise Sales', department: 'Enterprise' },
+        { name: 'Keriann Granato', currentRole: 'Enterprise Account Manager', department: 'Enterprise' },
+        { name: 'Carli Grant', currentRole: 'Sales Operations Manager', department: 'Enterprise' },
         
-        // Operations
-        { name: 'Ops 1', currentRole: 'Operations', department: 'Ops' },
-        { name: 'Ops 2', currentRole: 'Customer Success', department: 'Ops' },
-        { name: 'Ops 3', currentRole: 'Support', department: 'Ops' },
+        // Operations & G&A
+        { name: 'Dan Gusz', currentRole: 'Chief of Staff', department: 'Operations' },
+        { name: 'Karen Morris', currentRole: 'Head of Talent', department: 'Operations' },
+        { name: 'Samantha Willden', currentRole: 'Sr. Manager, People Ops', department: 'Operations' },
+        { name: 'Zhang Bin Wu', currentRole: 'Sr. Manager Supply Chain', department: 'Operations' },
+        { name: 'Trevor Denbo', currentRole: 'Head of QA and Reg Affairs', department: 'Operations' },
         
-        // Clinical/Health
-        { name: 'Clinical 1', currentRole: 'Clinical Lead', department: 'Clinical' },
-        { name: 'Clinical 2', currentRole: 'Dietitian', department: 'Clinical' },
+        // Customer Success
+        { name: 'Gwen Pflumm', currentRole: 'Sr. Manager, Client Success', department: 'Customer Success' },
+        { name: 'Hannah Gadient', currentRole: 'Customer Success Agent', department: 'Customer Success' },
+        { name: 'Bettina Morando', currentRole: 'Customer Success Agent', department: 'Customer Success' },
+        { name: 'Laura Decher', currentRole: 'Customer Success Agent', department: 'Customer Success' },
+        { name: 'Zachary Derade', currentRole: 'Customer Success Agent', department: 'Customer Success' },
         
-        // Contractors/Consultants
-        { name: 'Dan Gusz', currentRole: 'Advisor', department: 'Advisor' },
-        { name: 'Consultant 1', currentRole: 'Consultant', department: 'Advisor' },
-        { name: 'Consultant 2', currentRole: 'Consultant', department: 'Advisor' }
+        // Clinical
+        { name: 'Grace Shryack', currentRole: 'Clinical Lead', department: 'Clinical' },
+        { name: 'Sarah Steele', currentRole: 'Metabolic Wellness Program Manager', department: 'Clinical' },
+        
+        // Contractors
+        { name: 'Julien (Contractor)', currentRole: 'Full Stack Engineer', department: 'Contractor' },
+        { name: 'Antonio (Contractor)', currentRole: 'iOS Engineer', department: 'Contractor' },
+        { name: 'Leo (Contractor)', currentRole: 'iOS Engineer', department: 'Contractor' },
+        { name: 'Agustin (Contractor)', currentRole: 'Android Engineer', department: 'Contractor' },
+        { name: 'Ian (Contractor)', currentRole: 'Customer Service', department: 'Contractor' },
+        { name: 'Juliyanna (Contractor)', currentRole: 'Customer Service', department: 'Contractor' },
+        { name: 'Laz (Contractor)', currentRole: 'Design', department: 'Contractor' }
     ]
 };
 
