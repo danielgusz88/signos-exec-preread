@@ -61,12 +61,11 @@ const CONFIG = {
     TEAM_ROSTER: [
         // Executive Leadership
         { name: 'Sharam Fouladgar-Mercer', currentRole: 'CEO', department: 'Leadership' },
-        { name: 'Roger Neel', currentRole: 'Chief Technology Officer', department: 'Leadership' },
+        { name: 'Dan Gusz', currentRole: 'Chief of Staff', department: 'Leadership' },
         { name: 'Lindsay Peterson', currentRole: 'VP of Finance & Operations', department: 'Leadership' },
-        { name: 'Emma Allison', currentRole: 'VP of Product', department: 'Leadership' },
         { name: 'Colin Rogers', currentRole: 'VP of Healthcare', department: 'Leadership' },
-        { name: 'Tiffani Davidson', currentRole: 'VP Marketing', department: 'Leadership' },
-        { name: 'Benji Michalek', currentRole: 'VP of Design', department: 'Leadership' },
+        { name: 'Roger Neel', currentRole: 'Chief Technology Officer', department: 'Leadership' },
+        { name: 'Emma Allison', currentRole: 'VP of Product', department: 'Leadership' },
         
         // Engineering - Management
         { name: 'Pierre Wehbe', currentRole: 'Chief Architect Officer', department: 'Engineering' },
@@ -87,6 +86,10 @@ const CONFIG = {
         { name: 'Rebecca Anderson', currentRole: 'Software Engineer', department: 'Engineering' },
         { name: 'Tyler Grant', currentRole: 'Software Engineer', department: 'Engineering' },
         { name: 'Maggie Falkenberg', currentRole: 'Quality Engineering Analyst', department: 'Engineering' },
+        { name: 'Julien (Contractor)', currentRole: 'Full Stack Engineer', department: 'Engineering' },
+        { name: 'Antonio (Contractor)', currentRole: 'iOS Engineer', department: 'Engineering' },
+        { name: 'Leo (Contractor)', currentRole: 'iOS Engineer', department: 'Engineering' },
+        { name: 'Agustin (Contractor)', currentRole: 'Android Engineer', department: 'Engineering' },
         
         // Product
         { name: 'Brent Williams', currentRole: 'Principal Product Manager', department: 'Product' },
@@ -96,12 +99,15 @@ const CONFIG = {
         { name: 'Pawel Kozinski', currentRole: 'Principal B2B', department: 'Product' },
         
         // Design
+        { name: 'Benji Michalek', currentRole: 'VP of Design', department: 'Design' },
         { name: 'Lizzie Peterson', currentRole: 'Product Design Lead', department: 'Design' },
         { name: 'Nicole Ulgado', currentRole: 'Lead Product Designer', department: 'Design' },
         { name: 'Nadin Radwan', currentRole: 'Art Director', department: 'Design' },
         { name: 'Marquel Coaxum', currentRole: 'Videographer/Multimedia Producer', department: 'Design' },
+        { name: 'Laz (Contractor)', currentRole: 'Designer', department: 'Design' },
         
         // Marketing
+        { name: 'Tiffani Davidson', currentRole: 'VP Marketing', department: 'Marketing' },
         { name: 'Serina Stow', currentRole: 'Director of Growth', department: 'Marketing' },
         { name: 'Brittany Barry', currentRole: 'Senior Content Manager', department: 'Marketing' },
         { name: 'Alyssa Fackler', currentRole: 'Social Media Manager', department: 'Marketing' },
@@ -115,7 +121,6 @@ const CONFIG = {
         { name: 'Carli Grant', currentRole: 'Sales Operations Manager', department: 'Enterprise' },
         
         // Operations & G&A
-        { name: 'Dan Gusz', currentRole: 'Chief of Staff', department: 'Operations' },
         { name: 'Karen Morris', currentRole: 'Head of Talent', department: 'Operations' },
         { name: 'Samantha Willden', currentRole: 'Sr. Manager, People Ops', department: 'Operations' },
         { name: 'Zhang Bin Wu', currentRole: 'Sr. Manager Supply Chain', department: 'Operations' },
@@ -127,19 +132,12 @@ const CONFIG = {
         { name: 'Bettina Morando', currentRole: 'Customer Success Agent', department: 'Customer Success' },
         { name: 'Laura Decher', currentRole: 'Customer Success Agent', department: 'Customer Success' },
         { name: 'Zachary Derade', currentRole: 'Customer Success Agent', department: 'Customer Success' },
+        { name: 'Ian (Contractor)', currentRole: 'Customer Service', department: 'Customer Success' },
+        { name: 'Juliyanna (Contractor)', currentRole: 'Customer Service', department: 'Customer Success' },
         
         // Clinical
         { name: 'Grace Shryack', currentRole: 'Clinical Lead', department: 'Clinical' },
-        { name: 'Sarah Steele', currentRole: 'Metabolic Wellness Program Manager', department: 'Clinical' },
-        
-        // Contractors
-        { name: 'Julien (Contractor)', currentRole: 'Full Stack Engineer', department: 'Contractor' },
-        { name: 'Antonio (Contractor)', currentRole: 'iOS Engineer', department: 'Contractor' },
-        { name: 'Leo (Contractor)', currentRole: 'iOS Engineer', department: 'Contractor' },
-        { name: 'Agustin (Contractor)', currentRole: 'Android Engineer', department: 'Contractor' },
-        { name: 'Ian (Contractor)', currentRole: 'Customer Service', department: 'Contractor' },
-        { name: 'Juliyanna (Contractor)', currentRole: 'Customer Service', department: 'Contractor' },
-        { name: 'Laz (Contractor)', currentRole: 'Design', department: 'Contractor' }
+        { name: 'Sarah Steele', currentRole: 'Metabolic Wellness Program Manager', department: 'Clinical' }
     ]
 };
 

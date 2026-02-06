@@ -390,7 +390,7 @@ function initTeamRoster() {
     });
     
     // Department order
-    const deptOrder = ['Leadership', 'Engineering', 'Product', 'Design', 'Marketing', 'Enterprise', 'Operations', 'Customer Success', 'Clinical', 'Contractor'];
+    const deptOrder = ['Leadership', 'Engineering', 'Product', 'Design', 'Marketing', 'Enterprise', 'Operations', 'Customer Success', 'Clinical'];
     
     // Pod options
     const podOptions = CONFIG.PODS.map(pod => 
