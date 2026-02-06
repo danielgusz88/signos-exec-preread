@@ -2,9 +2,8 @@
 // API keys should be set in Netlify Environment Variables or entered at runtime
 const CONFIG = {
     // Supabase Configuration
-    // Set in Netlify: SUPABASE_URL and SUPABASE_ANON_KEY
-    SUPABASE_URL: 'YOUR_SUPABASE_URL', // e.g., 'https://xxxx.supabase.co'
-    SUPABASE_ANON_KEY: 'YOUR_SUPABASE_ANON_KEY',
+    SUPABASE_URL: 'https://zocaivksrrculidpjmmy.supabase.co',
+    SUPABASE_ANON_KEY: 'sb_publishable_3cXmwAAzAhrNaYBd13wAHw_TWfBlEvQ',
     
     // Claude API Configuration
     // Will be entered via prompt in admin dashboard for security
