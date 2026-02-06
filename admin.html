@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Signos Offsite Pre-Read</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* Admin-specific styles */
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 24px;
+        }
+        
+        .admin-header h1 {
+            font-size: 24px;
+        }
+        
+        .admin-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn-primary {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .btn-primary:hover, .btn-secondary:hover {
+            opacity: 0.9;
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        
+        .stat-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+        
+        .stat-card.agree .stat-value { color: var(--accent-success); }
+        .stat-card.question .stat-value { color: var(--accent-primary); }
+        .stat-card.concern .stat-value { color: var(--accent-warning); }
+        .stat-card.idea .stat-value { color: var(--accent-secondary); }
+        
+        /* AI Summary Section */
+        .ai-summary-section {
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.1), rgba(96, 165, 250, 0.1));
+            border: 2px solid var(--accent-secondary);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .ai-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .ai-header h2 {
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .ai-content {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 200px;
+        }
+        
+        .ai-placeholder {
+            color: var(--text-muted);
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .ai-result {
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+        
+        .ai-result h3 {
+            font-size: 16px;
+            color: var(--text-primary);
+            margin: 20px 0 10px;
+        }
+        
+        .ai-result h3:first-child {
+            margin-top: 0;
+        }
+        
+        .ai-result ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .ai-result li {
+            margin: 6px 0;
+        }
+        
+        /* Section Tabs */
+        .section-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        
+        .section-tab {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .section-tab:hover {
+            border-color: var(--accent-primary);
+        }
+        
+        .section-tab.active {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+            border-color: var(--accent-primary);
+        }
+        
+        .section-tab .count {
+            background: rgba(255,255,255,0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            margin-left: 6px;
+        }
+        
+        /* Annotations List */
+        .annotations-container {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .annotations-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .filter-group {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .filter-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .filter-btn.active {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+        
+        .annotation-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .admin-annotation {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid var(--border-color);
+        }
+        
+        .admin-annotation.agree { border-left-color: var(--accent-success); }
+        .admin-annotation.question { border-left-color: var(--accent-primary); }
+        .admin-annotation.concern { border-left-color: var(--accent-warning); }
+        .admin-annotation.idea { border-left-color: var(--accent-secondary); }
+        
+        .annotation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        
+        .annotation-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .exec-avatar {
+            width: 36px;
+            height: 36px;
+            background: var(--accent-primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--bg-primary);
+        }
+        
+        .annotation-details h4 {
+            font-size: 15px;
+            margin-bottom: 2px;
+        }
+        
+        .annotation-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        
+        .annotation-badge {
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+        
+        .annotation-badge.agree { background: rgba(52, 211, 153, 0.2); color: var(--accent-success); }
+        .annotation-badge.question { background: rgba(96, 165, 250, 0.2); color: var(--accent-primary); }
+        .annotation-badge.concern { background: rgba(251, 191, 36, 0.2); color: var(--accent-warning); }
+        .annotation-badge.idea { background: rgba(167, 139, 250, 0.2); color: var(--accent-secondary); }
+        
+        .annotation-comment {
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+        
+        .no-annotations {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+        }
+        
+        /* Loading State */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            color: var(--text-muted);
+        }
+        
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 12px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Executive Breakdown */
+        .exec-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .exec-card {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .exec-card h4 {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        
+        .exec-card .count {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-primary);
+        }
+        
+        .exec-card .status {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        
+        .exec-card .status.complete {
+            color: var(--accent-success);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="admin-header">
+            <div>
+                <h1>🔐 Admin Dashboard</h1>
+                <p class="subtitle">View and synthesize all executive feedback</p>
+            </div>
+            <div class="admin-actions">
+                <a href="index.html" class="btn-secondary">← Back to Pre-Read</a>
+                <button id="refreshBtn" class="btn-secondary">🔄 Refresh</button>
+                <button id="synthesizeBtn" class="btn-primary">🤖 Generate AI Summary</button>
+            </div>
+        </header>
+        
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="totalAnnotations">0</div>
+                <div class="stat-label">Total Comments</div>
+            </div>
+            <div class="stat-card agree">
+                <div class="stat-value" id="agreeCount">0</div>
+                <div class="stat-label">✅ Agree</div>
+            </div>
+            <div class="stat-card question">
+                <div class="stat-value" id="questionCount">0</div>
+                <div class="stat-label">❓ Questions</div>
+            </div>
+            <div class="stat-card concern">
+                <div class="stat-value" id="concernCount">0</div>
+                <div class="stat-label">⚠️ Concerns</div>
+            </div>
+            <div class="stat-card idea">
+                <div class="stat-value" id="ideaCount">0</div>
+                <div class="stat-label">💡 Ideas</div>
+            </div>
+        </div>
+        
+        <!-- Executive Breakdown -->
+        <h3 style="margin-bottom: 16px;">Executive Participation</h3>
+        <div class="exec-breakdown" id="execBreakdown">
+            <!-- Generated by JS -->
+        </div>
+        
+        <!-- AI Summary Section -->
+        <div class="ai-summary-section">
+            <div class="ai-header">
+                <h2>🤖 AI-Powered Summary</h2>
+                <span id="aiStatus" style="font-size: 13px; color: var(--text-muted);">Click "Generate AI Summary" to analyze feedback</span>
+            </div>
+            <div class="ai-content" id="aiContent">
+                <div class="ai-placeholder">
+                    <p>No summary generated yet.</p>
+                    <p style="font-size: 13px; margin-top: 8px;">The AI will analyze all annotations and provide:</p>
+                    <ul style="text-align: left; display: inline-block; font-size: 13px; margin-top: 12px;">
+                        <li>Key themes across all feedback</li>
+                        <li>Areas of consensus</li>
+                        <li>Areas of friction or disagreement</li>
+                        <li>Recommended discussion topics for the offsite</li>
+                        <li>Open questions that need resolution</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section Tabs -->
+        <div class="section-tabs" id="sectionTabs">
+            <button class="section-tab active" data-section="all">All Sections</button>
+            <!-- Generated by JS -->
+        </div>
+        
+        <!-- Annotations List -->
+        <div class="annotations-container">
+            <div class="annotations-header">
+                <h3>All Annotations</h3>
+                <div class="filter-group">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="agree">✅</button>
+                    <button class="filter-btn" data-filter="question">❓</button>
+                    <button class="filter-btn" data-filter="concern">⚠️</button>
+                    <button class="filter-btn" data-filter="idea">💡</button>
+                </div>
+            </div>
+            <div class="annotation-list" id="annotationList">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    Loading annotations...
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+    
+    <script src="js/config.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script>
+        // Admin Dashboard Logic
+        let allAnnotations = [];
+        let currentSectionFilter = 'all';
+        let currentReactionFilter = 'all';
+        
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Wait for store to initialize
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // Generate section tabs
+            generateSectionTabs();
+            
+            // Load data
+            await loadAllData();
+            
+            // Setup event listeners
+            setupEventListeners();
+        });
+        
+        function generateSectionTabs() {
+            const tabs = document.getElementById('sectionTabs');
+            CONFIG.SECTIONS.forEach(section => {
+                const tab = document.createElement('button');
+                tab.className = 'section-tab';
+                tab.dataset.section = section.id;
+                tab.innerHTML = `${section.id}. ${section.short} <span class="count" id="count-${section.id}">0</span>`;
+                tabs.appendChild(tab);
+            });
+        }
+        
+        async function loadAllData() {
+            try {
+                allAnnotations = await window.annotationStore.getAnnotations();
+                updateStats();
+                updateExecBreakdown();
+                renderAnnotations();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                showToast('Error loading annotations');
+            }
+        }
+        
+        function updateStats() {
+            const stats = {
+                total: allAnnotations.length,
+                agree: 0,
+                question: 0,
+                concern: 0,
+                idea: 0,
+                bySection: {}
+            };
+            
+            allAnnotations.forEach(a => {
+                if (a.reaction_type) {
+                    stats[a.reaction_type]++;
+                }
+                stats.bySection[a.section_id] = (stats.bySection[a.section_id] || 0) + 1;
+            });
+            
+            document.getElementById('totalAnnotations').textContent = stats.total;
+            document.getElementById('agreeCount').textContent = stats.agree;
+            document.getElementById('questionCount').textContent = stats.question;
+            document.getElementById('concernCount').textContent = stats.concern;
+            document.getElementById('ideaCount').textContent = stats.idea;
+            
+            // Update section counts
+            CONFIG.SECTIONS.forEach(section => {
+                const countEl = document.getElementById(`count-${section.id}`);
+                if (countEl) {
+                    countEl.textContent = stats.bySection[section.id] || 0;
+                }
+            });
+        }
+        
+        function updateExecBreakdown() {
+            const breakdown = {};
+            CONFIG.EXECUTIVES.forEach(exec => {
+                breakdown[exec] = 0;
+            });
+            
+            allAnnotations.forEach(a => {
+                if (breakdown[a.exec_name] !== undefined) {
+                    breakdown[a.exec_name]++;
+                }
+            });
+            
+            const container = document.getElementById('execBreakdown');
+            container.innerHTML = CONFIG.EXECUTIVES.map(exec => {
+                const count = breakdown[exec];
+                const statusClass = count > 0 ? 'complete' : '';
+                const statusText = count > 0 ? `${count} comments` : 'No comments yet';
+                
+                return `
+                    <div class="exec-card">
+                        <h4>${exec}</h4>
+                        <div class="count">${count}</div>
+                        <div class="status ${statusClass}">${statusText}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function renderAnnotations() {
+            let filtered = [...allAnnotations];
+            
+            // Filter by section
+            if (currentSectionFilter !== 'all') {
+                filtered = filtered.filter(a => a.section_id === currentSectionFilter);
+            }
+            
+            // Filter by reaction
+            if (currentReactionFilter !== 'all') {
+                filtered = filtered.filter(a => a.reaction_type === currentReactionFilter);
+            }
+            
+            // Sort by created_at descending
+            filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            
+            const container = document.getElementById('annotationList');
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="no-annotations">No annotations found</div>';
+                return;
+            }
+            
+            container.innerHTML = filtered.map(a => {
+                const reactionInfo = CONFIG.REACTIONS[a.reaction_type] || { emoji: '', label: 'Comment' };
+                const section = CONFIG.SECTIONS.find(s => s.id === a.section_id);
+                const sectionName = section ? section.short : `Section ${a.section_id}`;
+                const time = a.created_at ? new Date(a.created_at).toLocaleString() : '';
+                const initial = a.exec_name ? a.exec_name[0].toUpperCase() : '?';
+                
+                return `
+                    <div class="admin-annotation ${a.reaction_type || ''}">
+                        <div class="annotation-header">
+                            <div class="annotation-info">
+                                <div class="exec-avatar">${initial}</div>
+                                <div class="annotation-details">
+                                    <h4>${a.exec_name}</h4>
+                                    <div class="annotation-meta">${sectionName} • ${time}</div>
+                                </div>
+                            </div>
+                            ${a.reaction_type ? `<span class="annotation-badge ${a.reaction_type}">${reactionInfo.emoji} ${reactionInfo.label}</span>` : ''}
+                        </div>
+                        ${a.comment_text ? `<div class="annotation-comment">${escapeHtml(a.comment_text)}</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function setupEventListeners() {
+            // Refresh button
+            document.getElementById('refreshBtn').addEventListener('click', loadAllData);
+            
+            // Section tabs
+            document.querySelectorAll('.section-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentSectionFilter = tab.dataset.section;
+                    renderAnnotations();
+                });
+            });
+            
+            // Reaction filters
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentReactionFilter = btn.dataset.filter;
+                    renderAnnotations();
+                });
+            });
+            
+            // Synthesize button
+            document.getElementById('synthesizeBtn').addEventListener('click', generateAISummary);
+        }
+        
+        async function generateAISummary() {
+            const btn = document.getElementById('synthesizeBtn');
+            const status = document.getElementById('aiStatus');
+            const content = document.getElementById('aiContent');
+            
+            if (allAnnotations.length === 0) {
+                showToast('No annotations to analyze');
+                return;
+            }
+            
+            // Get or prompt for API key
+            let apiKey = localStorage.getItem('claude_api_key') || CONFIG.CLAUDE_API_KEY;
+            if (!apiKey) {
+                apiKey = prompt('Enter your Claude API key (sk-ant-...):\n\nThis will be stored in your browser for this session.');
+                if (!apiKey) {
+                    showToast('API key required');
+                    return;
+                }
+                localStorage.setItem('claude_api_key', apiKey);
+            }
+            
+            btn.disabled = true;
+            btn.textContent = '🔄 Generating...';
+            status.textContent = 'Analyzing feedback with AI...';
+            content.innerHTML = '<div class="loading"><div class="spinner"></div>Generating summary...</div>';
+            
+            try {
+                // Prepare the prompt
+                const annotationsBySection = {};
+                CONFIG.SECTIONS.forEach(s => {
+                    annotationsBySection[s.title] = allAnnotations
+                        .filter(a => a.section_id === s.id)
+                        .map(a => ({
+                            exec: a.exec_name,
+                            reaction: a.reaction_type,
+                            comment: a.comment_text
+                        }));
+                });
+                
+                const prompt = `You are helping prepare for an executive offsite meeting at Signos. Analyze the following pre-read feedback from executives and provide a structured summary.
+
+## Executive Feedback by Section
+
+${Object.entries(annotationsBySection).map(([section, annotations]) => {
+    if (annotations.length === 0) return `### ${section}\nNo feedback yet.`;
+    return `### ${section}
+${annotations.map(a => `- **${a.exec}** (${a.reaction || 'comment'}): ${a.comment || '[reaction only]'}`).join('\n')}`;
+}).join('\n\n')}
+
+## Your Task
+
+Provide a structured analysis with these sections:
+
+1. **Key Themes** - What patterns emerge across all feedback?
+
+2. **Areas of Consensus** - Where do executives agree? List specific items.
+
+3. **Areas of Friction** - Where are there disagreements or concerns? Be specific.
+
+4. **Open Questions** - What questions were raised that need resolution?
+
+5. **Recommended Discussion Topics for Offsite** - Prioritized list of what to discuss Monday/Tuesday.
+
+6. **Board Meeting Considerations** - Any feedback that impacts the Wednesday board presentation.
+
+Be specific and cite which executives said what. Keep the tone professional and actionable.`;
+
+                // Call Claude API
+                const response = await fetch('https://api.anthropic.com/v1/messages', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': apiKey,
+                        'anthropic-version': '2023-06-01',
+                        'anthropic-dangerous-direct-browser-access': 'true'
+                    },
+                    body: JSON.stringify({
+                        model: 'claude-sonnet-4-20250514',
+                        max_tokens: 4000,
+                        messages: [{
+                            role: 'user',
+                            content: prompt
+                        }]
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                const summary = data.content[0].text;
+                
+                // Convert markdown to HTML (simple conversion)
+                const htmlSummary = markdownToHtml(summary);
+                
+                content.innerHTML = `<div class="ai-result">${htmlSummary}</div>`;
+                status.textContent = `Generated at ${new Date().toLocaleTimeString()}`;
+                
+            } catch (error) {
+                console.error('AI Summary error:', error);
+                content.innerHTML = `<div class="ai-placeholder" style="color: var(--accent-danger);">
+                    <p>Error generating summary: ${error.message}</p>
+                    <p style="font-size: 12px; margin-top: 8px;">Make sure the Claude API key is configured correctly.</p>
+                </div>`;
+                status.textContent = 'Error generating summary';
+            }
+            
+            btn.disabled = false;
+            btn.textContent = '🤖 Generate AI Summary';
+        }
+        
+        // Simple markdown to HTML converter
+        function markdownToHtml(md) {
+            return md
+                .replace(/^### (.*$)/gim, '<h4>$1</h4>')
+                .replace(/^## (.*$)/gim, '<h3>$1</h3>')
+                .replace(/^# (.*$)/gim, '<h3>$1</h3>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/^- (.*$)/gim, '<li>$1</li>')
+                .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
+                .replace(/\n\n/g, '</p><p>')
+                .replace(/\n/g, '<br>');
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>

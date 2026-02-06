@@ -1,0 +1,107 @@
+redirectsOrigin = "config"
+functionsDirectory = "/Users/dangusz/Exec_Dashboard/signos-offsite-preread/netlify/functions"
+functionsDirectoryOrigin = "config"
+headers = []
+
+[functions]
+
+[functions.scheduled-outreach]
+schedule = "0 14 * * 1-5"
+
+[functions.scheduled-intel]
+schedule = "0 13 * * 1"
+
+[functions.scheduled-context-sync]
+schedule = "0 14-23 * * 1-5"
+
+[functions."*"]
+node_bundler = "esbuild"
+
+[[plugins]]
+origin = "config"
+package = "@netlify/plugin-nextjs"
+
+[plugins.inputs]
+
+[build]
+publish = "/Users/dangusz/Exec_Dashboard/signos-offsite-preread/.next"
+publishOrigin = "config"
+commandOrigin = "config"
+command = "npx prisma generate && npm run build"
+functions = "/Users/dangusz/Exec_Dashboard/signos-offsite-preread/netlify/functions"
+
+[build.environment]
+NODE_VERSION = "18"
+NPM_FLAGS = "--legacy-peer-deps"
+
+[build.processing]
+
+[build.processing.css]
+
+[build.processing.html]
+
+[build.processing.images]
+
+[build.processing.js]
+
+[build.services]
+
+[[redirects]]
+from = "/dashboard"
+to = "/hub"
+status = 301.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/dashboard/*"
+to = "/hub/:splat"
+status = 301.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/login"
+to = "/hub/login"
+status = 301.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/agents"
+to = "/hub/agents"
+status = 301.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/agents/*"
+to = "/hub/agents/:splat"
+status = 301.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
