@@ -8,6 +8,9 @@ class AnnotationManager {
     
     // Initialize annotation areas
     init() {
+        // #region agent log
+        fetch('http://127.0.0.1:7244/ingest/88b67abd-b5ee-473f-8d50-7658689e1c4f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'annotations.js:init',message:'H1,H2: AnnotationManager.init called',data:{currentExec:this.currentExec},timestamp:Date.now(),hypothesisId:'H1,H2'})}).catch(()=>{});
+        // #endregion
         this.setupReactionButtons();
         this.setupSaveButtons();
         this.loadExistingAnnotations();
@@ -142,6 +145,9 @@ class AnnotationManager {
     
     // Load existing annotations
     async loadExistingAnnotations() {
+        // #region agent log
+        fetch('http://127.0.0.1:7244/ingest/88b67abd-b5ee-473f-8d50-7658689e1c4f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'annotations.js:loadExistingAnnotations',message:'H1: loadExistingAnnotations called',data:{currentExec:this.currentExec,sectionsCount:CONFIG.SECTIONS?.length},timestamp:Date.now(),hypothesisId:'H1'})}).catch(()=>{});
+        // #endregion
         for (const section of CONFIG.SECTIONS) {
             await this.loadSectionAnnotations(section.id, true); // true = initial load
         }
@@ -161,21 +167,42 @@ class AnnotationManager {
         const container = section.querySelector('.existing-annotations');
         const textarea = section.querySelector('.comment-input');
         
+        // #region agent log
+        if (sectionId === '1') { // Only log for section 1 to avoid spam
+            fetch('http://127.0.0.1:7244/ingest/88b67abd-b5ee-473f-8d50-7658689e1c4f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'annotations.js:loadSectionAnnotations',message:'H2,H3: Section load state',data:{sectionId,isInitialLoad,currentExec:this.currentExec,annotationsCount:annotations?.length,annotationsData:annotations,hasTextarea:!!textarea,hasSection:!!section},timestamp:Date.now(),hypothesisId:'H2,H3'})}).catch(()=>{});
+        }
+        // #endregion
+        
         // Find current user's annotation and pre-populate the input/reaction
         if (this.currentExec) {
             const myAnnotation = annotations.find(a => a.exec_name === this.currentExec);
+            // #region agent log
+            if (sectionId === '1') {
+                fetch('http://127.0.0.1:7244/ingest/88b67abd-b5ee-473f-8d50-7658689e1c4f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'annotations.js:loadSectionAnnotations',message:'H5: Found my annotation',data:{sectionId,myAnnotation,execName:this.currentExec},timestamp:Date.now(),hypothesisId:'H5'})}).catch(()=>{});
+            }
+            // #endregion
             if (myAnnotation) {
                 // Pre-populate textarea with user's existing comment
                 // On initial load, always set it. On realtime updates, only if textarea is empty
                 if (myAnnotation.comment_text && textarea) {
                     if (isInitialLoad || !textarea.value.trim()) {
                         textarea.value = myAnnotation.comment_text;
+                        // #region agent log
+                        if (sectionId === '1') {
+                            fetch('http://127.0.0.1:7244/ingest/88b67abd-b5ee-473f-8d50-7658689e1c4f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'annotations.js:loadSectionAnnotations',message:'H4: Textarea populated',data:{sectionId,text:myAnnotation.comment_text},timestamp:Date.now(),hypothesisId:'H4'})}).catch(()=>{});
+                        }
+                        // #endregion
                     }
                 }
                 
                 // Pre-select their reaction button (always, independent of textarea)
                 if (myAnnotation.reaction_type) {
                     const reactionBtn = section.querySelector(`.reaction-btn[data-reaction="${myAnnotation.reaction_type}"]`);
+                    // #region agent log
+                    if (sectionId === '1') {
+                        fetch('http://127.0.0.1:7244/ingest/88b67abd-b5ee-473f-8d50-7658689e1c4f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'annotations.js:loadSectionAnnotations',message:'H4: Reaction button lookup',data:{sectionId,reactionType:myAnnotation.reaction_type,foundButton:!!reactionBtn},timestamp:Date.now(),hypothesisId:'H4'})}).catch(()=>{});
+                    }
+                    // #endregion
                     if (reactionBtn) {
                         // Clear all selections first
                         section.querySelectorAll('.reaction-btn').forEach(b => b.classList.remove('selected'));
