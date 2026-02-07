@@ -8,9 +8,6 @@ class AnnotationManager {
     
     // Initialize annotation areas
     init() {
-        // #region agent log
-        console.log('[DEBUG H1,H2] init() called, currentExec:', this.currentExec);
-        // #endregion
         this.setupReactionButtons();
         this.setupSaveButtons();
         this.loadExistingAnnotations();
@@ -145,9 +142,6 @@ class AnnotationManager {
     
     // Load existing annotations
     async loadExistingAnnotations() {
-        // #region agent log
-        console.log('[DEBUG H1] loadExistingAnnotations called, currentExec:', this.currentExec, 'sections:', CONFIG.SECTIONS?.length);
-        // #endregion
         for (const section of CONFIG.SECTIONS) {
             await this.loadSectionAnnotations(section.id, true); // true = initial load
         }
@@ -168,51 +162,21 @@ class AnnotationManager {
         const container = section.querySelector('.existing-annotations');
         const textarea = section.querySelector('.comment-input');
         
-        // #region agent log
-        if (sectionId === '1') { // Only log for section 1 to avoid spam
-            const allTextareas = section ? section.querySelectorAll('textarea') : [];
-            const commentInputs = section ? section.querySelectorAll('.comment-input') : [];
-            console.log('[DEBUG H2,H3] loadSectionAnnotations section 1:', {sectionId, isInitialLoad, currentExec: this.currentExec, annotationsCount: annotations?.length, annotations, hasTextarea: !!textarea, hasSection: !!section});
-            console.log('[DEBUG H7] DOM state:', {sectionId: section?.dataset?.section, sectionHTML: section?.className, allTextareasCount: allTextareas.length, commentInputsCount: commentInputs.length, textareaElement: textarea});
-        }
-        // #endregion
-        
         // Find current user's annotation and pre-populate the input/reaction
         if (this.currentExec) {
             const myAnnotation = annotations.find(a => a.exec_name === this.currentExec);
-            // #region agent log
-            if (sectionId === '1') {
-                console.log('[DEBUG H5] Looking for my annotation:', {sectionId, myAnnotation, execName: this.currentExec});
-                console.log('[DEBUG H6] myAnnotation contents:', {comment_text: myAnnotation?.comment_text, reaction_type: myAnnotation?.reaction_type, hasTextarea: !!textarea});
-            }
-            // #endregion
             if (myAnnotation) {
-                // #region agent log
-                if (sectionId === '1') {
-                    console.log('[DEBUG H6b] Entered myAnnotation block, checking conditions:', {hasCommentText: !!myAnnotation.comment_text, hasReactionType: !!myAnnotation.reaction_type, hasTextarea: !!textarea, isInitialLoad});
-                }
-                // #endregion
                 // Pre-populate textarea with user's existing comment
                 // On initial load, always set it. On realtime updates, only if textarea is empty
                 if (myAnnotation.comment_text && textarea) {
                     if (isInitialLoad || !textarea.value.trim()) {
                         textarea.value = myAnnotation.comment_text;
-                        // #region agent log
-                        if (sectionId === '1') {
-                            console.log('[DEBUG H4] Textarea populated with:', myAnnotation.comment_text);
-                        }
-                        // #endregion
                     }
                 }
                 
                 // Pre-select their reaction button (always, independent of textarea)
                 if (myAnnotation.reaction_type) {
                     const reactionBtn = section.querySelector(`.reaction-btn[data-reaction="${myAnnotation.reaction_type}"]`);
-                    // #region agent log
-                    if (sectionId === '1') {
-                        console.log('[DEBUG H4] Reaction button lookup:', {sectionId, reactionType: myAnnotation.reaction_type, foundButton: !!reactionBtn});
-                    }
-                    // #endregion
                     if (reactionBtn) {
                         // Clear all selections first
                         section.querySelectorAll('.reaction-btn').forEach(b => b.classList.remove('selected'));
