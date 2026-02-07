@@ -179,9 +179,15 @@ class AnnotationManager {
             // #region agent log
             if (sectionId === '1') {
                 console.log('[DEBUG H5] Looking for my annotation:', {sectionId, myAnnotation, execName: this.currentExec});
+                console.log('[DEBUG H6] myAnnotation contents:', {comment_text: myAnnotation?.comment_text, reaction_type: myAnnotation?.reaction_type, hasTextarea: !!textarea});
             }
             // #endregion
             if (myAnnotation) {
+                // #region agent log
+                if (sectionId === '1') {
+                    console.log('[DEBUG H6b] Entered myAnnotation block, checking conditions:', {hasCommentText: !!myAnnotation.comment_text, hasReactionType: !!myAnnotation.reaction_type, hasTextarea: !!textarea, isInitialLoad});
+                }
+                // #endregion
                 // Pre-populate textarea with user's existing comment
                 // On initial load, always set it. On realtime updates, only if textarea is empty
                 if (myAnnotation.comment_text && textarea) {
