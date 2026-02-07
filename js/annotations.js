@@ -161,7 +161,8 @@ class AnnotationManager {
     // isInitialLoad: if true, always populate textarea; if false (realtime update), don't overwrite user's typing
     async loadSectionAnnotations(sectionId, isInitialLoad = false) {
         const annotations = await window.annotationStore.getAnnotations(sectionId);
-        const section = document.querySelector(`[data-section="${sectionId}"]`);
+        // Use .content-section to avoid matching nav-items which also have data-section
+        const section = document.querySelector(`.content-section[data-section="${sectionId}"]`);
         if (!section) return;
         
         const container = section.querySelector('.existing-annotations');
