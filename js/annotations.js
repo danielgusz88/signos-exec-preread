@@ -161,22 +161,25 @@ class AnnotationManager {
         const container = section.querySelector('.existing-annotations');
         const textarea = section.querySelector('.comment-input');
         
-        // Find current user's annotation and pre-populate the input
-        if (this.currentExec && textarea) {
+        // Find current user's annotation and pre-populate the input/reaction
+        if (this.currentExec) {
             const myAnnotation = annotations.find(a => a.exec_name === this.currentExec);
             if (myAnnotation) {
                 // Pre-populate textarea with user's existing comment
                 // On initial load, always set it. On realtime updates, only if textarea is empty
-                if (myAnnotation.comment_text) {
+                if (myAnnotation.comment_text && textarea) {
                     if (isInitialLoad || !textarea.value.trim()) {
                         textarea.value = myAnnotation.comment_text;
                     }
                 }
-                // Pre-select their reaction button
+                
+                // Pre-select their reaction button (always, independent of textarea)
                 if (myAnnotation.reaction_type) {
                     const reactionBtn = section.querySelector(`.reaction-btn[data-reaction="${myAnnotation.reaction_type}"]`);
                     if (reactionBtn) {
+                        // Clear all selections first
                         section.querySelectorAll('.reaction-btn').forEach(b => b.classList.remove('selected'));
+                        // Select the saved reaction
                         reactionBtn.classList.add('selected');
                         this.selectedReactions[sectionId] = myAnnotation.reaction_type;
                     }
@@ -267,6 +270,9 @@ class AnnotationManager {
         localStorage.setItem('current_exec', name);
         document.getElementById('currentExecName').textContent = name;
         document.getElementById('execModal').classList.add('hidden');
+        
+        // Reload annotations to restore user's saved reactions and comments
+        this.loadExistingAnnotations();
     }
     
     // Show toast notification
