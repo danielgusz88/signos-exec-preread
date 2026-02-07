@@ -169,7 +169,10 @@ class AnnotationManager {
         
         // #region agent log
         if (sectionId === '1') { // Only log for section 1 to avoid spam
+            const allTextareas = section ? section.querySelectorAll('textarea') : [];
+            const commentInputs = section ? section.querySelectorAll('.comment-input') : [];
             console.log('[DEBUG H2,H3] loadSectionAnnotations section 1:', {sectionId, isInitialLoad, currentExec: this.currentExec, annotationsCount: annotations?.length, annotations, hasTextarea: !!textarea, hasSection: !!section});
+            console.log('[DEBUG H7] DOM state:', {sectionId: section?.dataset?.section, sectionHTML: section?.className, allTextareasCount: allTextareas.length, commentInputsCount: commentInputs.length, textareaElement: textarea});
         }
         // #endregion
         
