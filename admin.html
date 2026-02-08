@@ -289,6 +289,34 @@
             color: var(--text-secondary);
         }
         
+        .btn-delete-annotation {
+            background: transparent;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        
+        .btn-delete-annotation:hover {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: #ef4444;
+        }
+        
+        .btn-delete-annotation:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        .annotation-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
         .no-annotations {
             text-align: center;
             padding: 40px;
@@ -1140,7 +1168,7 @@
                 const initial = a.exec_name ? a.exec_name[0].toUpperCase() : '?';
                 
                 return `
-                    <div class="admin-annotation ${a.reaction_type || ''}">
+                    <div class="admin-annotation ${a.reaction_type || ''}" data-annotation-id="${a.id}">
                         <div class="annotation-header">
                             <div class="annotation-info">
                                 <div class="exec-avatar">${initial}</div>
@@ -1149,12 +1177,17 @@
                                     <div class="annotation-meta">${sectionName} • ${time}</div>
                                 </div>
                             </div>
-                            ${a.reaction_type ? `<span class="annotation-badge ${a.reaction_type}">${reactionInfo.emoji} ${reactionInfo.label}</span>` : ''}
+                            <div class="annotation-actions">
+                                ${a.reaction_type ? `<span class="annotation-badge ${a.reaction_type}">${reactionInfo.emoji} ${reactionInfo.label}</span>` : ''}
+                                <button class="btn-delete-annotation" onclick="deleteAnnotation('${a.id}')" title="Delete this annotation">🗑️ Delete</button>
+                            </div>
                         </div>
                         ${a.comment_text ? `<div class="annotation-comment">${escapeHtml(a.comment_text)}</div>` : ''}
                     </div>
                 `;
             }).join('');
+            
+            // Setup delete button event delegation is handled via inline onclick
         }
         
         function setupEventListeners() {
@@ -1183,6 +1216,42 @@
             
             // Synthesize button
             document.getElementById('synthesizeBtn').addEventListener('click', generateAISummary);
+        }
+        
+        async function deleteAnnotation(annotationId) {
+            if (!confirm('Are you sure you want to delete this annotation? This cannot be undone.')) {
+                return;
+            }
+            
+            // Find the button and disable it
+            const annotationEl = document.querySelector(`[data-annotation-id="${annotationId}"]`);
+            const deleteBtn = annotationEl?.querySelector('.btn-delete-annotation');
+            if (deleteBtn) {
+                deleteBtn.disabled = true;
+                deleteBtn.textContent = '⏳ Deleting...';
+            }
+            
+            try {
+                await window.annotationStore.deleteAnnotation(annotationId);
+                
+                // Remove from local array
+                allAnnotations = allAnnotations.filter(a => a.id !== annotationId);
+                
+                // Re-render everything
+                updateStats();
+                updateExecBreakdown();
+                renderAnnotations();
+                
+                showToast('Annotation deleted successfully');
+            } catch (error) {
+                console.error('Error deleting annotation:', error);
+                showToast('Error deleting annotation');
+                
+                if (deleteBtn) {
+                    deleteBtn.disabled = false;
+                    deleteBtn.textContent = '🗑️ Delete';
+                }
+            }
         }
         
         async function generateAISummary() {

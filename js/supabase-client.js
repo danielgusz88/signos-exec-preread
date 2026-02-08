@@ -89,26 +89,63 @@ class AnnotationStore {
         }
     }
     
-    // Save annotation
+    // Save annotation (upserts by section_id + exec_name to prevent duplicates)
     async saveAnnotation(annotation) {
-        const annotationData = {
-            ...annotation,
-            id: annotation.id || crypto.randomUUID(),
-            created_at: annotation.created_at || new Date().toISOString()
-        };
-        
         if (this.useSupabase) {
-            const { data, error } = await this.supabase
-                .from('annotations')
-                .upsert(annotationData)
-                .select();
-            if (error) {
-                console.error('Error saving annotation:', error);
-                return this.saveToLocalStorage(annotationData);
+            try {
+                // Check if an annotation already exists for this user + section
+                const { data: existing } = await this.supabase
+                    .from('annotations')
+                    .select('id, created_at')
+                    .eq('section_id', annotation.section_id)
+                    .eq('exec_name', annotation.exec_name)
+                    .single();
+                
+                const annotationData = {
+                    ...annotation,
+                    id: existing ? existing.id : (annotation.id || crypto.randomUUID()),
+                    created_at: existing ? existing.created_at : new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                };
+                
+                const { data, error } = await this.supabase
+                    .from('annotations')
+                    .upsert(annotationData)
+                    .select();
+                if (error) {
+                    console.error('Error saving annotation:', error);
+                    return this.saveToLocalStorage(annotationData);
+                }
+                return data[0];
+            } catch (e) {
+                console.error('Error in saveAnnotation:', e);
+                const fallbackData = {
+                    ...annotation,
+                    id: annotation.id || crypto.randomUUID(),
+                    created_at: new Date().toISOString()
+                };
+                return this.saveToLocalStorage(fallbackData);
             }
-            return data[0];
         } else {
-            return this.saveToLocalStorage(annotationData);
+            const annotationData = {
+                ...annotation,
+                id: annotation.id || crypto.randomUUID(),
+                created_at: annotation.created_at || new Date().toISOString()
+            };
+            // For localStorage, also deduplicate by section_id + exec_name
+            const allAnnotations = this.getFromLocalStorage();
+            const existingIdx = allAnnotations.findIndex(
+                a => a.section_id === annotation.section_id && a.exec_name === annotation.exec_name
+            );
+            if (existingIdx >= 0) {
+                annotationData.id = allAnnotations[existingIdx].id;
+                annotationData.created_at = allAnnotations[existingIdx].created_at;
+                allAnnotations[existingIdx] = annotationData;
+            } else {
+                allAnnotations.push(annotationData);
+            }
+            localStorage.setItem('offsite_annotations', JSON.stringify(allAnnotations));
+            return annotationData;
         }
     }
     

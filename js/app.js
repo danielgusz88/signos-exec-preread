@@ -172,7 +172,7 @@ async function saveGeneralFeedback() {
     
     try {
         // Check if feedback already exists for this exec
-        const { data: existing, error: fetchError } = await window.supabase
+        const { data: existing, error: fetchError } = await window.annotationStore.supabase
             .from('general_feedback')
             .select('id')
             .eq('exec_name', exec)
@@ -180,7 +180,7 @@ async function saveGeneralFeedback() {
         
         if (existing) {
             // Update existing
-            const { error } = await window.supabase
+            const { error } = await window.annotationStore.supabase
                 .from('general_feedback')
                 .update({
                     feedback: feedbackData,
@@ -191,7 +191,7 @@ async function saveGeneralFeedback() {
             if (error) throw error;
         } else {
             // Insert new
-            const { error } = await window.supabase
+            const { error } = await window.annotationStore.supabase
                 .from('general_feedback')
                 .insert({
                     exec_name: exec,
@@ -223,10 +223,10 @@ async function saveGeneralFeedback() {
 
 // Load general feedback from Supabase
 async function loadGeneralFeedback(execName) {
-    if (!execName || !window.supabase) return;
+    if (!execName || !window.annotationStore.supabase) return;
     
     try {
-        const { data, error } = await window.supabase
+        const { data, error } = await window.annotationStore.supabase
             .from('general_feedback')
             .select('feedback')
             .eq('exec_name', execName)
@@ -284,14 +284,14 @@ async function saveSprintFeedback() {
     };
     
     try {
-        const { data: existing } = await window.supabase
+        const { data: existing } = await window.annotationStore.supabase
             .from('sprint_feedback')
             .select('id')
             .eq('exec_name', execName)
             .single();
         
         if (existing) {
-            const { error } = await window.supabase
+            const { error } = await window.annotationStore.supabase
                 .from('sprint_feedback')
                 .update({ 
                     feedback: feedback,
@@ -300,7 +300,7 @@ async function saveSprintFeedback() {
                 .eq('exec_name', execName);
             if (error) throw error;
         } else {
-            const { error } = await window.supabase
+            const { error } = await window.annotationStore.supabase
                 .from('sprint_feedback')
                 .insert({ 
                     exec_name: execName, 
@@ -327,10 +327,10 @@ async function saveSprintFeedback() {
 
 // Load sprint feedback from Supabase
 async function loadSprintFeedback(execName) {
-    if (!execName || !window.supabase) return;
+    if (!execName || !window.annotationStore.supabase) return;
     
     try {
-        const { data, error } = await window.supabase
+        const { data, error } = await window.annotationStore.supabase
             .from('sprint_feedback')
             .select('feedback')
             .eq('exec_name', execName)
@@ -395,7 +395,7 @@ async function saveDecisionInputs() {
     
     try {
         // Check if entry exists for this exec
-        const { data: existing } = await window.supabase
+        const { data: existing } = await window.annotationStore.supabase
             .from('decision_inputs')
             .select('id')
             .eq('exec_name', execName)
@@ -403,7 +403,7 @@ async function saveDecisionInputs() {
         
         if (existing) {
             // Update existing
-            const { error } = await window.supabase
+            const { error } = await window.annotationStore.supabase
                 .from('decision_inputs')
                 .update({ 
                     decisions: decisions,
@@ -413,7 +413,7 @@ async function saveDecisionInputs() {
             if (error) throw error;
         } else {
             // Insert new
-            const { error } = await window.supabase
+            const { error } = await window.annotationStore.supabase
                 .from('decision_inputs')
                 .insert({ 
                     exec_name: execName, 
@@ -443,10 +443,10 @@ async function saveDecisionInputs() {
 
 // Load decision inputs from Supabase
 async function loadDecisionInputs(execName) {
-    if (!execName || !window.supabase) return;
+    if (!execName || !window.annotationStore.supabase) return;
     
     try {
-        const { data, error } = await window.supabase
+        const { data, error } = await window.annotationStore.supabase
             .from('decision_inputs')
             .select('decisions')
             .eq('exec_name', execName)
@@ -661,7 +661,7 @@ async function saveTeamAssignments() {
     
     try {
         // Check if entry exists for this exec
-        const { data: existing } = await window.supabase
+        const { data: existing } = await window.annotationStore.supabase
             .from('team_assignments')
             .select('id')
             .eq('exec_name', execName)
@@ -669,7 +669,7 @@ async function saveTeamAssignments() {
         
         if (existing) {
             // Update existing
-            const { error } = await window.supabase
+            const { error } = await window.annotationStore.supabase
                 .from('team_assignments')
                 .update({ 
                     assignments: assignments,
@@ -679,7 +679,7 @@ async function saveTeamAssignments() {
             if (error) throw error;
         } else {
             // Insert new
-            const { error } = await window.supabase
+            const { error } = await window.annotationStore.supabase
                 .from('team_assignments')
                 .insert({ 
                     exec_name: execName, 
@@ -709,10 +709,10 @@ async function saveTeamAssignments() {
 
 // Load team assignments from Supabase
 async function loadTeamAssignments(execName) {
-    if (!execName || !window.supabase) return;
+    if (!execName || !window.annotationStore.supabase) return;
     
     try {
-        const { data, error } = await window.supabase
+        const { data, error } = await window.annotationStore.supabase
             .from('team_assignments')
             .select('assignments')
             .eq('exec_name', execName)
