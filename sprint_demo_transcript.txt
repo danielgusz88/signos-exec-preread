@@ -1,0 +1,793 @@
+[00:00] Just say you don't have to gum up your workspace. Okay. All right. Well, I'm also if anyone wants, I'm also happy to share just say it. I'll do it. All good. Are we? I think we're good recording. Yeah, let's see. It's recording on. Yes, recording is on. So we are good to go. Take it away. Cool. All right. Uh, I'm
+[00:30] on behalf of AI needed in for. So our context was making the machine legible for AI and humans alike. We've have a lot to sort of cover here in terms of just all the things.
+[00:44] But I had to start with a quick dunk. So Greg Brockman, the president of open AI to his team yesterday kicked off a AI native, like pledge and idea. And Greg thought by March 31st, he'd like his whole team to take the time and try out the tools, create some skills and an agent.
+[01:13] And then agent's MD or obviously not in their world of clawed MD inventory and make accessible any internal tools structure code basis to be agent first. Say no to slap and work on some basic info like internal tools and processes.
+[01:32] So this sounded awfully familiar when I read the tweet last night. And so a little self congratulatory moment for all of us. I'm proud of all the work that I've seen everyone doing.
+[01:45] And so, you know, welcome aboard Greg and let us know if you have any questions on that process change or some of the internal tools that might be useful or some of the other things that that you know we've all been through over the last.
+[01:58] The last couple weeks so exciting to be here.
+[02:03] So yeah, what?
+[02:06] Prashant, I think I'm passing you.
+[02:08] Yes, sir, awesome. Thank you, Roger.
+[02:11] Cool. So what we built and learned on the AI and for a team. So really is around three sections. Right. It's the unified developer environment, core back and simplification and across team alignment.
+[02:26] Really gone or the days for too long we've been working in these like separate silos with all these walls in between us with back and mobile iOS Android.
+[02:39] So really it's time to tear down these walls. So really what we've been working on very heavily this last week and Thomas again demo this is a one command local setup to set up the back end with our fast API servers.
+[02:55] And so iOS and Android, the goal is for any engineer to run this doesn't have to be an engineer. It could be a PM potentially could be anyone else on the team.
+[03:05] To basically spin up the full sack in minutes.
+[03:09] We are going to demo a few seating scripts so that every dev has real data to work with locally and we don't have to connect to dev and deploy to dev every single time.
+[03:21] We want to get rid of all this tribal knowledge where like oh, I may have to go talk to Augustine or Jake for like, oh, how do I set up the Dexcom SDK again.
+[03:31] Or get to go ask Thomas, how do we start the back ends rip locally, all of that should be completely eliminated.
+[03:39] In terms of back end simplification, we've done major refactor of some of our back end services.
+[03:47] We have reduced the complexity a lot so that both new developers and AI agents can reason about the system.
+[03:55] And we have done a ton of documentation on the cloud.
+[04:01] And then lastly, in terms of cross team alignment, we've really been working with people on other pods.
+[04:11] Just name a few like Austin, Rebecca, Jake, you know, everyone's been super helpful to kind of like test some of these scripts.
+[04:18] And like we've been kind of listening to their pain points and like working on them in order.
+[04:25] So really just a lot of a lot of good cross team collaboration and yeah, it's been really good with that. I will pass it back to I believe Roger.
+[04:37] Cool. So yeah, like a little bit of a meta lesson to just in the spirit of retro a little bit.
+[04:45] So, you know, is push on to most of them are doing like discovery work on our own code base.
+[04:53] We really started finding like stuff we didn't anticipate.
+[04:57] And I think that that's going to be true for for every team, whether you're doing like a new project or you're kind of doing some refactorings or whatever.
+[05:06] And so as push on was just mentioning, you know, really as we all work on some of this in front because it doesn't just need to be limited to a team.
+[05:16] And we certainly didn't want to create an ivory tower.
+[05:19] You know, it's really a couple of weeks of work to get things kick started.
+[05:23] You know, we can all make judgment calls as we go to improve quality of life.
+[05:27] To Mass is going to touch on that a little bit.
+[05:30] And like one of the things I've been thinking about like over the last week or two.
+[05:36] As we think about documentation and this is beyond PRDs, this is more like leading the LLMs through our code base or code bases is that like kind of goes across.
+[05:47] Let's say an iOS and a backend feature and Android and a backend feature something like that.
+[05:52] It's really about documenting the interface, not documenting the implementation.
+[05:58] And so our highest value docs when it comes to, you know, even some of the stuff we're trying to do and signals HQ and whatnot.
+[06:08] It's not about like how the code works internally or like what, you know, what it is.
+[06:14] It's really like what does this service accept? What is the interface between these two things?
+[06:20] I think that's just like a really good way to think about it.
+[06:23] And so then if we get into a world where we're having to document implementation patterns buckets comes to mind.
+[06:31] That's probably a bit of a code smell and unfortunately we have to do that right now.
+[06:35] So I think this was a bit of a fruitful, fruitful exploration to figure out what, what some of those, what some of those codes smells are.
+[06:43] To Mass, I'll pass to you.
+[06:45] Thank you. Right. So for the future, what are like where are we heading? How can we have there?
+[06:52] There's a bunch of things different ways. These are few of them.
+[06:57] Discovering as we go along. So as we mentioned, but talking about feel him here.
+[07:02] So one idea is, you know, it's good to have a sort of shared contract between projects, between teams.
+[07:10] A great example of this is like the open apis back, which is auto generated by like the fast API, like the API framework.
+[07:20] It's been in place for a long time. It's a bit messy, you know, and there's just bugs in there and whatever.
+[07:25] But we like on the cloud side, we should do whatever we can to make sure that that spec is accurate.
+[07:31] It's precise. And once we have that, it gives both cloth, but also like anyone on the team really a great ability to like explore how our.
+[07:40] Explore the contract to the cloud system, right through the API.
+[07:45] So stuff like that. Another big point is quality of life improvements.
+[07:50] Generally, like things should just, you know, just work.
+[07:53] Like if I want to jump into ML or like iOS, whatever, and when I run something, it should quote about just work.
+[08:01] That's that's the course we want to try and take. Same for like like Archer is mentioning about signals and then the chat.
+[08:07] Such a typical thing like Archer has to do stuff in cloud every now and then.
+[08:12] Whenever he comes to the table, like something has changed, like we've broken something for him.
+[08:17] And it's like the quality of life there's really bad, right?
+[08:21] We want to make sure that that's not a problem. So like we should make sure that like we have, I don't know, make final commands.
+[08:28] Like read me should update the date.
+[08:30] Clot should be able to ask cloud like what's happened? Like what's wrong? And like cloud knows like, oh, you know, this change that you have to do this thing here and like, you know,
+[08:39] reducing that friction improves quality of life.
+[08:43] Also involves like timing. If something is taking like minutes, like is our way to bring it on to seconds.
+[08:50] Like that's so much worth doing. And anytime you step your tone something like this is a general message for anyone here.
+[08:57] If you come to cloud, you step your tone something. Do let us know and try and do try and fix it because you're going to step your tone.
+[09:05] That same thing months from now, like we're going to do it. Like new people are going to do it. So anytime we we we make sure to smooth out those harsh edges.
+[09:15] It just improves life for everyone.
+[09:18] Another thing we've been looking into personnel, maybe in particular is to look into deeper diving to having cloud look at observability.
+[09:27] And I think he actually looked and he's looking into getting a MCP connection for data log so that we can ask cloud.
+[09:35] Just like, hey, what's happening with this error? And it would just look after the log figure it out. And this becomes much, much better.
+[09:43] The more we instrument, you know, backend, mobile, ML, whatever the website, we instrument it with data log so that we get traces in the right places,
+[09:54] and then theoretically we can get a very holistic picture of one one action that spawns like so many sub actions and should be able to debug and figure out errors.
+[10:08] Quick note on yeah, that's music.
+[10:12] Yeah, the environment, right. We are very close to be able to have a set up where any engineer, for example, even a PM, you could sort of check out a particular version of something running locally, deep, I get tested, QA, this is very important for QAs well, very close to being able to do that locally.
+[10:37] Also, maybe like we wanted to be as easy as to specifying the environments somewhere like run the app against them, run the app against prod against local, whatever.
+[10:48] And the last thing we're touching on here is about the pots and like I don't know exactly what's the future of the pots that's more maybe up to like, you know, leadership or whatever, but it seems like it might be good to do to like not have the pots.
+[11:04] Be like new barriers like or silos, rather allow some rotation between pots and like cross pollinate stuff like that.
+[11:13] I think we would definitely discuss something like that before. So I think that's that's it for this slides.
+[11:21] But I'll just roll straight into us.
+[11:25] I'll go into demo.
+[11:27] 10 minutes speaking of environment parity.
+[11:32] And so, so Prishant has been working on getting like like automating startup of various projects like particular iOS, Android and back and you can do that, for example, if you're in the back end, latest version, there's a start back and skill, which means that you can do start back.
+[11:50] Right pretty cool.
+[11:53] We're not going to show you how to do it right here instead. I'm going to run it in a shell correctly. So back and there's a second.
+[12:01] Can you enhance.
+[12:03] Oh.
+[12:05] Is this better?
+[12:07] Yeah.
+[12:08] Thanks.
+[12:09] I'm not seeing comments.
+[12:11] Enhance.
+[12:16] Yeah, so Prishant wrote this and what it does, it like make sure that everything is running on your system.
+[12:21] And there's a few ways to do it for like the back end, for example, but in this case, we're making sure MongoDB is installed locally, red is like a caching server.
+[12:30] In dependencies and install stuff like that.
+[12:32] And then it starts to server and now it's, now it's running pretty much.
+[12:36] Don't know if this going off screen. Oh, yeah.
+[12:39] This is so weird. Why is this happening? Here we go.
+[12:42] Yeah, start a complete now. What's running?
+[12:47] So we have the server running. I also separately used this takes a lot more minutes, but we have a similar script running the Android emulator. So we have it running here.
+[12:56] The first time I'm running it locally, which is, you know, which is great.
+[13:00] Now, what we're going to show you is one of the quality of life things and generally many things we touched on in the talk so far, which is just how to improve your life.
+[13:10] And that's someone working with it. And that's about seating. So we added recently, sorry, let me make this bigger as well.
+[13:19] It's really annoying that it like extends the window. Okay, so here we are.
+[13:24] We have this management command called seed data in the cloud code base.
+[13:29] Manage just means it's like an entry point to like subcommands.
+[13:33] Seat data is a new command that we wrote. We talked about writing this particular thing for like a year plus and right.
+[13:40] The reason why we don't generally do it is like, like, we know it's going to take like a week, maybe to do it. And this is all the things to do.
+[13:46] There's errors in progress broken web hooks.
+[13:49] We talked about doing it forever. Cloud kind of just one shot it for us. And it's it's fine.
+[13:54] Like there's things we want to adjust. Maybe, but you know, for now, it's good enough.
+[13:58] Being called as seed data with various profiles, like, you know, a standard user or a lot of low-test user profile kind of controls.
+[14:06] Maybe how many buckets get created? How many meals? Yeah, yeah, yeah.
+[14:11] Yeah, so I've already seen a couple of users. I'm going to show you how easy to see the new ones. Let's say we want to see it with the fourth user in the system here.
+[14:21] This will create glucose data for like, I don't know, 12 days or something and meals like three meals per day.
+[14:28] We will add a lot more data times. I think it's only doing those two right now. And now you can see it did finished. Here's the email.
+[14:35] Now we can just lock in with this user locally because I have the emulator pointed at my local log an instance.
+[14:41] And as I said before, we are running the API locally. So I'm actually not going to lock in with the fourth user because we have to go through on boarding.
+[14:50] We have to speed up the demo and almost at the 15th mark. I'm going to log in with user three which are generated like, you know, 10 minutes or well, 30 minutes ago.
+[14:58] So put in that email, continue.
+[15:01] And you can see here, let's look at the logs in the background here. You can see the logs happening. So a log a phone number.
+[15:07] It's doing something you can see for two or two.
+[15:11] So as a mobile that if you're curious what's happening on the backend, you can see what's happening right here.
+[15:17] Log in.
+[15:20] It's doing it. Right. It always has to put this. There's some nuances. Probably like this should just be set up as primary automatically.
+[15:29] And then this text comes in which you ignore.
+[15:33] And think of. There we are.
+[15:36] This glucose data is all like auto generated. It's it's it's it's kind of cool how it did it. It's it's.
+[15:42] How do you zoom out? Is that yeah, like this?
+[15:46] It has like a really interesting curious to generate like somewhat realistic data with meals back stuff like that. And you can see also in the log.
+[15:54] It's the world is with meals.
+[15:57] It's somewhat corolliz with the meals actually. Yeah. It's not perfect. It's something like.
+[16:04] Much better to have something even as imperfect and we can iterate on it. We can make it better.
+[16:08] But yeah, this is just a show like you can easily get a fully local set of synthetic data.
+[16:13] And you can just go from there. It's pretty much it.
+[16:19] So yeah, I'm not working chat. So I will stop by that.
+[16:24] Everyone's telling you how great it is. Keep going.
+[16:29] I just got a risk. It said you received a request to record to the cloud. Am I do I need to click start recording again?
+[16:40] I'll click start recording. It says on my screen it says it's been recording, but maybe.
+[16:50] Still says it's recording now.
+[16:54] Hopefully that was our crew. Hope everyone enjoys the new tech.
+[17:03] Awesome. Okay.
+[17:06] Looking good. All right. Who is next? We've got our meal log in crew.
+[17:13] David. It's going to take it away.
+[17:16] I would love to. I'm excited to show what our amazing team has done in the last two weeks.
+[17:22] And before I get diving in just a shout out to the team. It includes Pierre, Seppie Antonio, Lars and Maggie, like a great group of people to work with and they've done some pretty incredible stuff that I'm excited to share.
+[17:39] So when we started down when I was given this mandate.
+[17:45] It was kind of a hefty one to I think Roger wanted a something that would compete with the number one selling weight logging app.
+[17:55] Down loan from scratch and then do this all with the team and AI native first.
+[18:03] So yeah, a lot of contextual things needed to be gathered competitive analysis and stuff like that to really get going.
+[18:11] And we found that when we sort of had carved out the puzzle pieces that they started fitting together really quickly in the end.
+[18:20] And so I it's not it's a diamond and a rough. It's nowhere near ready for a production release, but it's it's pretty impressive. I think so let's get into it.
+[18:32] So again, the mandate was to build a standalone meal on the app that's fast to log.
+[18:40] And the things that I did pull those pull it all the feedback and survey data and social data on meal logging and find out where all the pain points were and what people, you know, what we currently offered.
+[18:55] And you know, and that's manual counting. And I think best is we can get like five five to six clicks to log something in the signals.
+[19:04] And Kelly, I was sort of our, our, you know, we were looking to compete with was about, you know, two to three or three actually.
+[19:14] And so we want to do it better. So we got it down to one, but we'll get into that in a sec.
+[19:22] But yeah, not only that, we wanted to be able to have it be a sort of top of funnel up sell opportunity for people. So we wanted to pull in the strengths of signals, which were our knowledge about glucose.
+[19:35] Oh, I'm not sharing the pres of my bad.
+[19:42] Thanks, happy for letting me know.
+[19:46] They can all see it.
+[19:49] Yeah, no. So yeah, so signals, you know, the differentiator here is that we have a lot of information on glucose.
+[19:56] And we want to figure out how to integrate that into standalone app without requiring a CGM, which is difficult. But we, since we have data and populations, you know, we can, we can say, you know, we can offer inside onto some of that without.
+[20:13] And just say, hey, you know, based on averages, this might highly impact impact your glucose. But if you want to be, you know, if you want to get personalized data that's specific to you, here's how.
+[20:27] So the other thing was.
+[20:31] Besides up sell would be, you know, if it's taking pieces of it, if it's good enough for maybe the whole experience and then replace our current.
+[20:39] Meal logging once everything is validated and proved.
+[20:44] So, you know, this is all subject to change, but we wanted to create something that was to actually release something that shipable and store ready.
+[20:54] So, like what are what we required was that should be a, you know, single tap experience capture and the capture experience is logging it.
+[21:03] And then all the analysis follows, asynchronously.
+[21:07] We wanted to clear value loop. So able to log something review, learn what was good, what was bad.
+[21:16] And you know, track what you know what you're ingesting and then offer them ways to like, hey, do you want to know more? Do you want to learn more? Do you want to know more about yourself?
+[21:26] And to get out of the door though, we still need to have some, you know, fundamentals we need to look into like privacy and consent about, you know, data we're taking and there's other settings we want like, you know, potential.
+[21:38] And then we want to have a progress which we could then also upsell into prism or, you know, at least have a pathway from, hey, you want to like, for an after and while you're doing that, you know, you can, you know, scan your body and see what your, you know, your proportions are in your body fat percentage.
+[21:55] We need settings, need to do a little bit more analytics and reports, just run through some accessibility, which might be easier to do with, with, with, Claude, you know, at the look into that and then just QA.
+[22:09] And then just make sure it works on both iOS and Android flawlessly.
+[22:18] So what we're, what we're going to show today, what we've built.
+[22:23] Again, to was a, you know, it's a usable pilot for, you know, internal use to show you guys. So again, not a finished product, but we want, you know, we, it's, we want to show that it logs fast. You take a picture.
+[22:38] It's an instant commit and then it now it analyzes the photo asynchronously.
+[22:43] You can use the voice to capture meal or you can type it in barcode scan, nutrition label scan.
+[22:50] And you don't need to switch between three different modes. You take one picture and it will determine what it is.
+[22:56] We offer some bezels for people who want some of that guidance, but it's not necessary.
+[23:01] Then you're taking, you know, you see where the results are from your capture and it will tell you basically it'll let you review it.
+[23:09] It'll warn you if there's something missing or if it sees something in your photo that maybe you forgot to add.
+[23:15] And then allow you to jump in and do really easy edits. Change, change your sizes portions right there on the fly and even macros.
+[23:24] And one of the other things kind of exciting is that some of the work that Claudia was doing on macros and tracking got pulled into here.
+[23:35] So on onboarding you supply your some of your height weight age info and it will predict based on a scale that was provided to us by Sarah and Grace, like what macro targets you should be hitting.
+[23:53] And then it tracks them daily so you can kind of follow along and see if you're hitting them or not and how you did host orically from today into the past.
+[24:02] And also when you review, you know, the speaking of that, you know, about the glucose impact.
+[24:07] When you review the details of a meal or a food that's logged, it will tell you whether, you know, it is predicted to impact you, you know, in a positive or negative way.
+[24:17] And then rate our confidence in in that score. So people won't ever, you know, you know, there's sort of an idea we will talk about later, which is, you know, complete list not or completeness, not perfection.
+[24:32] And so.
+[24:35] So some of the key decisions and surprisingly ran into.
+[24:40] I think I don't know if we had a lot of surprises. I think decision wise, we knew that instantly committing, you know, taking a photo and then just capturing it was the right way to go.
+[24:50] But we also knew speaking of confidence that that trust our users trust in what we showed them.
+[24:57] It would depend on like, hey, we're pretty sure we're not sure and if we're wrong, here's an easy way to fix it.
+[25:03] So kind of kills people who really want to get into the weeds and bio hack and those that don't.
+[25:10] I think one of the biggest, I guess for a surprise, one of the biggest challenges and maybe Pierre can and some of the engineers can speak up if there's something different, but there's a lot that happens between the capture and the results that we show on the screen.
+[25:23] There are a lot of different multiple inputs, you know, from voice to capture to upload to web scraping and so.
+[25:31] A lot of edge cases or failure states that you have to consider when that happens and and a lot of testing to do.
+[25:38] And during the sprint, what changed, we just tighten the scope a lot to protect that core loop that we want to do that, you know, that the meal logging first log edit and then learn.
+[25:51] So for a shipable V one, I think you have to make sure that core that core flow that we are going to show is consistent and that's multiple inputs that all work correctly and they land in the right place and they analyze correctly and allow you to edit.
+[26:05] And if we get it wrong, we want to make sure it's easy to fix right there on the fly.
+[26:11] We want to make sure that all of our scanning like if it goes from barcode barcode or nutrition label that it's it's reliably getting the right information fed and, you know, hopefully, you know, maybe again, not need to speak on this yet, but like it may be, you know, fast secret isn't the best source, maybe there's ways to, you know, look into things that might other other avenues to get more dependable information.
+[26:39] I don't know if we get to that for launch, but we definitely want to wire up metrics because we don't want to fly blind. So we want to make sure that we know what people are doing, how they're using it and we can adjust based on those later.
+[26:51] And then we just have to add some basics like we have a very sort of scatter shot settings right now reports and again, something to make sure that we're not going to be there's any violations there in privacy or consent.
+[27:07] One of the biggest risks, I think, here was saying is that we have like 400 new files and a lot of them were AI generated and just the amount and the speed which which we worked meant there's not been a lot of code review or clean up.
+[27:26] So we got to validate a lot of stuff that's in there is stable and can be maintained.
+[27:34] And if, you know, again, green light, you know, I think what would need to be true is that that user can log quickly and repeatedly and that the AI is going to be good and honest.
+[27:45] And if it's not sure it tells you and lets you just and that there's an honest, hopefully path from a free or low cost low cost usage to actual CGM and then a conversion to one of our services.
+[28:02] So I'm going to hand it off to Pierre to demo this, but stuff that is not in scope for today's demo and some of this actually again going back to the puzzle pieces some of the stuff was the engineers didn't amazing job wire you know staying at the back end foundations and a lot of what's left is just connecting it to the UI.
+[28:23] So like water logging I think that got put in this morning if you know in some state we want to make sure that we have saved and a favorite meals and food swapping within those.
+[28:35] This is for Jake specifically so if you're listening Jake it's for you.
+[28:40] Weakly reports and insights still need to kind of be hammered out perfected some exciting things is that we want to be able to have a restaurants menu scan option so you can take a picture of a menu at a restaurant and it will know you know if you have locations services on it will know.
+[28:57] Maybe what restaurant you're at and if it has a restaurant you know a menu on file can just pull it in.
+[29:02] But if you're on a diet again depending on what information you give it if you have allergies it will tell you hey here's based on what you know your diet is your macros recommending your allergies we recommend these meals in this order for beat from my healthiest to least healthiest.
+[29:20] Something I know that I've talked to Benji about when I first came on and other people's the ability to store and share recipes and so we want to make sure there's a you know add a recipe sort of scan or upload that you can take a picture or upload from a website and import a recipe and food ingredients and steps.
+[29:40] Say that and share with friends and then that feature will play into sort of an idea of pantry inventory or meal planning so if you're super OCD and you scan everything in your pantry and then you look at it say I want to make this recipe it'll tell you we have this much you need to go to the store and buy this other stuff and it will help you meal plan and shopping list kind of stuff so that might be kind of a longer or.
+[30:09] Higher higher goal that you know but that's on the on the sort of backlog.
+[30:17] I also mentioned earlier that you know if we integrate something like you know if you want to take pictures of where you're at to start and where you end up it's a good opportunity there to if we integrate prison body scanning to somehow you know get that path integrated.
+[30:33] And again we have some mentions of glucose but it's not a firm upsell flow yet so I think looking to that talking to marketing finding out what ways we can.
+[30:44] Sort of say hey here's here's what we see but do you want to see how you're going to do and with that will come stuff like a better ppGR graph which I think again we have some foundation on the back end but haven't integrated it yet into the UI.
+[30:59] So with that i'm just going to toss it over to peer and he's going to show you how it goes.
+[31:13] I'll put up my screen.
+[31:20] Here it looks like you're in the heavens.
+[31:23] I'm in that prer.
+[31:25] I just meant the blue sky.
+[31:29] It might be well my my work laptop has failed me so i'm on my personal one.
+[31:37] All right so we'll go.
+[31:41] We tried to tackle a lot of enemies let me see all right thanks here.
+[31:46] All right.
+[31:51] All right i'll start by creating an account we'll use fictional character.
+[32:07] Okay should we be seeing something on your screen or.
+[32:10] You should be but it's possible that.
+[32:19] Yeah this is where.
+[32:23] We're only seeing it.
+[32:25] Let me try trying again.
+[32:32] You got to see the home train and now i'm moving to create your account.
+[32:37] Yeah we should.
+[32:44] Something made up in.
+[32:50] I asked was 12345 it's Jake Smith.
+[32:55] I'm going to go ahead of the world.
+[32:58] All right we usually ask for permissions and accros and the basics.
+[33:07] I'm going to be offended.
+[33:10] Okay.
+[33:13] I guess it isn't.
+[33:16] Plenty old.
+[33:19] He is.
+[33:22] Close.
+[33:25] All right so not quite goal setting and.
+[33:29] Over here we're generating budgets I think that's an ask that we've been getting for all of our teams tackling different missions.
+[33:35] PC us GLP one weight loss weight gain like all those have different.
+[33:41] No they will usually look at a different subsets of macros and.
+[33:47] Usually what would have slightly different targets as for we're definitely introducing budgets I think that's something new that probably members have always been asking for.
+[33:56] And now on that screen were asking the user user whether they'd like to land on the dashboard or directly into the capture moment and I think over here there's room one now leave it in the hands of the user but also.
+[34:12] The potential like they've said to really move the logging experience to at one click experience and.
+[34:20] For the sake of comparison we could go back and see how long it would take or how many clicks I'll take in the signal set but there'll be north of like five or six even for snapping a picture.
+[34:33] Right and ready to start logging.
+[34:39] For those millennial that know what snapchat is I think that's where this came in but.
+[34:45] Snapchats mission or goal is for people to snap and share moments same for Instagram.
+[34:50] Ubers order your Uber so that's a button that's directing in front of you so since we're in the me logging business without landing page should be straight into the camera.
+[35:01] I got a banana and apple and my glasses so I'll just.
+[35:08] Snap it and once it's snapped you get directly onto the home screen and the demo demons are.
+[35:16] Are here it's not working.
+[35:19] I'll try it one more time.
+[35:22] All right here we go so you're moving on the home screen and it's analyzing I can turn off the app I could go on with my day and everything is happening in the background today things are kind of blocking.
+[35:42] Again we'll go through this in this experience but my launches log my quotas or progress within the budget is updated as well.
+[35:51] We can log water.
+[35:56] We try to optimize for definitely for lazy people but also for one not compromising on both accuracy and completeness I think accuracy and completeness are things that we've been wanting to.
+[36:09] Or have been frequent requests from the team and so now by going into the meal detail will get that quick micro micro break down.
+[36:19] Completeness now people tend to be lazy and not log everything they've had and so sometimes based on context we're able to suggest things that might be missing from your meal and allow for a quick log so maybe I've had peanut butter but not yogurt and those explicit confirmation confirmations are I think data that really helps with completeness and accuracy as well of the new trends in here.
+[36:44] A lot of successful app are winning the market because of like quick verdicts as well for those who know you look or now they're different apps where you can snap and get an immediate score so coming with our own score and now really having different sections I think one of them is you know I quick verdict on top some score.
+[37:06] Some comments and feedback some educational content sometimes you know if you're reading something that might be processed food or have some ingredients that might not be the healthiest to have in quantity I think this is where some educational content might be useful tips.
+[37:25] This was our best attempt to add a glucose and there that's something that we had in previous and a very old version of signals this is where PPGR could surface and.
+[37:36] The message over here is to show very overarching population estimate on what the glucose impact could be from you and you know hoping that people would you know want to really invite people to go put on a CGM together on accurate numbers so.
+[37:58] There's that.
+[38:03] So we we do support well something that we tried supporting novels so also a signal is for lazy people is a quick button for I quit just a signal that people ate something and add it later.
+[38:19] We tried not to really like the experience that we're designing is maybe 10% real time as in capture and forget about it and most of it will probably be retrospective through insights this is not fully wired up yet but that's kind of design getting ahead of.
+[38:37] Of us on some things but will show daily nutrition summaries click of stats estimate spikes per day so over here we're trying to borrow from the GPA that we offer in signals really provide a preview of it and.
+[38:53] Weekly trends daily macros impact scores your good and bad list or watch out list for the week.
+[39:04] And so maybe inviting people to connect the CGM.
+[39:11] What else we got the calendar over here.
+[39:17] We did try to be excessive on or try to think of different channels for signals to be the app of choice when logging a meal or keeping an adventure after items.
+[39:29] And so one thing that we try to do is a lot of people like cooking recipes recipes are extremely hard to log and today at least we did not offer me logging so this ended up not we didn't have time to fully make it work but the goal is to be able to any link any Instagram post tick tock recipe can be now shared within Calibite.
+[39:51] Now this won't work when I click on it because well things are not necessarily not everything is hard up but I did add a manual way for so just basic a link over here.
+[40:04] Well can immediately parse your recipe and it's going to add it into your recipe bookmarks has nutrition labels ingredients instructions like only one place.
+[40:17] I downloaded Instagram just for this time saber pure right there is so many people try to make food and it's takes a long time to log that is really nice.
+[40:28] Exactly and a lot of people are on Instagram so.
+[40:33] And tick tock but I will not download tick tock so if I.
+[40:40] This that's recipe here we have a scraper all go on Instagram scrape the thing and still resolve the recipe and hopefully.
+[40:53] So this is no definitely content on the description of the recipe of the recipe is in the caption I did not check that but we'll see.
+[41:01] If it works and that can be moved to the background we try to really jam a lot of features in there so I got it again if I go in there will have the list of ingredients that were describing that Instagram post instruction and all those assets now can be decorated with our signals like ppr prediction analysis verdicts and whatnot.
+[41:22] I try to do something it will probably fail but I will try it.
+[41:31] Let me delete this or I'll try liking something else so we'll try to describe here.
+[41:40] I had two eggs, third key and butter.
+[41:46] So I got quick snap goes back in here and I'll wait for and we can do thanks for multiply it inside of time.
+[41:56] So logging over here so we did not code any edit functionality even though it's available it was didn't make it to the iOS app and I'll share not.
+[42:05] Generally the output what are different tooling that we've built for ourselves so it did not burst it correctly.
+[42:17] I'll try to do this while I say I had two eggs.
+[42:29] So I think once you connect to zoom things I'll get messed up hoops.
+[42:56] I think things were okay sure now what what what I want to demo is something more contextual but I actually had four eggs.
+[43:18] So basically now the intent here is intent will be captured and instead of creating a new meal it will instead update the meal in place and hopefully portions instead of like.
+[43:30] Okay it's met my message things up but you'll see what's what's possible I guess we'll be able to capture intent and update portions kind of seamlessly.
+[43:40] Surely if you have always commands as opposed to having a lot of manual edits because that cost user usually a couple of clicks.
+[43:49] Let me look at my script you see if I'm missing on something that we were wanting to display and.
+[43:57] The recipe for edits you guys do barcodes here look like it was in the UI.
+[44:03] Oh yeah I do not have something that can be scanned right now but I think as I said in chat it sounds super cool or just take a photo of whatever and then we'll figure it out of the bar code.
+[44:16] It's so nice.
+[44:18] Correct.
+[44:21] Yeah the bar code and the nutrition or the label ones are just bezels they doesn't change the photo is just if someone wants that guidance of the narrow for the bar code or the interest level.
+[44:32] People might get confused or scared if they don't have that so.
+[44:36] Yeah like the goal here is you can update something and I let's find out.
+[44:43] I'll have those fries here.
+[44:49] So yeah like bar code and label those can like we're thinking of like removing them all together because auto will will detect if a bar code is available quickly snap it.
+[45:03] And I have some some chops that can hear I will see that.
+[45:09] I would not eat that chopstick but so what can be detected over here is we can detect and all being a by priority but you can detect a bar code pretty confidently and log it immediately and again process in the background.
+[45:24] You can capture and nutrition label and also no materialize that into an ingredient or a meal.
+[45:32] But about having a menu as well this is more on the real time experience by scanning a menu or resorting items and decorating them with with our data.
+[45:42] We'll still have the manual mode and there are totally people.
+[45:46] We'll pick the hands free experience instead.
+[45:50] And so what you ended up with is we tried to hooking things up and honestly we tried to hooking things.
+[45:57] We had a lot of action to build an RIS app and Android app from scratch a lot of water play code and we still did not want to compromise on quality as much as possible.
+[46:06] We did compromise a lot on quality I was saying the past two days so things have not made it in the main branch they're only feature branch.
+[46:14] Now what we ended up with are.
+[46:17] Let me see where my chrome.
+[46:20] We ended up with an Android app and the US app and.
+[46:26] An admin panel so initially when we move in parallel tracks.
+[46:32] We did you know we we all aligned on a PRD a feature set and you really started not working and we divided and conquered.
+[46:41] What we were trying to do so we had a usp go helps set up their individual apps.
+[46:47] I was more on the backend David and Alex were no flash counter flows and no Q a Q a no was probably well Maggie was jumping around in different teams but no I would say was playing with David and Alex on the flow.
+[47:00] And this is where now sometimes Q a can start until things make it to to the finish line and there's a lot of features that we want to build that will never make it on.
+[47:12] Well that will need to wait on to test until they make it to mobile.
+[47:16] So what I ended up building here and tooling internal tooling is so easy that's something that we deployed that Maggie was able to go in and.
+[47:25] You know quickly have different flows that she can test directly from here and start assessing for quality of the output and really providing feedback and that's a super set of all the features that.
+[47:35] And eventually be migrated down to mobile or any interface so we have our less of users no Q a can quickly and person at a user look at their meals.
+[47:46] The meal has a pretty complicated state machine now but that's all you know behind curtains which right to play with different glucose profile or what could the glucose message be.
+[47:57] So we could have an impact score without no macro breakdown so based on different macros this is how things could align try to show the exosciveness of our data sets or for different cohorts could be by age by activity level by BMI and whatnot like your spy could be extremely different based on all who you are.
+[48:21] And look we're giving you estimates you really want to get your number get get into signals.
+[48:29] So that's for me you can save the recipes which are to emulate fully food search here.
+[48:35] That's the correct a lot of time that doesn't resolve ingredients and so you know if there's a lot of Lebanese dish that you wouldn't find and so if I if I worked you type you know.
+[48:46] That thing it would actually go straight for a recipe figure out the ingredient fully resolved the meal by using fat secret so we're still.
+[48:55] No aiming for both completeness and accuracy.
+[49:00] This might take some time but now a lot of things will be uploaded to the background yeah so.
+[49:06] It was pretty confident created my label parts all those ingredients from fat secret directly and if it doesn't find any fat secret i'll try to estimate things I can save the recipe.
+[49:18] That's our library over here capture testing so all that we did like random URL or text or voice directly photo testing the pipeline bit by bit so a lot of tooling now can be created to go and test.
+[49:35] The different puzzle pieces that will put together.
+[49:39] Now in a feature or in a product and this helps both QA test as well as possible this helps sometimes engineer share some some of what's feasible and idea directly to PM so PMs can help stitch things together so yeah.
+[49:56] That that's it for our team I know David and co if that can mess on anything.
+[50:07] No but I think that was pretty that was pretty comprehensive awesome I yeah I mean if you guys weren't watching the chat that recipe sharing and uploading super cool so an awesome idea.
+[50:23] Alright moving right along we're going to go into the gel P1 group let me.
+[50:34] I think this is a little bigger.
+[50:37] Cool alright so yeah good stuff alright on the gel P1 side what are we doing we're working on building CGM gel P1 combination plans in partnership with company company.
+[50:52] Called open loop who's going to be our clinical provider of the gel P1's and manage gel P1 fulfillment so our V1 product scope is pretty hefty because it's a whole new product offering plus integration plus operational fulfillment pieces as well so broke it down into three kind of like main chunks.
+[51:21] Of work there's a big web component making sure that we get people through an intake survey that determines their eligibility and through checkout the man portal member account management making sure that that's reflecting all of the updated purchasing orders fulfillment information and then big part of this will definitely be a go to market.
+[51:50] Strategy marketing plan landing pages all that fun stuff as well on the clinical side a lot of this is just about the integration with open loop so really having a full back and forth integration with them going through account creation clinical review approval.
+[52:15] We've got some video visits refill and checkpoint cadence and then making sure that we're surfacing all of the status changes and updates in the app and man portal depending on where it needs to be seen.
+[52:29] And then on the mobile side what we're tackling for our initial scope is adaptive onboarding making sure that people can get into the app quickly because actually something with the gel P1 programs is there will be two different boxes going to our members there will be a gel P1 box going every month and then separate CGM boxes right so we don't want people to get stuck in onboarding because one box or the other hasn't.
+[52:59] Has arrived specific to gel P1 also we want to do first dose education program overview dosing instructions side effect guidance.
+[53:09] We're planning on managing both signals manage gel P1 so auto auto populate medication clinical fields refill checkpoints and status but planning ahead to make sure that this also works for self manage gel P1 users as well so people are already on signals or.
+[53:28] By the signals core program want to be able to log gel P1s.
+[53:33] In addition to all that dose logging tracking reminders we're going to be offering both oral and injection as well and those have different cadences and oral you take every day and injection you take once a week so managing reminding people to keep them on top of their dosing and then of course see graph integration.
+[53:57] So gel P1 markers on the glucose graph and the ability to do symptom tracking but we're going to be piggybacking symptom tracking off of another team so out of scope for V1 we're not going to be building the full symptom tracking system we're going to piggyback that off of the PCOS group.
+[54:18] We're not going to be tackling any off ramp taper flows intermittent states you know if people are taking gel P1 but not wearing a CGM we're not going to do any of that for V1 we're not tackling the body scanning integration I think a lot of teams are excited to leverage that.
+[54:42] In the future and then we're also not doing our own macro tracking and trying piggyback where we can advanced coaching or any custom titration path so really focusing on V1 on you know what do we need to get out the door to have an end to end initial offering.
+[55:01] So what we built and what we learned so in terms of what we built we built a V1 adaptive intake questionnaire that determines eligibility makes a recommendation and then conditionally surfaces the remainder of the intake all the way through checkout.
+[55:20] You guys will probably remember from our MDI medical questionnaire days we also had an intake survey that determined eligibility basically doing that again but this one there's there's a lot more that goes into it we're going to be offering a variety of gel P1 programs and want to make sure that based on what people are eligible for we're driving them to the correct option.
+[55:48] And so we have a so an initial version built there and then it's actually saving data to our backend so that's super exciting on the open loop integration side didn't make as much progress there still trying to crack the nut with open loop a little bit make sure that we get that contract signed so.
+[56:07] We you know did review the open loop API documentation that they gave us have lots of questions there and had initial conversation with open loop on some things and actually during this meeting just saw a ping that we finally got access to the staging environment which will unlock a lot of work here for us.
+[56:26] And then on the mobile side what we've built we built out the adaptive onboarding and some of that early education based on the selected program medication logging with graph integration a medication management tab with clinical dose and status integration so that will be surfaced from open loop program check in refill dosing states reminders push notifications and then all of this is.
+[56:56] Inside of some of our internal development tool so we can actually test this end to end.
+[57:02] So in terms of what we learned some of our you know decision surprises along the way we really found them were organized you are upfront the better the entire output and so really found that the pre work was really becoming more important than than ever and we used clawed to identify gaps and refine every piece of this spec.
+[57:25] Along the way and so with that we actually spent more time in the PRD initially before building out screens than I think we thought we would.
+[57:35] So that was a bit of a learning and surprise for us but then on the flip side when we started running clawed to build the screens interactions it went a lot faster as well so we had a very trust the process mentality.
+[57:53] We really kind of we let clawed build everything we you know and see how it interpreted what what we wrote.
+[58:01] I think maybe Roger Prashant told us that kind of echoes maybe some of what you guys were talking about earlier to in terms of like how to frame the document writing as well.
+[58:13] And so what did you did you create the PRD in a separate interface and then paste it into cloud code or did you actually do it through clawed and referenced it somehow so it would not lose its not lose its head as you guys were building.
+[58:29] Yes, the very very initial PRD was written in Google Doc with multiple tabs but then we downloaded that to a markdown file and the way that our team worked was that we had a get hub repo for this project and we put the markdown files in that and so everyone was in that get repo.
+[58:51] And so essentially refining like in clouds out on top of that so refining and reviewing the PRD from there and the PRD essentially with then we used clawed to refine the PRD.
+[59:05] We would do like you know interview process and then had clawed break the PRD down into actual stories implementation stories and then those stories got turned into an implementation plan that effectively wrote the code.
+[59:23] And so jossy actually will probably go into a little bit more detail there when he pulls up the demo but so yeah definitely thinking a lot about process along the way I know there's a lot of conversation still around you know what is the right process long term where should PRD live how how should we do this but this is you know what has what really worked for our team so for us the sooner we got out of Google Docs the better.
+[59:52] Totally I was wondering like is there a way to have it create the PRD for you as you were as you were prompting it or giving a bunch of context or if it just isn't very and it's better to just do it manually.
+[60:04] Well you have to guide cloud so I think you know it we didn't you know set sit down and say I want to add GLP ones the CGM program go actually there was like quite a bit of thought put it in up front in terms of like what are the things that we're doing.
+[60:22] So what are the business goals what are the key jobs to be done how do we want to think about versioning a bit and then using claw to fill in a lot of the gaps.
+[60:34] A lot of the initial work to didn't we weren't referencing our existing code base so you can you had to you had to guide it more.
+[60:44] Yeah for sure and there's probably a lot of lot more learning there to to be done in terms of what changed during the spring honestly not like no major restart so stops we you know really just kept deep in our usage of cloud we did you know in coordination with other teams modify some placement of banners and messaging I think you know one thing.
+[61:13] We worked on a lot over last couple weeks is making sure that we were coordinating enough with other teams especially if we wanted to piggyback on something or if we're both adding you know post on boarding setup steps making sure that you know we weren't going complete opposite directions for when there was integration happening later on and then you know from a prop again on the process I'd really focus our mind on.
+[61:42] We really focused our mindset in terms of how do we get cloud to build anything we want reliably ongoing rather than how do I just get cloud to build a single feature so maybe share them that's like a little bit in terms of what you're saying is like did you just sit down and start prompting like well no because we was a little bit more in terms of like okay how how can we create a structure that will get us the end result that we're looking for.
+[62:12] Cool okay and so then past so we accomplished a ton of super proud of the team and super excited for no one jossie to do their demos here but there's a fair amount to go we got we you know it's a lot it's amazing what you can get done quickly but then kind of like time up a lot of.
+[62:33] Loosen and finalizing a lot of things so on the website we you know definitely still need to finalize that intake questionnaire and layer and some personality the intake questionnaire we built out was really kind of I would say it's a little bit bare minimum based on the clinical protocol but you know we probably want to make it feel a little bit more like signals and we might want to even like layer in some new or different questions.
+[63:03] We still need to figure out what our go to market plan marketing site scope will be in terms of you know what what we want to say what we want to show and then our we haven't really dug into the man portal scope definition yet we're really waiting to get more information on the open loop integration first lots of questions there before defining that so we still need to do that and then on the intake survey.
+[63:32] I'm already you know thinking ahead that we'll probably want to have a few variants that were testing to see what gets people through the funnel as quickly as possible because it is it is a lengthier intake this time around so we'll probably want to be able to play with that on the open website a lot of this is you know getting contract finalize getting access to that open loop staging environment we're still not in there yet and doing that.
+[64:02] So we're going to be able to do that in the full end to end integration and of it's it's a count creation clinical review all the status web hooks so really digging into that and then on the mobile side we've got a lot of the UI built out but we need to still build out the back end and define the data models API contracts and end points get that in place.
+[64:30] So the additional work is you know a tons of refinement and rework making sure we get it to where we ultimately want it to be so ongoing PRD refinement breaking those down to you know what we consider our final stories our final implementation plan code design polish then the big part is you know the code reviews merge QA test and release.
+[64:59] We've been doing a lot of many loops of these and you'll see you know all you we've managed to accomplish a lot doing many loops but we'll probably need to do you know a really big end to end review of all of this.
+[65:12] Additionally we want to make sure iOS and Android have solid platform alignment we've been feeding you know the same instructions into Claude but it's interesting to see how iOS and Android output are you know functioning differently and so making sure that we've got alignment and the alignment will probably come with the back and model is a little bit more defined.
+[65:40] So in terms of our biggest risks dependencies I think I'm the for the GLP one group you know it really is there's a lot of integration complexity i will say you know enabling someone to log medication in the app you know not not the biggest challenge but making sure that we educate people correctly we're getting the correct information from open loop surfacing that in the app and making sure that it's a really good end to end customer experience.
+[66:10] Is is a big one and in terms of making sure that we're ready to go live with this we need we want to still work to finalize our go to market strategy technical readiness and code review I think who was it that said David I think you said AI debt review debt or something we're right there too.
+[66:40] Same thing and then you know the full end to end integration testing as well so a lot of coordination with open loop there.
+[66:51] So with that I'm going to hand over to Noah and Jossi who are going to take us through our demo here they're going to take us through intake and purchase and then right on into the app.
+[67:08] Cool thanks Emma so yeah i'm going to try to keep this kind of short and sweet for y'all it's not going to look to two different from what we saw a little bit last week but we added a few more bells and whistles just did some general polishing hooked it up to the back end so that I can start saving some data.
+[67:25] And yeah so i'm just going to start going through it it first will you can see the like at the top it's been out that we have like this little progress bar and let people stay informed of you know where they are in this survey because if there's one thing that I know I hate is if i'm taking a survey online I want to know how many questions I got to answer before i'm done.
+[67:42] And so then i'll just start kind of like going through it just ask some some basic questions at first and we'll ask more questions based on that.
+[67:53] If you're between like a certain BMI the way it starts branching is that if you're like if you're below I think it's like 26 it kind of just lets you.
+[68:03] Only do the only lets you do our micro dosing plan we have set up currently if it's between like 26 and 27.99 it asks you for.
+[68:15] If you have any of these comorbidities to go along with it if I were to answer basically with a BMI either below or above that threshold it would branch off and not let me pick this and this is determined eligibility for macro and micro versus just micro.
+[68:32] So then it was on to like our little bit of an exclusion step to kind of sort of.
+[68:36] Pre deny folks if they have any of these i'm going to say I got none of the below and then cool we get to our routed port so now I can pick like if I was a customer I answered those questions I can pick what I want to go forward through.
+[68:51] This is our macro plan here where it's basically full dose GLP ones with CGMs and then our micro plan is about half dose GLP ones with our CGMs both are six month plans gives you the little.
+[69:06] A little bit of the breakdown in between and you can kind of just pick which one you want to go through so i'll say i'm going to continue with the macro plan.
+[69:13] And now it's going to ask me for some general information i'm going to put in my real address because I don't feel like making up one but so you know if anybody wanted to send me some cupcakes that be cool.
+[69:27] But that's not a real sit code but.
+[69:32] To do go through there and then looking at it's like cloud was also able to like use a bunch of existing components that we had written before so like all of these text components for the most part we've used in other places.
+[69:46] With this very very empty added some of this like error messaging.
+[69:50] If you got it to do it created these components I went over with Lizzy to just double check that they match our our style guide and everything and so that all looked good.
+[70:01] So now we've gotten through that it's just going to ask us a few more questions so that it can inform the clinicians on the other side on open loofside what they're actually eligible for makes for people aren't getting through and can actually use the product that they want.
+[70:16] And as I'm kind of mentioned before.
+[70:21] As I'm a kind of mentioned before this is sort of like baseline sort of the most basic requirements that we needed to ask for using like language that open loop would like us to use we still need to do a pass where we add a little bit more of our signals personality to it.
+[70:38] So that's kind of why you're seeing feels maybe a little bit too clinical or cold that's probably why.
+[70:43] But just asking the last few questions it has like branching logic in here so that if you pick something that requires a little bit more detail little ask you about that.
+[70:57] We'll just go on and continue and I can say yeah.
+[71:01] Say I take some allergy meds every day.
+[71:05] Just make sure we're doing a little little bit and yeah I got pollen allergies I'll put that in there.
+[71:11] And this is kind of like the last bit we kind of need the last of the questions I want medical weight loss and say exercise regularly we keep on going through.
+[71:21] Oh sorry one more question and this is just a kind of dial in.
+[71:26] What your medication preferences are so the open loop can offer you either injectables or oral options this is kind of where we we figure that part out and then I didn't pick a state that required a clinician video but if I say I would like to.
+[71:40] Talk to somebody before we get approved that'll flag it on the back end we'll send that through to open loops that they can actually set up a video call with whoever is taking the form.
+[71:52] Cool so you can see now I got my little final selection here just to give you a little bit of a review.
+[71:59] Use a nice little fake credit card.
+[72:01] Then you can put in a different billing address if you want very typical for an order I'll just uncheck that.
+[72:10] To do and cool an hour offset so it just gives you now lastly what to expect.
+[72:17] Stay informed let you know like where you can expect updates and then not showed here but this did go send to make a request to cloud all that data is in our own Mongo database now.
+[72:29] Which is cool and it's ready to just kind of be processed and sent to open loop when we can get that integration done.
+[72:36] So yeah that's that I'll hand it over to Josie.
+[72:43] Awesome thank you know I'm.
+[72:46] Yeah so I'm going to go through the user flow now.
+[72:50] For on the mobile apps side so after a user finishes that intake form what they would experience on the clients.
+[72:59] I'm going to go ahead and present that here.
+[73:05] Can we all see this phone simulator yes yep awesome.
+[73:11] Okay now before I dive in continue with the demo here I do want to talk a little bit about what we're seeing so this is Android but we were able to have really close parity on iOS because Leo and I.
+[73:25] So I think that's why we worked really closely on the workflow to be able to achieve everything that we're going to show you.
+[73:35] So on iOS it's almost exactly identical to this and I think that's largely due to the workflow that we worked on throughout the week.
+[73:45] So we we we touched we touched on this on Monday and I just mentioned it a little bit but really we the line share of our time was spent on this particular workflow from taking the PRD.
+[73:55] I'm iterating through that and then establishing a set of skills that Leo and I used with Claude that would create stories from the PRD would make very detailed implementation plans.
+[74:08] Then implement the feature and we even had skills to revise parts of the code when the PRD would be updated.
+[74:15] And all of these skills have context for the PRD that is in that's in our future branch that we would have there.
+[74:23] So a little bit of a one here let me stop sharing for a second a little bit of a feature drop I'm going to we added a plug in and we merged all those skills to the signal HQ repo, which I just put in the chat here on the zoom and I'll add it in Slack as well.
+[74:45] But if anyone wants to actually test these skills and use them yourself to actually see the workflow that we've been working on.
+[74:52] You can go ahead and install that plug in and then how to use the skills are there and this is probably more helpful for the mobile engineers, but anyone can encourage you guys to please take a look because we just.
+[75:05] Leo and I worked on these on this process over and over and over so our process was we would take a section of the PRD we would use these skills.
+[75:15] If the output wasn't as expected we would iterate through it we would update the skill and so on and so forth until we sort of found a loop to give us really really awesome results.
+[75:26] So those skills are now available for everybody and let's cool that this is we can all contribute to them as we test those tests stuff out, which is awesome.
+[75:34] Now for the rest of the demo so what I have here so they just finished intake form next would be the app experience.
+[75:45] Now there's a couple different ways that they're going to be able to see the onboarding as I showed to you.
+[75:52] They'll be able to get to the onboarding from selecting the will eventually be a sort of gating screen in the for the initial user onboarding you know you want to set up your cgm first.
+[76:04] Do you want to get started with the GLP one that's one path if they're in existing cgm customer of ours there's going to be a home screen banner that they can select the take them through this flow as well.
+[76:16] Or we're going to have a new GLP one tab sub tab I think that's TBD where all these things live.
+[76:24] But once they go to that for the first time if they'd never gone through this onboarding of would automatically launch it.
+[76:29] But every so we'll go ahead and start so first off based on what they filled with the intake form whether the micro does macro all that there would be a program that would be established.
+[76:43] So I'm going to go ahead and make that program and we have some debugging tools here will be can establish that program some mock data so we can see how it looks.
+[76:52] We'll stick with macro and just what it has here and we'll go ahead and create that program.
+[76:58] So you have a program it's going to be a weekly injection at 2.5 milligrams for each dose and now we can proceed into the onboarding flow.
+[77:08] It's going to be a six month journey gives us a little bit of a preview of the titration schedule now what you're seeing here is there is no figma or actual designs that we pointed claw to this is the design was taken from two places really in our clod in the file for iOS and Android we really defined what our mobile design system or what the frequently used and reusable components are that we build UI with.
+[77:35] So it had those to reference to sort of understand it had access to our colors all that stuff.
+[77:42] And then it it was able to mostly align with the onboarding that we already have established our app for a bunch of other things which was very cool to see it did make some creative decisions on its own like we never have buttons that are serice we don't ever have these progress bars like this.
+[77:56] So it did make some sort of cool inclusions and it kind of stuck close to what we have which was really cool to see.
+[78:03] I'll go ahead and continue how to administer the injection gave us these little collapsible cards. This is also something we don't do it just sort of it was this is an example of if if we're if we're doing this sort of building from PRD flow.
+[78:19] We need to specify those things the second we have actual designs from Figma or there is a design layer to this process or adding those designs to the PRD's.
+[78:30] This will get this will be amazing because it won't get creative like this it will just follow what we have which is cool.
+[78:39] I can continue on the common side effects that you can see nausea potential fatigue decreased appetite of course what's normal when you can seek help.
+[78:51] It had a lot of the screen probably way too much that we would ever want to surface for a user going through this onboarding but that's what it made.
+[78:59] Next is the reminder so you can choose when you want to be able to take your dose and we will send you push notifications and will be cards and UI elements in the app that will keep you on track with that.
+[79:12] We'll go ahead and just keep it at what is that and those are the snooze options.
+[79:17] And then we give the user the option to log their first dose now or they can say hey I'm going to skip this I'll do it later I don't want to get into this right now they could say that we would show them the upcoming milestones and against where to review where they're at in their titration schedule.
+[79:35] You know for the sake of the demo I will just log in.
+[79:39] Okay so that so let's pretend they they did all that in real life.
+[79:46] They would get kicked back out to the signals homescreen that we all know and you're going to notice there's going to be a card here this is the next dose reminder card so based on the onboarding and their program we're showing them hey this is the next dose you can expect to have you have an active program.
+[80:05] Over here in the log tab you're going to notice the sub tab.
+[80:08] We had gop 1 here now this will have the next dose reminder information but all the information about the program your active prescription the dose history that dose that we logged during onboarding right now is captured here it's also captured as you could see it as a log bubble here we can click on it that was captured as well it really did log it.
+[80:31] The other thing we have here is we have for the sake of the prototype is we have a whole debug sort of prototype tool to be able to explore all the different states now since we don't have a backend or things like that this is really useful for us to be able to play with this and actually be able to see all the states things like this can help QA be able to explore different edge cases and things like that.
+[80:59] I'll quickly go through this you can edit the state of the program things like that if it's an oral medication we can change the state management if you're under review still if the program is paused or even if you've completed the journey your gop 1 journey with us you know there's different states like that we'll set it back to active.
+[81:22] There's going to be extensive reminders as well push notifications as well as just UI cards and things like that let's say if you missed a dose we can go ahead and have that push notification triggered here you see how are you feeling we notice you missed a few doses it'll take them right into the logging flow things like that.
+[81:41] We're also going to be servicing shipment status on their medication so things have been ordered you're going to notice we kind of get to see and preview with that slight the estimated delivery everything I change here in this debugging tool will actually is actually reflecting live and all those other UI elements across the home screen the log tab.
+[82:00] The log tab.
+[82:04] Let's see here refill status we will worry about that at the moment.
+[82:10] I can show you what that looks like see when something is scheduled.
+[82:15] Let's see what else check points check points are another thing they're going to be doing with open loop will notify them when a checkpoint is coming up if you're overdue on your checkpoint notice it says the refill is blocked and other parts of the experience say hey.
+[82:30] It's clinical check in is required before your next refills complete your checkpoint to continue things like that.
+[82:37] Let's see.
+[82:39] Back to that we'll clear that out as far as being able to take the dose so we have the way that it's hooked up in the code is we're not going to even allow them the option to log their dose if they are signus managed because there are two program states you can be in a user managed to say you bring your own guilty you're not.
+[83:00] Or their signus managed that's a little bit more control this to when we allow you to log this is a signal managed case that i'm showing you.
+[83:10] But let's say you're within the window or let's say you're even overdue we'll say that we missed our dose.
+[83:15] Now the UI is saying hey you're overdue go ahead and log now you're available to go ahead and do that here from the home screen as well we can do that notice it says it's managed by signals the we can't edit the dose or the medication type.
+[83:30] But we'll just go ahead and say hey i took my dose and that's captured here you see that other dose we logged go back to the tools to get rid of that little override.
+[83:44] Let's see and then there's other cool things that clawed so nothing else I have others we built all the this functionality out using the flow that I described but then after the fact we asked bought hey looks to this entire feature branch of everything we built please make us these debugging and development tools based on the code you see and it almost for Leo and I both are basically like one shot at it it was great.
+[84:09] For everything you see and we did some minor improvements to it here and there to add new things but was pretty cool to see those other things streaks which we haven't really implemented in the UI yet celebrations for hitting certain milestones I know we have dailies and the upcoming badges feature like there's no integration with that yet but.
+[84:30] Cloud was smart enough to look at our code base and say hey we notice you had confetti and other celebratory things already built in the app and it's sort of out of those here as things we could possibly use to.
+[84:43] But that is pretty much it.
+[84:48] It was really cool to build all this and get to see it come to life from the purity so.
+[84:56] That is it.
+[84:58] Awesome thank you no one and jossy good stuff.
+[85:02] All right.
+[85:04] Moving right along who do we have next here the PCOS group.
+[85:11] Yeah cool okay all workers through a couple of things and then give it over to Augustine for the demo I think we can try to be brief this although I was in the
+[85:22] business here we're doing good on time but we're going on a little over.
+[85:25] Yeah I think a lot of you guys have already seen this we're really focused on bringing a clinically focused solution for folks with polys to go over a
+[85:34] sense over a syndrome and you know for us I think we really had some like a good initial ideas from grace and then dove deeper to figure out how we can make this a clinically useful approach.
+[85:47] But I guess for the background is that this impacts 13% of reproductive females and even more shocking 70% of them don't know they have it.
+[85:57] And so there's a huge opportunity for us to signals because the two biggest things you can do to deal with this issue this with PCOS which is not curable it's
+[86:07] treatable are to lose weight 5% weight loss drives it in a meaningful improvement in symptoms or and or to reduce your insulin load.
+[86:16] And so we have kind of our V1 scope here V2 we are actually looking at doing some more complex insulin load calculations but we need data first but for V1 what we've been focused on a couple of things.
+[86:28] We'll have onboarding updates we need a way both for PCOS and other features like gop1 to detect that somebody is going to be in a signal specialty program those are these two we know of already but there could be others.
+[86:42] We are implementing a cycle tracking feature so down at the bottom you can see the various user segments but this is an example of a user segment that will benefit all of our users not just PC who X folks we've had that request for a while to implement cycle tracking.
+[86:56] And we will be doing it here glucose insights specifically like you know the ability to log specific symptoms as we detect low glucose so you can see in the last one glucose crash alerts for working with ML in the future there will be three different styles of those crash alerts but for V1 specifically the ability to detect when someone's headed towards that 70 mark.
+[87:21] That we can actually then prompt a question to them and collect a symptom which is really important for this.
+[87:27] And then we're beginning finally to get into symptom and nutrition tracking symptom management we've had on our radar for a while we kind of do with tags but this is the first for a to really start managing it especially with PCOS which is you know just because of its individual nature people can have a wide variety of symptoms.
+[87:47] And then last but not least we are beginning to implement a macro target for users we've never had a macro target for users in the app and in the future obviously we're going to probably.
+[87:58] It will be pulling in some of the like net new macro features and the logging features the meal log team has been proposing but we're likely likely to get to this first so we will be able to show all of our users a fiber and protein target so this.
+[88:15] Just to rehash the scope of this project has macro tracking for all users you know female users in general get cycle tracking and then PCOS users will get this full full seat the future.
+[88:28] In terms of what we learned you know first chunk for us was really market research and clinical validation this is a more clinical product and some more other things and so we needed to do a little bit of research so crudos to grace and some others on that.
+[88:41] We went through about ten different prototypes to explore direction all of the things that jossie had mentioned and trying to take some of their learnings to kind of build a new process and of course and design files along the way as far as what's done we'll see that in a bit with some of the demos but we've been able to finish a lot of the onboarding and education and we're in progress in progress on cycle tracking and macro display.
+[89:05] And then after that we expect to start work on the symptom tracking so I think one thing that was mentioned is there's a lot of cross team kind of feature sharing so the PCOS pod is the one that's going to lead on symptom tracking so we've developed a shared spec with us in the GLP one team so we'll be able to implement a symptom tracking feature for all users but with some custom views speed things up for PC us users and for GLP one users.
+[89:33] As far as the learning I think definitely lots of learnings it took us a little while to figure out just how to work in the new pod structures I think most of our team felt like cloud itself has been fairly intuitive to work with and we're making progress there but the pod structures took us a while to adjust to.
+[89:54] I think other big things I'll skip the ones that have already been mentioned but I think for us the we learned that the trickle down from changing something in the PRD so we know that changing things in the PRD you know we try to avoid it but that's just part of feature development.
+[90:11] In our previous world we kind of had a set way to do that like I know it's in the PRD I know what the story is I go change of both when we change it in this system where all the artifacts are by an AI driven into one another it can cause some unexpected ripples that we then end up building and cause some problems so I go and change something in the PRD I tell the team I put up a PR they regenerate all the artifacts now you have to go check all the artifacts because it would generate some weird stuff in the artifacts so we kind of learned our lesson there.
+[90:42] So that's on the challenge side on the like I'd say pro side our team has felt like the back-end front-end mobile development flow like mobile cloud development flow has been greatly improved.
+[90:54] You know having Rebecca embedded in our team with you know Augustin and rip and you know mel and the four three of them working together has been just a better back-end front-end development flow.
+[91:09] We have appreciated some of the various tooling from others so like we're starting to use prashant and the AI teams tools to be able to like spin up local dev like back-end environment has been really helpful and then a couple things we're trying is we're trying to get a little bit faster with just prototyping it and then bring it to the design after the fact I think we know we're still kind of working with some of those flips so.
+[91:37] That's some of what we learned as far as where we go from here we still have a good amount of work to do to get production code up a lot of our prototypes it's kind of the like a little bit of a you know miss no more with cloud like we have several prototypes that look like they totally work end and but it's code that like we haven't been able to test.
+[92:03] We haven't got any pr review of these things and so we have some work to do to get production code done.
+[92:09] Is a good amount of work to do on the back end and then in our case we're going to be doing some health gets thinking so for women they come into the app and think this health get data from other apps is many women are already tracking their period and we want to be able to take advantage of that so we're kind of beginning to explore that process.
+[92:28] As far as the risk and dependencies I think everyone else has already said them you know I think most of ours are shared you know we have a lot of cross pod coordination but we made big strides on that this week I think we're lined on onboarding.
+[92:42] Center tracking glucose or honestly I think we've aligned on all of those this week so this was a big alignment week but yeah from us I think from here it's really just you know process of okay we got to still get these things into small enough shape that we can actually q a them.
+[92:57] We're going to have to figure out how pr reviews are going to happen because right now we have some really big code jokes so that's enough from me i'm going to pass it over to Augustine who will walk through our demo.
+[93:10] Thanks let me say sir here to do there there here.
+[93:18] Writer okay so i'm yeah few things we have here the we've been the the questioner for you know when the when the users have are missing some questions on this is a data we need to know they're going to see this city is here.
+[93:39] And yeah you know they could hear there's like a few things that they need to decide the period and you know all these little pieces data here you know like that you know like that.
+[93:57] Here in pretty much that but you know be paying the scenes we actually have like the database entries here we're actually doing the API goals.
+[94:08] I know we have all those pieces have to be implemented by clouder and because now we have that for that's not accessible anymore i don't have like that tool here that cloud also put together here.
+[94:26] Cycle tracking the bank here because you know also there's there's the logic here it's used like I don't get my deal that's it finishes there and yeah again all that done by cloud it was like.
+[94:43] Time time you I did those to a chance but ordinary was flow that's.
+[94:48] Yeah and then we also have some changes in the morning here here when we go to the morning.
+[94:57] I mean we had we had demo rough version of this last week but you know this this time here this is like the actual production really work.
+[95:10] Here here here there there.
+[95:22] Here here look again the PCS morning screen here again all these 100% cloud all the logic that we have here again that's going to kind of new at this going to hit up a new API.
+[95:40] So we have a cycle all that are going to be done by cloud you know if we like mail we skip the whole thing again all that time to know I think to navigate to the morning here automatically done by cloud.
+[95:54] And yeah that's pretty much it not much like friends said you know now that we're going through the actual PRP process and redoing everything and making sure everything is there you know it takes more time.
+[96:07] Last week because we were just for the typing and we didn't really have any constraints things were much faster but this is the actual program this is what we are going to get out there so yeah so far so good.
+[96:21] Yeah thanks yeah that's about to run yeah awesome I'm head my back to you think this BAB left who's left and or first week CGM.
+[96:35] I think you guys are up next.
+[96:42] Yes.
+[96:44] Benji I think it's going to kick it off.
+[96:51] I'm already sharing my screen things are happening.
+[97:02] Okay cool all right.
+[97:09] All right so the project is single CGM.
+[97:13] Just a little context around this.
+[97:17] One thing that I personally am very excited about this is we're lowering a barrier to entry and increasing the top of funnel by with this project and so.
+[97:27] As we're kind of walking through this one of things that was important my head over last week where we're building prototypes and thinking through stuff was how are we building a cohesive marketing message all the way through.
+[97:38] The inexperience as we get to the body experience and.
+[97:42] And then at the very end one thing that was really critical in my mind to add to the prototype is how do we upsell them from ballie and get them into.
+[97:52] Like a bigger conversion funnel now that they're a high quality lead.
+[97:57] So I thought that was really exciting.
+[98:01] One of the things I.
+[98:04] Really wanted to highlight too is you know as a company is first time in our history we're starting to hit.
+[98:12] So much much cheaper price point right now with the 25.
+[98:16] 25% off you know six month.
+[98:20] Three month one month is can like significantly higher than a $55ish kind of price point for single CGM so super super exciting.
+[98:31] And then pairing that with the ballie project and giving everyone an aha moment is.
+[98:38] So we're going to have a way to build energy and kind of focus on how do we increase our conversion here.
+[98:46] Claudia did you want to take the V1 definition.
+[98:51] Yeah so thanks, Angie so our goal is really to build something that for users where they say hey.
+[98:58] This is just two weeks we have one sensor and we need to convince that user in that two weeks that this is worth a long time experience.
+[99:06] So what we're going to be doing with them is at first of all we're going to ask some very targeted questions during onboard onboarding so we really understand what their needs are.
+[99:15] So we can give targeted responses and insights.
+[99:18] Followed by a 17 70 day baseline week so this is where users will be asked to just behave as normal as they actually use to so we can really learn their bodies, their habits, their normal glucose responses.
+[99:32] So it can be already on a weight management plan without even trying just by learning and observing day eight is where this all comes together day eight means there's the big reveal.
+[99:44] And we want to go here is to provide rich inside really help users understand all that data that has been collected to interpret and understand including of course all their glucose data.
+[99:56] So what does the nutrition look like with do that glucose metrics look like and what do they mean what was your best and your worst day and why was your best and your worst day the way they were notable events meaning types of spikes and glucose events that stood out and educating on what that means.
+[100:16] A user can make which is the ultimate point of this experience to then say after everything we've learned about you here's what you recommend you change and here are the next steps you should be taking and to have a really motivational experience after that for them to continue going and actually start the process of of the weight loss and and the absolute experience that will come then within that next week or so.
+[100:43] And in addition also working on glucose notifications for the piece or S team so that they can other their users so that's outside of that but again the goal is to give the user a real meaningful inside for summary of everything we've learned about them so they're like okay i'm good to go I want to see this happen.
+[101:05] And there's a bunch of algorithms that the amount of is working on in the back end to make all of this happen this is where we will might be working a little different and other teams we need to do a lot of research first need to make sure we have the algorithms in place the data supports those and but making really good progress there.
+[101:25] And yeah definitely and you know I think when they kind of call out about this V1 definition is you know Claudia and I focused a lot on the marketing on products, becktocks we have all focusing on targeted on boarding questions and wrapping our arms as everyone notice cross team on just what the heck is our onboarding process and then.
+[101:50] Art or demetry and Jake focusing on tying the algorithms back into the front end.
+[101:57] Okay so in a nutshell though you know we've been talking a lot about this and what we're trying to create this project to be is a bespoke single CGM experience that leaves users wanting more.
+[102:12] Okay i guess Claudia i'll take a little bit of the first part but we just wanted to summarize here because I think we've all been saying a lot of the same stuff about what we've built and learned and a lot happened in the last two weeks in between our group we've had six pure days.
+[102:35] We've begun a more research algorithms data schema i've been cranking out UX UI stuff and building up the good market strategy there we have over 16 prototypes with our group that were really focused on how do we take this from concept to commercialization and so.
+[102:58] One of the things I think our team really highlighted is what is the failures and when we sit down in cloud and build a prototype and what what kind of where the cracks there when we start to hand something off between me to Jake for instance and there's definitely some stuff we haven't quite figured out yet.
+[103:17] So key decisions and surprises a lot goes in the amount of research and algorithm development we've had some really cool ideas emerge that made things a lot quicker using the prototype experience stuff but it still needs the smart surround.
+[103:36] I do think we've been able to react faster to experiences just by telling cloud hey you know what about adding an animation here or adding an screen that does xyz like calculates your macros in a specific way or something like that and so it let us hit consensus faster which was super cool but the transition between UX and engineering was very challenging.
+[104:01] And then Claudia and I definitely agreed with me a little bit more just like a day or two between product and UX to align on what the definition is and what we're trying to deliver.
+[104:13] I added this one in that a picture is worth a thousand words it's way easier for me to nudge something eight pixels and figma to make it pixel perfect and it is for me to go in the cloud and say shift this thing down eight pixels no no no shift the whole thing down but leave this up.
+[104:30] So we're going to add a little bit of an element in the same spot something like that and then we cloud is relied on across all stages.
+[104:45] You know other than I think where the prototyping comes in and is you can front load a lot of testing of the user experience a lot of things that beforehand we would build we would not see until afterwards that things actually are that's not really how we meant it or the original to work and being able to do that ahead of time makes for much much better planning and faster planning.
+[105:13] Yep and then obviously there's a learning curve as we're using a I think a lot of people felt this to we're seeing a lot of slop and then we're seeing a lot of cool stuff that's hard to let go and you're trying to preserve it but you should probably let it go because it's junk.
+[105:30] But that's just something we were kind of noticing.
+[105:33] Alright Claudia this one's you.
+[105:36] Yep let's take a photo.
+[105:39] Yeah sure yeah so what's left of like you saw in the previous slides there's a lot of ML work that happened here a lot of new all goes got created for this so just you know all the testing that goes into that finalizing it simulations running it with actual test data like actual data that people have.
+[106:00] And just smell testing to make sure everything looks right I think part of that is the identifying distribution shapes and edge cases in data.
+[106:11] I know I know most of those words maybe not in that order but I think what we're getting that there is like just looking at population level and seeing that people are getting the right number of each of these things that we expect them to.
+[106:24] The data pipelines actually getting that data out of ML into into cloud and over to mobile like I actually the cloud mobile integration I see that's on there I think that's actually in a pretty good spot.
+[106:41] That's good that was one of the harder things to nail that was like looking at all the screens that we actually have like what how we get what ML is generated and getting that into to our hands mobile hands and in the form that we need but.
+[106:54] Pretty happy with where we got that and then just the actual production mobile code like now that we're finally getting like all the PRDs in order we're getting finalized designs and everything so now that time we actually start building out non throw away mobile code so that's coming up next now back to Claudia.
+[107:17] Yeah so I hope that that actually that building is going to be a lot more efficient because we're building basically screens up a filling with data and output from algorithms that come from an L and that's where all the work goes.
+[107:31] Talking about biggest risks and dependencies so can we have one sensor to convince users that they want to stay with us long term and one of the big risks here is sensor failure we know that.
+[107:45] Up to 12% 15% of sensors fail before day nine or day 10 so that before and reveal what occur in other words that is something that we had to account for and you had to say how we're going to make sure that this does not hurt the user experience that the baseline experience that is still happening in the first week is is not interrupted or at least no data's lost can smoothly continue.
+[108:15] When users order the replacement so this is where we have to work closely with support to make sure that replacement process is quick considering that it's up to 15% of people that we see this occurring with sensor variability is another topic we know that with style there are some of these issues that when you have sensor high sensor variability or sensors that are hot can lead to a data that isn't always the most accurate but we built the experience around.
+[108:44] So making sure that all our insights and learnings that we will share with users are focused on those metrics that actually not subject to your total to absolute readings like last LST or numbers of spikes per day those are barely affected by those and those is where really important message is coming in and the new algo's we will be showing another dependency is that we have multiple points that we have to do.
+[109:13] We have multiple programs that all can actually kind of interact with each other is this probably going to be very likely that a person who wants to try this single sensor experience might have to might have PCOS or be a GLP one user and they have different needs for different insights and different behavioral advice and that is something that in we want is not yet a tight component of the experience where we need to start working for the tool with other teams to really integrate and
+[109:42] personalize that for all users that might end up using the singles EGM. Some other challenges are launch planning in general when you mentioned something there about these singles EGM experience needing some of support for example.
+[110:02] GitHub process right that there was some delay for us to get set up in GitHub so we can we can have an integrated process between product management UX and and engineering but that's good now.
+[110:14] And then overall data pipeline how data is delivered we will have now a new rhythm of how we provide users with their data it will happen on day eight of the experience to every user so it's not a strict Monday schedule and and that requires quite some adjustments that we still have to work on to to make happen.
+[110:40] Yeah and just unpacking that for the group what what that means is just we don't always know what time they're starting this kick off for the report we don't know how close it is the Sunday we need to like there's just some flexibility needed there.
+[110:59] And sorry to cut you off Claudia and then I just wanted to really emphasize the first three bullets here again like sensor failure probably we need some sort of plan there since this is such a cheap impulse buy for people now that we probably should have a quicker response to something like that and then the variability and then PC OS and GOP one definitely have different insight and behavioral needs.
+[111:23] So this may not always work for them experientially.
+[111:29] Okay yeah I think it's time it's demo time.
+[111:37] I'm sharing my screen to show one of the future this is prototype is that a prototype so it's actually it's based on real data but it's not yet looking as beautiful as it would once Benji gets his hands on it.
+[111:53] But this is one of these educational modules that we've been talking about where in this short amount of time we want to give users a real understanding of what matters with their glucose so notable events as what we call this features are specific events that stood out from the week before we will tell users how many sugar crushes they had night events major spikes and rebound meals and so they can see that they can click on that.
+[112:20] And they can see some education so for example sugar crashes what's the problem with those well those are the ones where if you take in high carbs you have a sharp drop after and that leaves you hungry.
+[112:33] This is why people fall off the wagon to begin with when they're trying to wait lost program and so we are educating on this and then also giving users a direct insight into where their sugar crashes were what they look like when they happened and what kind of foods cost them.
+[112:49] How big that crash was this one so a 60 points in 14 minutes that's fast enough drop to leave you.
+[112:58] Getting cravings for more even if your glucose is still high so these are things we want to teach users to to to prevent night events so this is another one where if you have if you consume or if you eat shortly before bed for example you see much stronger glucose responses then you would during the daytime.
+[113:18] So and that of course impacts your weight loss and also here the user will be then able to see examples of where that happened in the last week what meals they had just before that you see here that like after midnight glucose gone way high that's not good that's something you want users to pay attention to.
+[113:39] Major spikes those are spikes that are running really high they are outside of what we would recommend to where we will comment try to eliminate those these are spikes that go over 180.
+[113:55] You see an example here with kind of food cost these again exactly when it happened and how you can prevent this so that you don't understand what these bikes actually do to you.
+[114:05] Yeah it just spikes and and the last one is rebound meals so rebound meals are things where something that we see very often with users trying to lose weight they delay their meals they try to eat later and then they end up overeating yet another thing that leads to people falling off the wagon when they try to do weight management and educating on this year and then showing users examples of where this happened so good.
+[114:34] So glucose is stable for quite a while and end up going lower below baseline and if we detect that followed by a meal with a larger increase like of 60 mg dl then that is a good indicator that if that user had eaten earlier not skipped that meal or not exercised and not refueled they might have not developed this pattern ready then overeat and also likely to crash after so this is one of the educate you can see that they are not going to eat that.
+[115:04] So that is the educational models modules they're looking to include in the in the reveal at the end of the baseline week and there's of course other really cool ones.
+[115:20] And then I believe Ben G you if you have something to share.
+[115:26] I think the note about this is more just designing prototypes and cursor but overall you know we've been talking a lot about the metabolic report so imagine you for $55 by a sensor you're very unfamiliar with CGMs or metabolic health you just want to try it out you heard about it from your doctor or friend or something.
+[115:52] And then you enter into this program you get a report this is what pops up on day 8 after we have 7 days worth of data.
+[116:01] The entry point is on the home screen they tap on it and then this isn't overtake.
+[116:07] And so what's been really fun at least for me is being able to go in the clawed and can't really art direct the hell out of this to make it a lot more interesting to add animations and stuff and so one of the things that we've been looking at is how do we take this from kind of this like version and convert it from web to something inside of iOS in the Android.
+[116:36] And another thing to kind of note is you know we're treating this like a post onboarding education moment to really drive home the value that signals delivers on every single screen I know we all talk about TIR a lot but I kind of have to imagine after day 4 or 5 members are still trying to figure out what it means.
+[117:02] And so I think it's really good for us to use this as kind of a reminder about the different things that we're driving home for each member.
+[117:11] This is probably one of my favorite screens just being able to literally go to cloud and say hey I actually like some stars in the background with the moon just to make it a little bit more interesting and so it jumped right in and added it in.
+[117:26] Again, I think all these kind of like little notes these little moments are really important to bring people along with us through the story and and get things to be interesting this is a screen Claudio is just sharing.
+[117:43] Just added into the prototype and cleaned up a little bit more in our branding.
+[117:50] And you know I think it's just a lot more fun building this stuff out.
+[117:58] Having a meaningful daily that you can pin to your home screen so it becomes a little bit more personalized right out the gate.
+[118:08] Congratulations on them within seven days for lowering their upper bounds and educating them that the tighter the upper bound gets the more personal becomes the better they're doing the harder the system goes I think it's just an interesting idea to keep congratulating them keep the energy going.
+[118:29] And then this part is hey we have one week of data what you do next counts.
+[118:35] And so we've been crafting a story here that once they hit this spot at the end of the report.
+[118:41] We actually want them to graduate to a three six whatever plan and make sure that they're converting and so one of the metrics I think we come out of this that we would track is what is the conversion rate from single CGM to the six month plan, etc.
+[118:59] And the thing here that's a really interesting kind of communication narrative is that if they order and now they won't lose like they won't have a gap in their sensor data.
+[119:14] So what I really like about the positioning of having this at seven days is within the next seven days they should have their next shipment of their three to six month plan.
+[119:25] And that's what I got.
+[119:30] And then also the prompts are super easy. I just literally said add stars and animate them and it went to town.
+[119:38] So it was super super cool playing with that and building that on our existing grant.
+[119:53] Awesome. I was finding the mute button there.
+[119:57] It looks beautiful. Yeah love it.
+[120:01] Do you guys can also take on dark mode while you're at it?
+[120:07] Just do it all with cloud anything is possible.
+[120:12] Emma I literally uploaded our brand guide and said but make it dark mode.
+[120:17] There you go. Okay sounds like done. Let's ship it.
+[120:22] Ship it. All right.
+[120:27] Beta B team. You're up. Take it away.
+[120:36] I also lost track of the mute button there. Awesome. Thank you.
+[120:40] So I feel like we've covered our contact and V1 definition in a few meetings but our V1 is really focused around around a health a shared health outcomes report for both our employee benefit and functional medicine verticals.
+[120:58] So we're really sticking to activation engagement and population demographic metrics within within this V1 and that is mainly because it is a it is a shared use case.
+[121:12] We will have individual V2s for for that for the report across verticals.
+[121:19] The employee benefit verticals V2 is going to be heavily rely on on cost offset JLP one cost offset and cost of care offset metrics.
+[121:29] And then the FM vertical will be more more focus on granular specific user data.
+[121:37] They have they're very different use cases with the biggest difference being on the employee benefit side.
+[121:43] We are only allowed to use anonymized data, whereas on the functional medicine side.
+[121:49] The the org admins want to see and need to see individualized user data.
+[121:58] As part of V1, we are also enabling new functional medicine workflows specifically trying to remove friction that our current work flows have so current workflows are our current workflows rely on a discount code system to help tag users to the proper orgs at checkout.
+[122:16] And then we are still rely on a small evolution of our current over our old credit system. So really just trying to cut out that friction and and allow our functional medicine admins to to quickly easily purchase seats and invite clients.
+[122:36] At all hands on Tuesday, I said that we would also included cost savings calculator for GLP one offset. However, after talking with Colin.
+[122:46] After talking to Colin after all hands, we actually made some changes in terms of priority. So we're going to move we move that out of V1 and moved in the ability for orgs to have self service registration from our website for smaller orgs for employed benefit.
+[123:04] We need to see anyone under 500 employees and for and we're still talking about what I might look like for functional medicine.
+[123:10] The reason we decided to do that is because we actually think we can build a better GLP one cost offset calculator once the GLP one data model set on on that pot.
+[123:21] And actually be able to bring in real data real or use real user logs to show the offsets and show when users are actually getting off the GLP ones as opposed to using metabolic metrics to make that guess.
+[123:39] In terms of what we built and what we learned, we have built the health outcomes report report of what the shared view.
+[123:49] We need to we need to update the UI a little bit. Lizzie's given us some feedback there. But we just haven't we haven't gone through that yet. And we have built out most of the FM.
+[124:02] Most of the health and workflows outside of self service registration and and basically the client invite portion of the purchasing flow.
+[124:17] In terms of key decisions prizes. So honestly from a surprise standpoint, I wouldn't I kind of like the GLP one team. I don't know if there was any like surprises or any changes we had to make along the way outside of priorities based on just conversations with stakeholders.
+[124:33] However, in terms of our key decisions and kind of learnings.
+[124:37] And I feel like this has been echoed echoed throughout the conference throughout the presentations, but.
+[124:44] Priorities just gain a bigger or just are more important kind of than ever. We we have a very similar process to what the GLP one team is doing.
+[124:57] Yeah, we have a very similar process to what the GLP one team is doing and and just came just kind of had a lot of the same learnings.
+[125:05] I would say however, we not that we differ, but I think we found on our side.
+[125:12] Because we the GLP one team is working with one very large feature sets. So they have a lot of like small little priorities, whereas we are working on kind of isolated silo deliverables.
+[125:25] We've noticed that like part of the process is kind of like bringing some water water fall methodologies back, right.
+[125:31] So in the past in our old world, PM might not necessarily have to get a PRD to a to a very granular and very 100% defined state before handing off to end because they can always kind of catch up as edges spiking or end just starting to build the first portions of it.
+[125:48] There's a natural back and forth with product and engineering kind of as the project goes on, flesh out any any kind of gaps, answer any questions and kind of fill in those holes.
+[126:00] Now that kind of all changes right the PRD has to be almost bulletproof by the time it gets to engineering the PM has to have a very granular knowledge understanding of what they want to be built so that they can translate that to engineering.
+[126:16] Since all of these steps takes so much less time than they would in the past.
+[126:24] But kind of the agile world kind of comes back in because things are so much faster and big we feel that you can still change your PRD.
+[126:35] And it doesn't lose a lot of time however like you still have when you present when whatever changes you make they still have to be granular they still have to like go through the cloud process.
+[126:45] So it is a kind of a weird mix of needing to understand the project kind of fully before before engineering starts but having the ability to change course and kind of stop on a dime.
+[126:56] Which we definitely did a couple of well which we definitely changed how what the PRD said a couple of times after some review sessions between me and the engineers.
+[127:08] One thing that I would say is different in our workflow than the JLP1 team.
+[127:14] So I had the pleasure of working on both teams for a little bit and I would say at the JLP1 group Leo asked to put like engineering breakdowns and kind of more granular user stories and some of the PRDs.
+[127:27] And I started doing that on the B2B side and Julian actually asked me to stop.
+[127:32] And the reason was because part of some of the code snippets that would that get added to the PRD when it's creating that engineering breakdown.
+[127:42] They essentially get put into the blueprint right and it just it's very hard for it's very hard for further down the process.
+[127:50] You kind of have to keep telling cloud ignore ignore this code snippet in the PRD that's not how I want to do this.
+[127:57] So it's it is just easier to not include those code snippets and let engineering own that portion of the project we found on the B2B side.
+[128:08] But also say that that just being comfortable for ambiguity. There's definitely feels like there's like more little black box moments in this process, whether that's you know as a product manager now when I hand over PRD before I think I would have an expectation for how long a project took.
+[128:24] I definitely be able to T-shirt size it by myself to some extent right now I genuinely could be told it'll take me a day will take me week.
+[128:33] I think I'm going to be able to do a month and I kind of believe all of those without with it. So there is there is just more ambiguity you have to be comfortable with it.
+[128:44] And because because things happens are rapidly things move quickly.
+[128:52] Emma Lizzie and I would get together a pair on a PRD.
+[128:57] And I kind of miss one meeting. It's almost the equivalent of missing like a week of work in the old world because because all those decisions get made right in all those decisions and made using the like ask the user question tool.
+[129:11] So if you miss an hour long meeting, you kind of miss the whole the ideation process for a feature. So like that's also a little.
+[129:19] It's a little funky but like that just kind of goes to show like you have to be comfortable with having like question marks and have to be comfortable catching up.
+[129:28] But yeah, and then I would say our last kind of surprise decision is make sense why we're in get but definitely some of our engineers raise the question of do we really want all these non engineers and get do we trust them.
+[129:43] Just I you know, I'm biased but just just kind of speaking for the team.
+[129:49] Then in terms of kind of a change during the spring as mentioned just really priority order based on conversations will call and what what the needs were.
+[129:58] So the reason we bumped up the registration flows in the first place to be our second deliverable is because of needs for a major functional medicine group that that we're planning on onboarding in the near future forum.
+[130:11] So we want to make sure that we have all of our all of our ducks in a row for that.
+[130:17] Well, when you make it when you make a change.
+[130:21] Let's say it's a week later and there's a there's a change for some reason is there a best practice where you ask claw to make the change or do you go back into the PRD make the change or do you ask claw to make the change and change the PRD and update the MD.
+[130:36] How do you sort of do that if there are changes.
+[130:40] Yeah, so what I've been doing so far is and I actually I actually don't like the ask user mode in cloud.
+[130:48] I still prompt claw to identify gaps and tag enough identify gaps. The reason I do that is because it.
+[130:55] An ask user mode it kind of gives you one question at a time this way kind of outlines all of the gaps at binds all at once you can read through them.
+[131:03] You can kind of take a second think about it holistically and then and then update the PRD, which is just better for my working style, but to but I have been going back to the PRD updating the PRD then kind of going through that same process of like of identify the gaps working with claw to make it better and then handing it back over to engineer.
+[131:25] Cool thanks.
+[131:29] So in terms of our path to the getting our view on into production.
+[131:36] We we feel pretty close to be honest, so we have some UI improvements we want to make to the health outcomes dashboard.
+[131:44] And then we need to complete the remaining kind of steps in our FF workflows, but our biggest next steps are just testing.
+[131:52] So we're trying the B2B team how to use the new workflows and then user education we are going to be changing user workflows so need to work with life cycle to make sure that that we send out user education and they're up to date on on their steps.
+[132:08] We are moving friction we are making the process much easier for them, but we just need to tell them what to do.
+[132:15] In terms of our biggest risks and actually the AI native group, thank you and I know Jeff's also focused on this as well, but especially on the B2B side just kind of lack of testing data.
+[132:27] We have orgs that orgs don't necessarily have users in them with different states of different states of activation and registration or glucose data.
+[132:36] So making sure that we feel comfortable in our metrics and we need to make sure we have good testing data in there.
+[132:44] Not a dependency for V1, but a dependency for V2 is where you will require a GLP1 data model for our next phases.
+[132:51] And then honestly, what we need to do to get a green light and feel like the deliverables that we have been working on have been known as priorities and needs for a while.
+[133:02] So just kind of go to market and stay colder sign off on what we have built and then and then working with Colin and team to get it out the door.
+[133:11] And now I will hand it over to Julian.
+[133:18] And I will take over window which one this one.
+[133:26] All right, so small quick thing.
+[133:32] That's this yes panel.
+[133:35] That's all of you knows about it, but it's there.
+[133:38] It's on the ship of ice or we added organization to it.
+[133:43] And there's now it's now showing the type functional medicine or employee benefits.
+[133:49] There's actually four different types. The one is carrier and this one that I am not remembering the the present.
+[134:00] Let's see, I think it's there affiliate. That's the other one.
+[134:05] So you can now so basically to be able to do all.
+[134:10] That's Pavel said we need to be able to create organization that was previously done on read tool and was not updated for a while.
+[134:19] So this is the new place. So it's all the same information and all the same set things that you can do on on on read tool and create the type of organization that you want.
+[134:31] That said, you can let's say an organization like this one, which is car nie's test logo functional.
+[134:41] That's and you can also edit. So those are like things that were not there at the beginning of the week, but the is quite easy or to actually go and go through that.
+[134:52] That was not even based on a design of whatsoever. It's just like look at what's in there. And this one is using Polaris components that are directly from Shopify.
+[135:07] And so it just like whipped up something that look great.
+[135:13] Which is a real big time. I'm safer for that. So now the crux of like everything that's going on on the on the B2B side is actually on the partner dashboard.
+[135:30] So for those who don't have a partner, you might not know this screen, this screen is where you switch between your personal account or the organizational account.
+[135:40] So let's go to the organization account.
+[135:43] Yeah. So this.
+[135:45] Yes. Yeah.
+[135:48] Okay.
+[135:50] That's good.
+[135:53] So the this is it's you. So we're only selling now one month planned and three month plans.
+[136:04] So there's no credit that's there's no credit system in the back. We're just basically purchasing seats on Shopify. So basically there's only one.
+[136:19] There's only the three month plan configured on the dev side of things. So that's why that's what's showing up.
+[136:24] But the weekend purchase seed like that. And then if you click purchase, it's actually going to the checkout for Shopify.
+[136:36] Which is.
+[136:40] Yes. So you can you can actually buy those seats when those seats are like paid for the.
+[136:48] They'll show up in your in your available seats view.
+[136:55] And then we're working right now on the process here to actually assign seats to specific users. So basically tell them to.
+[137:08] If I want to give a seat to let's say Emma, then I would input her email address and all that.
+[137:15] And the seat would be assigned to her and the you know the CGM would be shipped to her address.
+[137:24] Unfortunately, it's almost done, but not quite ready. So that's why it's not showing up there. But yeah, the main difficulty with all that is that there's.
+[137:37] Three different systems ship a fine cloud and web involved and there's basically steps that are done by CS customer support.
+[137:50] The step being done by the partner admins. The step being done by the user.
+[137:56] So the flow chart of all that is a bit difficult to manage.
+[138:02] And put some example, let's say if we're talking about like an admin. Is it a CS admin or is it the partner admin?
+[138:13] And a code is completely confused about that. If we're just specifying in admin. Sometimes it's not sure which one we're talking about.
+[138:24] So yeah, there's a bunch like that. We have to be kind of precise.
+[138:30] Every step of the way. That's about it. I did not look in the chat.
+[138:38] Oh, it's okay. That's not really okay.
+[138:43] Awesome. Okay. Huge just like huge huge huge round of applause for everyone. Take deep breath.
+[138:50] Thanks for thanks for buckling in there and and listening. I mean, I'm just like super blown away.
+[138:59] It's really amazing to see what everyone has been working on and yeah, just a lot of like really amazing creative ideas coming on to the last couple of weeks.
+[139:10] I know.
+[139:12] You know, so next week, don't worry, we're not going to be like great. Now six new projects.
+[139:19] One do that to you. You know, stay stay in your pods and kind of think about like, okay, now, you know what the one of the reasons why I want to make sure we're talking about like what's left to get to V1 is because that really is the goal here, right, is to get us to shipable V1s for for everything.
+[139:39] And so I know next week to probably need some time to do a lot more synthesis and like some digesting of different processes across the board, getting you know, run your V back in team together, kind of like cross pods mobile as well.
+[139:58] And so we'll kind of figure out what that looks like. But you guys, you know, kind of like in in the deck, kind of forced you to think about, you know, what's what's next, what's left to do.
+[140:11] So keep on working towards those V1 goals and really appreciate all the effort that you guys put into planning for today to it was really cool to see a lot of things really come to life.
+[140:26] Roger, do you have anything else you want to add?
+[140:29] You said it all. I think it's, yeah, well, we'll start synthesizing a little bit on Monday and I'd say just kind of stay the course and looks like we've got some really promising stuff to get out the door.
+[140:42] Yeah.
+[140:43] Because we keep forging ahead.
+[140:45] Yeah.
+[140:47] Cool. All right. Well, thank you everyone. Have a great rest of your Friday and we'll see you all on Monday.
+[140:55] Bye.
+[140:58] Thank you.
+[140:59] Thanks everybody.

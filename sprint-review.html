@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signos Sprint Review — Feb 6, 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a2e;
+            --bg-card-hover: #1e1e35;
+            --border: rgba(255,255,255,0.06);
+            --border-accent: rgba(99,102,241,0.3);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent: #6366f1;
+            --accent-glow: rgba(99,102,241,0.15);
+            --green: #34d399;
+            --green-bg: rgba(52,211,153,0.1);
+            --yellow: #fbbf24;
+            --yellow-bg: rgba(251,191,36,0.1);
+            --red: #f87171;
+            --red-bg: rgba(248,113,113,0.1);
+            --blue: #60a5fa;
+            --blue-bg: rgba(96,165,250,0.1);
+            --purple: #a78bfa;
+            --purple-bg: rgba(167,139,250,0.1);
+            --orange: #fb923c;
+            --orange-bg: rgba(251,146,60,0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Login Modal */
+        .login-modal {
+            position: fixed; inset: 0; z-index: 1000;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(12px);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .login-modal.hidden { display: none; }
+        .login-box {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 16px; padding: 40px; width: 380px; text-align: center;
+        }
+        .login-box h2 { font-size: 22px; margin-bottom: 8px; }
+        .login-box p { color: var(--text-secondary); font-size: 14px; margin-bottom: 24px; }
+        .login-input {
+            width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border);
+            background: var(--bg-secondary); color: var(--text-primary); font-size: 14px;
+            margin-bottom: 12px; outline: none; font-family: inherit;
+        }
+        .login-input:focus { border-color: var(--accent); }
+        .login-btn {
+            width: 100%; padding: 12px; border-radius: 8px; border: none;
+            background: var(--accent); color: white; font-weight: 600; font-size: 14px;
+            cursor: pointer; font-family: inherit; margin-top: 8px;
+        }
+        .login-btn:hover { background: #5558e6; }
+        .login-error { color: var(--red); font-size: 13px; margin-top: 8px; display: none; }
+
+        /* Header */
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 32px;
+            display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .header-left { display: flex; align-items: center; gap: 16px; }
+        .header-logo { font-size: 20px; font-weight: 700; color: var(--accent); }
+        .header-title { font-size: 14px; color: var(--text-secondary); }
+        .header-right { display: flex; align-items: center; gap: 12px; }
+        .user-badge {
+            background: var(--accent-glow); border: 1px solid var(--border-accent);
+            border-radius: 20px; padding: 6px 14px; font-size: 13px; color: var(--accent);
+        }
+        .nav-link {
+            color: var(--text-secondary); text-decoration: none; font-size: 13px;
+            padding: 6px 12px; border-radius: 8px; transition: all 0.2s;
+        }
+        .nav-link:hover { color: var(--text-primary); background: rgba(255,255,255,0.05); }
+
+        /* Layout */
+        .container { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+        
+        /* Sprint Overview Banner */
+        .sprint-banner {
+            background: linear-gradient(135deg, var(--bg-card), #1a1a40);
+            border: 1px solid var(--border-accent);
+            border-radius: 16px; padding: 32px; margin-bottom: 32px;
+        }
+        .sprint-banner h1 {
+            font-size: 28px; font-weight: 800; margin-bottom: 8px;
+            background: linear-gradient(135deg, #fff, var(--accent));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .sprint-banner .subtitle { color: var(--text-secondary); font-size: 15px; margin-bottom: 20px; }
+        .sprint-stats {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+        }
+        .sprint-stat {
+            background: rgba(255,255,255,0.03); border-radius: 10px; padding: 16px;
+            border: 1px solid var(--border);
+        }
+        .sprint-stat .label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 4px; }
+        .sprint-stat .value { font-size: 22px; font-weight: 700; color: var(--text-primary); }
+        .sprint-stat .detail { font-size: 12px; color: var(--text-secondary); }
+
+        /* Team Navigation */
+        .team-nav {
+            display: flex; gap: 8px; margin-bottom: 24px; overflow-x: auto;
+            padding-bottom: 4px; flex-wrap: wrap;
+        }
+        .team-nav-btn {
+            padding: 10px 18px; border-radius: 10px; border: 1px solid var(--border);
+            background: var(--bg-card); color: var(--text-secondary); font-size: 13px;
+            cursor: pointer; white-space: nowrap; font-family: inherit;
+            transition: all 0.2s; font-weight: 500;
+        }
+        .team-nav-btn:hover { border-color: var(--border-accent); color: var(--text-primary); }
+        .team-nav-btn.active {
+            background: var(--accent-glow); border-color: var(--accent);
+            color: var(--accent); font-weight: 600;
+        }
+        .team-nav-btn .team-dot {
+            display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+            margin-right: 6px;
+        }
+
+        /* Team Panel */
+        .team-panel { display: none; }
+        .team-panel.active { display: block; }
+
+        .team-header {
+            display: flex; align-items: center; gap: 16px; margin-bottom: 24px;
+        }
+        .team-icon {
+            width: 48px; height: 48px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px;
+        }
+        .team-header h2 { font-size: 24px; font-weight: 700; }
+        .team-header .team-meta { color: var(--text-secondary); font-size: 13px; }
+
+        /* Cards */
+        .review-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 14px; padding: 24px; margin-bottom: 20px;
+        }
+        .review-card h3 {
+            font-size: 16px; font-weight: 600; margin-bottom: 12px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .review-card h3 .icon { font-size: 18px; }
+
+        /* Tag chips */
+        .tag-list { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+        .tag {
+            padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 500;
+        }
+        .tag-green { background: var(--green-bg); color: var(--green); border: 1px solid rgba(52,211,153,0.2); }
+        .tag-yellow { background: var(--yellow-bg); color: var(--yellow); border: 1px solid rgba(251,191,36,0.2); }
+        .tag-red { background: var(--red-bg); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+        .tag-blue { background: var(--blue-bg); color: var(--blue); border: 1px solid rgba(96,165,250,0.2); }
+        .tag-purple { background: var(--purple-bg); color: var(--purple); border: 1px solid rgba(167,139,250,0.2); }
+        .tag-orange { background: var(--orange-bg); color: var(--orange); border: 1px solid rgba(251,146,60,0.2); }
+
+        /* Bullet list */
+        .bullet-list { list-style: none; padding: 0; }
+        .bullet-list li {
+            position: relative; padding-left: 20px; margin-bottom: 8px;
+            font-size: 14px; color: var(--text-secondary); line-height: 1.6;
+        }
+        .bullet-list li::before {
+            content: ''; position: absolute; left: 0; top: 8px;
+            width: 6px; height: 6px; border-radius: 50%;
+        }
+        .bullet-list.green li::before { background: var(--green); }
+        .bullet-list.yellow li::before { background: var(--yellow); }
+        .bullet-list.red li::before { background: var(--red); }
+        .bullet-list.blue li::before { background: var(--blue); }
+        .bullet-list.purple li::before { background: var(--purple); }
+
+        /* People list */
+        .people-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 8px; margin-top: 8px;
+        }
+        .person-chip {
+            display: flex; align-items: center; gap: 8px; padding: 8px 12px;
+            background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px solid var(--border);
+            font-size: 13px;
+        }
+        .person-avatar {
+            width: 28px; height: 28px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 600;
+        }
+        .person-name { font-weight: 500; }
+        .person-role { font-size: 11px; color: var(--text-muted); }
+
+        /* Progress bar */
+        .progress-bar {
+            height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px;
+            margin-top: 8px; overflow: hidden;
+        }
+        .progress-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+
+        /* Two-column layout */
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } }
+
+        /* Input sections */
+        .input-section {
+            background: var(--bg-card); border: 1px solid var(--border-accent);
+            border-radius: 14px; padding: 24px; margin-bottom: 20px;
+        }
+        .input-section h3 {
+            font-size: 16px; font-weight: 600; margin-bottom: 16px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .input-group { margin-bottom: 16px; }
+        .input-label {
+            font-size: 13px; font-weight: 500; color: var(--text-secondary);
+            margin-bottom: 6px; display: block;
+        }
+        .input-textarea {
+            width: 100%; min-height: 80px; padding: 12px; border-radius: 8px;
+            border: 1px solid var(--border); background: var(--bg-secondary);
+            color: var(--text-primary); font-size: 14px; font-family: inherit;
+            resize: vertical; line-height: 1.5;
+        }
+        .input-textarea:focus { border-color: var(--accent); outline: none; }
+        .input-textarea::placeholder { color: var(--text-muted); }
+
+        /* Rating buttons */
+        .rating-group {
+            display: flex; gap: 6px; margin-top: 8px;
+        }
+        .rating-btn {
+            flex: 1; padding: 8px; border-radius: 8px; border: 1px solid var(--border);
+            background: var(--bg-secondary); color: var(--text-secondary); font-size: 12px;
+            cursor: pointer; text-align: center; font-family: inherit; transition: all 0.2s;
+        }
+        .rating-btn:hover { border-color: var(--border-accent); }
+        .rating-btn.selected { border-color: var(--accent); background: var(--accent-glow); color: var(--accent); font-weight: 600; }
+
+        .save-btn {
+            padding: 10px 24px; border-radius: 8px; border: none;
+            background: var(--accent); color: white; font-weight: 600;
+            font-size: 14px; cursor: pointer; font-family: inherit;
+            transition: all 0.2s;
+        }
+        .save-btn:hover { background: #5558e6; }
+        .save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Toast */
+        .toast {
+            position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+            padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: 500;
+            background: var(--green); color: #000;
+            transform: translateY(100px); opacity: 0; transition: all 0.3s;
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+
+        /* Transcript section */
+        .transcript-toggle {
+            padding: 10px 18px; border-radius: 8px; border: 1px solid var(--border);
+            background: var(--bg-card); color: var(--text-secondary); font-size: 13px;
+            cursor: pointer; font-family: inherit; transition: all 0.2s;
+        }
+        .transcript-toggle:hover { border-color: var(--border-accent); color: var(--text-primary); }
+        .transcript-box {
+            max-height: 400px; overflow-y: auto; margin-top: 12px; padding: 16px;
+            background: var(--bg-secondary); border-radius: 8px; border: 1px solid var(--border);
+            font-size: 13px; color: var(--text-secondary); line-height: 1.8;
+            display: none;
+        }
+        .transcript-box.visible { display: block; }
+        .transcript-box .timestamp {
+            color: var(--accent); font-weight: 500; font-size: 12px;
+            cursor: pointer; margin-right: 4px;
+        }
+
+        /* Summary section */
+        .summary-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        .summary-card {
+            background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border);
+            padding: 20px;
+        }
+        .summary-card h4 {
+            font-size: 14px; font-weight: 600; margin-bottom: 8px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .summary-card p { font-size: 13px; color: var(--text-secondary); }
+
+        /* Overall assessment section */
+        .overall-section {
+            background: linear-gradient(135deg, var(--bg-card), #1a1a3e);
+            border: 1px solid var(--border-accent); border-radius: 16px;
+            padding: 32px; margin-top: 32px;
+        }
+        .overall-section h2 {
+            font-size: 22px; font-weight: 700; margin-bottom: 20px;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<!-- Login Modal -->
+<div class="login-modal" id="loginModal">
+    <div class="login-box">
+        <h2>🔐 Sprint Review</h2>
+        <p>Sign in to review the sprint demos</p>
+        <form id="loginForm">
+            <input type="text" class="login-input" id="loginUsername" placeholder="Username" autocomplete="off">
+            <input type="password" class="login-input" id="loginPassword" placeholder="Password">
+            <button type="submit" class="login-btn">Sign In</button>
+            <div class="login-error" id="loginError">Invalid credentials</div>
+        </form>
+    </div>
+</div>
+
+<!-- Header -->
+<header class="header">
+    <div class="header-left">
+        <div class="header-logo">Signos</div>
+        <div class="header-title">Sprint Review — Feb 6, 2026</div>
+    </div>
+    <div class="header-right">
+        <a href="index.html" class="nav-link">← Pre-Read</a>
+        <a href="admin.html" class="nav-link">Admin</a>
+        <div class="user-badge" id="userBadge"></div>
+    </div>
+</header>
+
+<div class="container">
+
+    <!-- Sprint Overview Banner -->
+    <div class="sprint-banner">
+        <h1>🚀 2-Week Sprint Demo Review</h1>
+        <p class="subtitle">Sprint #1 completed Feb 6, 2026 — 6 pods presented demos of V1 prototypes built with AI-native development</p>
+        <div class="sprint-stats">
+            <div class="sprint-stat">
+                <div class="label">Duration</div>
+                <div class="value">2 Weeks</div>
+                <div class="detail">Jan 27 – Feb 6</div>
+            </div>
+            <div class="sprint-stat">
+                <div class="label">Teams</div>
+                <div class="value">6 Pods</div>
+                <div class="detail">Full company participation</div>
+            </div>
+            <div class="sprint-stat">
+                <div class="label">Demo Length</div>
+                <div class="value">2h 21m</div>
+                <div class="detail">All pods presented</div>
+            </div>
+            <div class="sprint-stat">
+                <div class="label">Key Theme</div>
+                <div class="value">AI-Native</div>
+                <div class="detail">Claude-driven development</div>
+            </div>
+            <div class="sprint-stat">
+                <div class="label">V1 Status</div>
+                <div class="value">In Progress</div>
+                <div class="detail">Prototypes → Production</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Team Navigation -->
+    <div class="team-nav">
+        <button class="team-nav-btn active" data-team="overview">📊 Overview</button>
+        <button class="team-nav-btn" data-team="ai-infra"><span class="team-dot" style="background:#6366f1"></span>AI Infrastructure</button>
+        <button class="team-nav-btn" data-team="meal-log"><span class="team-dot" style="background:#34d399"></span>Meal Logging</button>
+        <button class="team-nav-btn" data-team="glp1"><span class="team-dot" style="background:#60a5fa"></span>GLP-1</button>
+        <button class="team-nav-btn" data-team="pcos"><span class="team-dot" style="background:#a78bfa"></span>PCOS</button>
+        <button class="team-nav-btn" data-team="single-cgm"><span class="team-dot" style="background:#fb923c"></span>Single CGM</button>
+        <button class="team-nav-btn" data-team="b2b"><span class="team-dot" style="background:#f87171"></span>B2B Enterprise</button>
+        <button class="team-nav-btn" data-team="synthesis">🧠 Synthesis & Next Steps</button>
+    </div>
+
+    <!-- ========== OVERVIEW PANEL ========== -->
+    <div class="team-panel active" id="panel-overview">
+        <div class="review-card">
+            <h3><span class="icon">📋</span> Sprint Summary</h3>
+            <p style="color:var(--text-secondary);font-size:14px;margin-bottom:16px;">
+                The first 2-week sprint concluded with comprehensive demos from all 6 pods. Every team embraced AI-native development with Claude, building V1 prototypes at unprecedented speed. The sprint demonstrated both the incredible potential of AI-assisted development and the organizational challenges of adapting processes. Key themes across all teams: PRD quality is critical, Claude enables rapid prototyping but code review debt accumulates, cross-pod coordination needs improvement, and the transition from prototype to production requires significant additional work.
+            </p>
+        </div>
+
+        <div class="summary-grid">
+            <div class="summary-card">
+                <h4>🟣 AI Infrastructure</h4>
+                <p>Unified dev environment, one-command setup, backend simplification. Enabling all other teams.</p>
+                <div class="progress-bar"><div class="progress-fill" style="width:65%;background:var(--accent)"></div></div>
+                <span style="font-size:11px;color:var(--text-muted)">~65% to V1</span>
+            </div>
+            <div class="summary-card">
+                <h4>🟢 Meal Logging (CaliBite)</h4>
+                <p>Photo→instant log, barcode/label scan, recipe import from Instagram/TikTok. Admin QA panel.</p>
+                <div class="progress-bar"><div class="progress-fill" style="width:50%;background:var(--green)"></div></div>
+                <span style="font-size:11px;color:var(--text-muted)">~50% to V1</span>
+            </div>
+            <div class="summary-card">
+                <h4>🔵 GLP-1</h4>
+                <p>Intake questionnaire, eligibility branching, checkout, mobile onboarding, dose logging, graph integration.</p>
+                <div class="progress-bar"><div class="progress-fill" style="width:55%;background:var(--blue)"></div></div>
+                <span style="font-size:11px;color:var(--text-muted)">~55% to V1</span>
+            </div>
+            <div class="summary-card">
+                <h4>💜 PCOS</h4>
+                <p>Clinical PCOS solution, cycle tracking, macro targets, symptom tracking spec, glucose crash alerts.</p>
+                <div class="progress-bar"><div class="progress-fill" style="width:45%;background:var(--purple)"></div></div>
+                <span style="font-size:11px;color:var(--text-muted)">~45% to V1</span>
+            </div>
+            <div class="summary-card">
+                <h4>🟠 Single CGM</h4>
+                <p>$55 single sensor experience, 7-day baseline → Day 8 metabolic report, notable events, upsell flow.</p>
+                <div class="progress-bar"><div class="progress-fill" style="width:40%;background:var(--orange)"></div></div>
+                <span style="font-size:11px;color:var(--text-muted)">~40% to V1</span>
+            </div>
+            <div class="summary-card">
+                <h4>🔴 B2B Enterprise</h4>
+                <p>Health outcomes report, Shopify seat purchasing, partner dashboard, FM workflows, self-service registration.</p>
+                <div class="progress-bar"><div class="progress-fill" style="width:60%;background:var(--red)"></div></div>
+                <span style="font-size:11px;color:var(--text-muted)">~60% to V1</span>
+            </div>
+        </div>
+
+        <div class="review-card" style="margin-top:20px;">
+            <h3><span class="icon">🔑</span> Cross-Team Themes</h3>
+            <ul class="bullet-list blue">
+                <li><strong>AI debt is real:</strong> Multiple teams reported 400+ AI-generated files with limited code review. Production readiness is the top concern across all pods.</li>
+                <li><strong>PRD quality = output quality:</strong> Every team learned that thorough, granular PRDs dramatically improve Claude's output. "The sooner we got out of Google Docs the better" (GLP-1 team).</li>
+                <li><strong>Waterfall is back (sort of):</strong> B2B team noted PRDs must be "almost bulletproof" before handing to engineering now, since AI builds so fast there's less natural back-and-forth.</li>
+                <li><strong>Prototype ≠ Production:</strong> All teams have impressive prototypes but significant work remains to merge, test, QA, and ship production-ready code.</li>
+                <li><strong>Cross-pod coordination improved:</strong> Multiple teams praised the collaboration (AI infra helping everyone, shared symptom tracking spec between PCOS & GLP-1).</li>
+                <li><strong>Skills & tooling sharing:</strong> GLP-1 team published reusable Claude skills to SignalHQ repo — shared infrastructure for AI-native development.</li>
+                <li><strong>Interface documentation > implementation documentation:</strong> Roger emphasized documenting APIs and contracts between services, not internal implementation.</li>
+            </ul>
+        </div>
+
+        <div class="review-card">
+            <h3><span class="icon">⚡</span> My Analysis & Recommendations</h3>
+            <p style="color:var(--text-secondary);font-size:14px;margin-bottom:12px;"><em>AI-generated analysis based on transcript review:</em></p>
+            <ul class="bullet-list green">
+                <li><strong>Velocity is impressive but fragile:</strong> Teams built what would have taken months in 2 weeks, but the "AI debt" (unreviewed code, untested paths, prototype-quality architecture) could become a significant liability if not addressed before V1 ships.</li>
+                <li><strong>The GLP-1 team's process was best-in-class:</strong> Their PRD → stories → implementation plan → code pipeline, with skills published to shared repo, represents the most mature AI-native workflow. Other teams should adopt this pattern.</li>
+                <li><strong>Single CGM has highest revenue impact potential:</strong> At $55, this is the broadest top-of-funnel product. The Day 8 metabolic report → conversion to 3-6 month plan is a brilliant retention mechanic. Prioritize this for launch.</li>
+                <li><strong>OpenLoop integration is the critical path for GLP-1:</strong> Contract and staging access just came through during the meeting. This is the single biggest blocker — without OpenLoop, there's no GLP-1 product.</li>
+                <li><strong>Platform team is under-resourced relative to impact:</strong> The AI infrastructure work (one-command setup, seeding, DataDog MCP integration) benefits EVERY team. Consider increasing investment here.</li>
+                <li><strong>QA is a bottleneck about to break:</strong> Multiple teams mentioned QA can't start until features are merged. With 6 pods shipping simultaneously, QA will become the constraint. Need a strategy now.</li>
+                <li><strong>Mobile parity is a hidden risk:</strong> Several teams noted iOS and Android outputs diverge when given the same PRD. The alignment will need dedicated effort.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ========== AI INFRASTRUCTURE PANEL ========== -->
+    <div class="team-panel" id="panel-ai-infra">
+        <div class="team-header">
+            <div class="team-icon" style="background:var(--accent-glow);color:var(--accent);">🤖</div>
+            <div>
+                <h2>AI Infrastructure & Platform</h2>
+                <div class="team-meta">Demo: 0:00 – 12:36 • Led by Roger, Prashanth, Thomas</div>
+            </div>
+        </div>
+
+        <div class="tag-list">
+            <span class="tag tag-purple">Foundation Team</span>
+            <span class="tag tag-green">Cross-Team Impact</span>
+            <span class="tag tag-blue">Developer Experience</span>
+        </div>
+
+        <div class="two-col">
+            <div class="review-card">
+                <h3><span class="icon">✅</span> What Was Built</h3>
+                <ul class="bullet-list green">
+                    <li><strong>One-command local setup:</strong> Any engineer (or PM) can spin up the full backend stack in minutes with a single command</li>
+                    <li><strong>Seeding scripts:</strong> Every developer now has real data to work with locally — no more connecting to dev environment</li>
+                    <li><strong>Backend simplification:</strong> Major refactor of backend services, reduced complexity for both humans and AI agents</li>
+                    <li><strong>Comprehensive documentation:</strong> Extensive Claude-readable documentation of the codebase</li>
+                    <li><strong>OpenAPI spec cleanup:</strong> Working to ensure the auto-generated API spec is accurate and precise</li>
+                    <li><strong>DataDog MCP integration (exploring):</strong> Cloud can query observability logs to debug errors</li>
+                </ul>
+            </div>
+            <div class="review-card">
+                <h3><span class="icon">💡</span> Key Learnings</h3>
+                <ul class="bullet-list blue">
+                    <li><strong>"Document the interface, not the implementation"</strong> — Highest-value docs describe what services accept and how they connect, not how code works internally</li>
+                    <li><strong>Quality of life compounds:</strong> Fixing friction points saves everyone time — if you stub your toe on something, fix it because everyone else will too</li>
+                    <li><strong>Cross-team collaboration was excellent:</strong> Austin, Rebecca, Jake all tested scripts and provided pain-point feedback</li>
+                    <li><strong>Environment parity:</strong> Close to having any engineer run apps against local, dev, or prod with simple config change</li>
+                    <li><strong>Pod rotation could prevent silos:</strong> Thomas suggested allowing rotation between pods to cross-pollinate</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="review-card">
+            <h3><span class="icon">🎯</span> What's Left for V1</h3>
+            <ul class="bullet-list yellow">
+                <li>Finalize environment parity — one-click run against any environment</li>
+                <li>Complete DataDog MCP connection for AI-powered observability</li>
+                <li>Ensure OpenAPI spec is 100% accurate for all endpoints</li>
+                <li>Make README auto-updateable so docs never get stale</li>
+                <li>Reduce build/startup times from minutes to seconds</li>
+            </ul>
+        </div>
+
+        <div class="review-card">
+            <h3><span class="icon">👥</span> Team Members</h3>
+            <div class="people-grid">
+                <div class="person-chip"><div class="person-avatar" style="background:var(--accent-glow);color:var(--accent)">R</div><div><div class="person-name">Roger Neel</div><div class="person-role">CTO — Lead</div></div></div>
+                <div class="person-chip"><div class="person-avatar" style="background:var(--accent-glow);color:var(--accent)">P</div><div><div class="person-name">Prashanth Nambiar</div><div class="person-role">Engineering Manager</div></div></div>
+                <div class="person-chip"><div class="person-avatar" style="background:var(--accent-glow);color:var(--accent)">T</div><div><div class="person-name">Thomas Jonasson</div><div class="person-role">Principal Engineer</div></div></div>
+            </div>
+        </div>
+
+        <!-- Transcript -->
+        <div class="review-card">
+            <h3><span class="icon">📝</span> Demo Transcript</h3>
+            <button class="transcript-toggle" onclick="this.nextElementSibling.classList.toggle('visible')">Show/Hide Transcript (0:00 – 12:36)</button>
+            <div class="transcript-box" id="transcript-ai-infra"></div>
+        </div>
+
+        <!-- Executive Input -->
+        <div class="input-section">
+            <h3>✏️ Your Assessment</h3>
+            <div class="input-group">
+                <label class="input-label">How would you rate this team's sprint output?</label>
+                <div class="rating-group" data-team="ai-infra" data-field="rating">
+                    <button class="rating-btn" data-value="1">1 — Needs Work</button>
+                    <button class="rating-btn" data-value="2">2 — Below Expectations</button>
+                    <button class="rating-btn" data-value="3">3 — Met Expectations</button>
+                    <button class="rating-btn" data-value="4">4 — Exceeded</button>
+                    <button class="rating-btn" data-value="5">5 — Outstanding</button>
+                </div>
+            </div>
+            <div class="input-group">
+                <label class="input-label">What worked well?</label>
+                <textarea class="input-textarea" data-team="ai-infra" data-field="worked_well" placeholder="What impressed you about this team's output?"></textarea>
+            </div>
+            <div class="input-group">
+                <label class="input-label">What didn't work or concerns?</label>
+                <textarea class="input-textarea" data-team="ai-infra" data-field="concerns" placeholder="What needs improvement or worries you?"></textarea>
+            </div>
+            <div class="input-group">
+                <label class="input-label">Employee standouts (positive or negative)?</label>
+                <textarea class="input-textarea" data-team="ai-infra" data-field="standouts" placeholder="Which individuals stood out and why?"></textarea>
+            </div>
+            <div class="input-group">
+                <label class="input-label">Next steps / priorities for this team?</label>
+                <textarea class="input-textarea" data-team="ai-infra" data-field="next_steps" placeholder="What should this team focus on next?"></textarea>
+            </div>
+            <button class="save-btn" onclick="saveTeamReview('ai-infra')">💾 Save Review</button>
+        </div>
+    </div>
+
+    <!-- ========== MEAL LOGGING PANEL ========== -->
+    <div class="team-panel" id="panel-meal-log">
+        <div class="team-header">
+            <div class="team-icon" style="background:var(--green-bg);color:var(--green);">🍎</div>
+            <div>
+                <h2>Meal Logging (CaliBite)</h2>
+                <div class="team-meta">Demo: 12:36 – 50:06 • Led by David, Pierre, Maggie, Alex, Noah</div>
+            </div>
+        </div>
+
+        <div class="tag-list">
+            <span class="tag tag-green">New Product</span>
+            <span class="tag tag-blue">AI Meal Capture</span>
+            <span class="tag tag-purple">Recipe Import</span>
+        </div>
+
+        <div class="two-col">
+            <div class="review-card">
+                <h3><span class="icon">✅</span> What Was Built</h3>
+                <ul class="bullet-list green">
+                    <li><strong>Photo → instant meal log:</strong> Snap a photo, AI identifies food, logs calories/macros instantly in background</li>
+                    <li><strong>Barcode & nutrition label scanning:</strong> Auto-detects barcodes, resolves via FatSecret database</li>
+                    <li><strong>Recipe import from Instagram/TikTok:</strong> Share any link, scraper extracts ingredients, nutrition, and instructions</li>
+                    <li><strong>Macro budgets:</strong> First-ever daily macro targets for Signos users (protein, fiber, etc.)</li>
+                    <li><strong>Quick verdict scores:</strong> Instant health rating on every logged meal</li>
+                    <li><strong>Voice & text logging:</strong> Multiple input channels — "I had two eggs" works</li>
+                    <li><strong>Intent-based meal updates:</strong> Say "actually I had 4 eggs" and it updates the existing meal in place</li>
+                    <li><strong>Admin QA panel:</strong> Internal tool for testing all capture pipelines, allowing QA before mobile merge</li>
+                    <li><strong>Suggested items for completeness:</strong> AI suggests what might be missing from a meal ("did you also have yogurt?")</li>
+                    <li><strong>Glucose estimates (PPGR preview):</strong> Population-level glucose impact estimates without CGM</li>
+                </ul>
+            </div>
+            <div class="review-card">
+                <h3><span class="icon">💡</span> Key Learnings</h3>
+                <ul class="bullet-list blue">
+                    <li><strong>Scope tightened to protect core loop:</strong> Focused on log → edit → learn cycle. Many edge cases and failure states between capture and results</li>
+                    <li><strong>"Signos is for lazy people":</strong> Optimized for minimal effort — one tap from home screen to camera, like Snapchat's mission</li>
+                    <li><strong>400+ new AI-generated files:</strong> Speed of development meant very limited code review. Major AI debt to validate</li>
+                    <li><strong>Internal tooling is powerful:</strong> Admin panel lets QA and PMs test pipeline pieces independently before mobile integration</li>
+                    <li><strong>Multi-input complexity:</strong> Voice, photo, barcode, URL, text — each has different processing pipelines and failure modes</li>
+                    <li><strong>FatSecret may not be the best source:</strong> Some reliability issues with nutrition data — exploring alternatives</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="two-col">
+            <div class="review-card">
+                <h3><span class="icon">🎯</span> What's Left for V1</h3>
+                <ul class="bullet-list yellow">
+                    <li>Validate and stabilize all 400+ AI-generated files</li>
+                    <li>Wire up water logging (partially done)</li>
+                    <li>Saved & favorite meals with food swapping</li>
+                    <li>Weekly reports and insights</li>
+                    <li>Restaurant menu scanning</li>
+                    <li>Barcode/nutrition label end-to-end integration</li>
+                    <li>Instrument metrics — need to track what people are doing</li>
+                    <li>Settings, reports, privacy/consent compliance</li>
+                    <li>Better PPGR graph integration (backend exists, not in UI)</li>
+                    <li>Edit functionality on iOS (not yet merged)</li>
+                </ul>
+            </div>
+            <div class="review-card">
+                <h3><span class="icon">⚠️</span> Risks & Dependencies</h3>
+                <ul class="bullet-list red">
+                    <li><strong>Code quality concern:</strong> "A lot that was AI-generated and just the amount and the speed meant there's not been a lot of code review or cleanup"</li>
+                    <li><strong>Data reliability:</strong> FatSecret may not consistently provide accurate nutrition data</li>
+                    <li><strong>Feature branch only:</strong> Many features built in feature branches, not merged to main</li>
+                    <li><strong>iOS-Android parity:</strong> Different outputs from same PRD inputs</li>
+                    <li><strong>Free → CGM conversion path:</strong> Not yet designed how meal logging leads to CGM upsell</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="review-card">
+            <h3><span class="icon">👥</span> Team Members</h3>
+            <div class="people-grid">
+                <div class="person-chip"><div class="person-avatar" style="background:var(--green-bg);color:var(--green)">D</div><div><div class="person-name">David Forsythe</div><div class="person-role">Product — Presenter</div></div></div>
+                <div class="person-chip"><div class="person-avatar" style="background:var(--green-bg);color:var(--green)">P</div><div><div class="person-name">Pierre Wehbe</div><div class="person-role">Chief Architect — Demo</div></div></div>
+                <div class="person-chip"><div class="person-avatar" style="background:var(--green-bg);color:var(--green)">M</div><div><div class="person-name">Maggie Falkenberg</div><div class="person-role">QA Analyst</div></div></div>
+                <div class="person-chip"><div class="person-avatar" style="background:var(--green-bg);color:var(--green)">N</div><div><div class="person-name">Noah Kellem</div><div class="person-role">Sr. Engineer</div></div></div>
+                <div class="person-chip"><div class="person-avatar" style="background:var(--green-bg);color:var(--green)">A</div><div><div class="person-name">Alex</div><div class="person-role">Engineer</div></div></div>
+            </div>
+        </div>
+
+        <div class="review-card">
+            <h3><span class="icon">📝</span> Demo Transcript</h3>
+            <button class="transcript-toggle" onclick="this.nextElementSibling.classList.toggle('visible')">Show/Hide Transcript (12:36 – 50:06)</button>
+            <div class="transcript-box" id="transcript-meal-log"></div>
+        </div>
+
+        <div class="input-section">
+            <h3>✏️ Your Assessment</h3>
+            <div class="input-group">
+                <label class="input-label">How would you rate this team's sprint output?</label>
+                <div class="rating-group" data-team="meal-log" data-field="rating">
+                    <button class="rating-btn" data-value="1">1 — Needs Work</button>
+                    <button class="rating-btn" data-value="2">2 — Below Expectations</button>
+                    <button class="rating-btn" data-value="3">3 — Met Expectations</button>
+                    <button class="rating-btn" data-value="4">4 — Exceeded</button>
+                    <button class="rating-btn" data-value="5">5 — Outstanding</button>
+                </div>
+            </div>
+            <div class="input-group">
+                <label class="input-label">What worked well?</label>
+                <textarea class="input-textarea" data-team="meal-log" data-field="worked_well" placeholder="What impressed you about this team's output?"></textarea>
+            </div>
+            <div class="input-group">
+                <label class="input-label">What didn't work or concerns?</label>
+                <textarea class="input-textarea" data-team="meal-log" data-field="concerns" placeholder="What needs improvement or worries you?"></textarea>
+            </div>
+            <div class="input-group">
+                <label class="input-label">Employee standouts (positive or negative)?</label>
+                <textarea class="input-textarea" data-team="meal-log" data-field="standouts" placeholder="Which individuals stood out and why?"></textarea>
+            </div>
+            <div class="input-group">
+                <label class="input-label">Next steps / priorities for this team?</label>
+                <textarea class="input-textarea" data-team="meal-log" data-field="next_steps" placeholder="What should this team focus on next?"></textarea>
+            </div>
+            <button class="save-btn" onclick="saveTeamReview('meal-log')">💾 Save Review</button>
+        </div>
+    </div>
+
+    <!-- ========== GLP-1 PANEL ========== -->
+    <div class="team-panel" id="panel-glp1">
+        <div class="team-header">
+            <div class="team-icon" style="background:var(--blue-bg);color:var(--blue);">💊</div>
+            <div>
+                <h2>GLP-1 Program</h2>
+                <div class="team-meta">Demo: 50:06 – 85:04 • Led by Emma, Noah, Jossi, Leo</div>
+            </div>
+        </div>
+
+        <div class="tag-list">
+            <span class="tag tag-blue">Revenue Driver</span>
+            <span class="tag tag-green">Best Process</span>
+            <span class="tag tag-orange">OpenLoop Integration</span>
+        </div>
+
+        <div class="two-col">
+            <div class="review-card">
+                <h3><span class="icon">✅</span> What Was Built</h3>
+                <ul class="bullet-list green">
+                    <li><strong>V1 adaptive intake questionnaire:</strong> Eligibility branching based on BMI, comorbidities, exclusions → routes to macro or micro dosing plans</li>
+                    <li><strong>Full checkout flow:</strong> Data saves to MongoDB backend, ready for OpenLoop integration</li>
+                    <li><strong>Mobile adaptive onboarding:</strong> Program setup, titration schedule preview, first dose education, side effect guidance</li>
+                    <li><strong>Medication logging with graph integration:</strong> GLP-1 dose markers on glucose graph, dose history tracking</li>
+                    <li><strong>Medication management tab:</strong> Clinical dose status, refill checkpoints, shipment tracking</li>
+                    <li><strong>Push notification system:</strong> Dose reminders with snooze options, missed dose alerts, checkpoint notifications</li>
+                    <li><strong>Signos-managed vs self-managed states:</strong> Different controls for each program type</li>
+                    <li><strong>Debug/prototype tools:</strong> Comprehensive internal testing tools for all states and edge cases</li>
+                    <li><strong>Near-identical iOS/Android parity:</strong> Leo and Jossi achieved close feature parity through shared workflow</li>
+                    <li><strong>Reusable Claude skills:</strong> Published to SignalHQ repo for all teams to use</li>
+                </ul>
+            </div>
+            <div class="review-card">
+                <h3><span class="icon">💡</span> Key Learnings</h3>
+                <ul class="bullet-list blue">
+                    <li><strong>PRD → Stories → Implementation Plan → Code pipeline:</strong> The most mature AI-native workflow. More time on PRD upfront = much faster building</li>
+                    <li><strong>"Trust the process":</strong> Let Claude build everything, then review — rather than micro-managing each step</li>
+                    <li><strong>Out of Google Docs ASAP:</strong> Moved PRD to markdown in GitHub repo, Claude could iterate directly on it</li>
+                    <li><strong>Claude interview process:</strong> Had Claude identify gaps in PRD, then break it into implementation stories</li>
+                    <li><strong>Skills sharing:</strong> Built Claude plugin skills and published to shared repo for reuse</li>
+                    <li><strong>Coordinated with other teams:</strong> Shared symptom tracking spec with PCOS, aligned on onboarding flow</li>
+                    <li><strong>"How do we get Claude to build anything reliably ongoing"</strong> vs just building a single feature — a strategic mindset shift</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="two-col">
+            <div class="review-card">
+                <h3><span class="icon">🎯</span> What's Left for V1</h3>
+                <ul class="bullet-list yellow">
+                    <li>Finalize intake questionnaire with Signos personality/branding</li>
+                    <li>Complete OpenLoop end-to-end integration (account creation, clinical review, webhooks)</li>
+                    <li>Define and build member portal (admin) scope</li>
+                    <li>Go-to-market strategy, marketing site, landing pages</li>
+                    <li>Backend data models, API contracts, endpoints for mobile</li>
+                    <li>Full code review and merge — lots of AI debt</li>
+                    <li>iOS-Android alignment pass</li>
+                    <li>A/B testing variants for intake questionnaire funnel optimization</li>
+                    <li>End-to-end integration testing with OpenLoop</li>
+                </ul>
+            </div>
+            <div class="review-card">
+                <h3><span class="icon">⚠️</span> Risks & Dependencies</h3>
+                <ul class="bullet-list red">
+                    <li><strong>OpenLoop contract & staging:</strong> Just got staging access during the meeting — this was the biggest blocker</li>
+                    <li><strong>Integration complexity:</strong> Multiple systems (web, app, OpenLoop) all need to sync correctly</li>
+                    <li><strong>AI debt / code review:</strong> Same issue as other teams — code built fast, needs thorough review</li>
+                    <li><strong>Customer experience end-to-end:</strong> Education, fulfillment status, clinical checkpoints — all need to work seamlessly</li>
+                    <li><strong>Go-to-market readiness:</strong> Marketing plan and site scope not yet defined</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="review-card">
+            <h3><span class="icon">👥</span> Team Members</h3>
+            <div class="people-grid">
+                <div class="person-chip"><div class="person-avatar" style="background:var(--blue-bg);color:var(--blue)">E</div><div><div class="person-name">Emma Allison</div><div class="person-role">VP Product — Lead</div></div></div>
+                <div class="person-chip"><div class="person-avatar" style="background:var(--blue-bg);color:var(--blue)">N</div><div><div class="person-name">Noah Kellem</div><div class="person-role">Sr. Engineer — Web Demo</div></div></div>
+                <div class="person-chip"><div class="person-avatar" style="background:var(--blue-bg);color:var(--blue)">J</div><div><div class="person-name">Jossi Cruz</div><div class="person-role">Engineer — Mobile Demo</div></div></div>
+                <div class="person-chip"><div class="person-avatar" style="background:var(--blue-bg);color:var(--blue)">L</div><div><div class="person-name">Leo (Contractor)</div><div class="person-role">iOS Engineer</div></div></div>
+            </div>
+        </div>
+
+        <div class="review-card">
+            <h3><span class="icon">📝</span> Demo Transcript</h3>
+            <button class="transcript-toggle" onclick="this.nextElementSibling.classList.toggle('visible')">Show/Hide Transcript (50:06 – 85:04)</button>
+            <div class="transcript-box" id="transcript-glp1"></div>
+        </div>
+
+        <div class="input-section">
+            <h3>✏️ Your Assessment</h3>
+            <div class="input-group">
+                <label class="input-label">How would you rate this team's sprint output?</label>
+                <div class="rating-group" data-team="glp1" data-field="rating">
+                    <button class="rating-btn" data-value="1">1 — Needs Work</button>
+                    <button class="rating-btn" data-value="2">2 — Below Expectations</button>
+                    <button class="rating-btn" data-value="3">3 — Met Expectations</button>
+                    <button class="rating-btn" data-value="4">4 — Exceeded</button>
+                    <button class="rating-btn" data-value="5">5 — Outstanding</button>
+                </div>
+            </div>
+            <div class="input-group">
+                <label class="input-label">What worked well?</label>
+                <textarea class="input-textarea" data-team="glp1" data-field="worked_well" placeholder="What impressed you about this team's output?"></textarea>
+            </div>
+            <div class="input-group">
+                <label class="input-label">What didn't work or concerns?</label>
+                <textarea class="input-textarea" data-team="glp1" data-field="concerns" placeholder="What needs improvement or worries you?"></textarea>
+            </div>
+            <div class="input-group">
+                <label class="input-label">Employee standouts (positive or negative)?</label>
+                <textarea class="input-textarea" data-team="glp1" data-field="standouts" placeholder="Which individuals stood out and why?"></textarea>
+            </div>
+            <div class="input-group">
+                <label class="input-label">Next steps / priorities for this team?</label>
+                <textarea class="input-textarea" data-team="glp1" data-field="next_steps" placeholder="What should this team focus on next?"></textarea>
+            </div>
+            <button class="save-btn" onclick="saveTeamReview('glp1')">💾 Save Review</button>
+        </div>
+    </div>
+
+    <!-- ========== PCOS PANEL ========== -->
+    <div class="team-panel" id="panel-pcos">
+        <div class="team-header">
+            <div class="team-icon" style="background:var(--purple-bg);color:var(--purple);">🩺</div>
+            <div>
+                <h2>PCOS Program</h2>
+                <div class="team-meta">Demo: 85:04 – 96:35 • Led by Brent, Augustin, Rebecca, Mel</div>
+            </div>
+        </div>
+
+        <div class="tag-list">
+            <span class="tag tag-purple">Clinical Product</span>
+            <span class="tag tag-green">Women's Health</span>
+            <span class="tag tag-blue">Shared Features</span>
+        </div>
+
+        <div class="two-col">
+            <div class="review-card">
+                <h3><span class="icon">✅</span> What Was Built</h3>
+                <ul class="bullet-list green">
+                    <li><strong>Market research & clinical validation:</strong> Deep research on PCOS (13% of reproductive females, 70% undiagnosed)</li>
+                    <li><strong>10+ prototypes explored:</strong> Extensive design exploration before settling on direction</li>
+                    <li><strong>Onboarding & education flows:</strong> PCOS-specific questionnaire, morning check-in screens</li>
+                    <li><strong>Cycle tracking implementation:</strong> Benefits ALL female users, not just PCOS — long-requested feature</li>
+                    <li><strong>Macro display for all users:</strong> First-ever protein & fiber targets in the app</li>
+                    <li><strong>Production-quality API integration:</strong> Backend entries with actual API calls, not just prototypes</li>
+                    <li><strong>Shared symptom tracking spec:</strong> Coordinated with GLP-1 team on reusable symptom system</li>
+                    <li><strong>Glucose crash alert design:</strong> Detecting when users approach 70 mg/dL mark for symptom prompting</li>
+                </ul>
+            </div>
+            <div class="review-card">
+                <h3><span class="icon">💡</span> Key Learnings</h3>
+                <ul class="bullet-list blue">
+                    <li><strong>Pod structure adjustment took time:</strong> Team needed a while to figure out how to work in the new structures</li>
+                    <li><strong>Claude is intuitive for individuals:</strong> Most team members found Claude itself easy to work with</li>
+                    <li><strong>PRD changes create ripple effects:</strong> Changing the PRD causes AI to regenerate artifacts with unexpected changes — need to check all downstream artifacts</li>
+                    <li><strong>Backend-frontend flow improved:</strong> Having Rebecca embedded with Augustin and team improved development velocity</li>
+                    <li><strong>"Prototype first, design later" approach:</strong> Building it first, then refining design — faster but more rework</li>
+                    <li><strong>HealthKit integration exploration:</strong> Women already tracking periods in other apps — can import that data</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="two-col">
+            <div class="review-card">
+                <h3><span class="icon">🎯</span> What's Left for V1</h3>
+                <ul class="bullet-list yellow">
+                    <li>Complete cycle tracking implementation</li>
+                    <li>Build symptom tracking system (leading this for all pods)</li>
+                    <li>Finalize macro display</li>
+                    <li>Backend work for PCOS-specific features</li>
+                    <li>HealthKit integration for period data import</li>
+                    <li>PR reviews — "really big code chunks" need review</li>
+                    <li>Production code from prototypes (not all tested/merged)</li>
+                </ul>
+            </div>
+            <div class="review-card">
+                <h3><span class="icon">⚠️</span> Risks & Dependencies</h3>
+                <ul class="bullet-list red">
+                    <li><strong>Prototype ≠ Production:</strong> Several prototypes "look like they totally work end to end but it's code we haven't been able to test"</li>
+                    <li><strong>Cross-pod coordination:</strong> Symptom tracking shared across teams, cycle tracking for all users</li>
+                    <li><strong>PRD change ripple effects:</strong> AI regenerates artifacts with unexpected changes</li>
+                    <li><strong>Code review bottleneck:</strong> Large code chunks need review before merge</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="review-card">
+            <h3><span class="icon">👥</span> Team Members</h3>
+            <div class="people-grid">
+                <div class="person-chip"><div class="person-avatar" style="background:var(--purple-bg);color:var(--purple)">B</div><div><div class="person-name">Brent Williams</div><div class="person-role">Principal PM — Lead</div></div></div>
+                <div class="person-chip"><div class="person-avatar" style="background:var(--purple-bg);color:var(--purple)">A</div><div><div class="person-name">Augustin (Contractor)</div><div class="person-role">Android — Demo</div></div></div>
+                <div class="person-chip"><div class="person-avatar" style="background:var(--purple-bg);color:var(--purple)">R</div><div><div class="person-name">Rebecca Anderson</div><div class="person-role">Backend Engineer</div></div></div>
+                <div class="person-chip"><div class="person-avatar" style="background:var(--purple-bg);color:var(--purple)">M</div><div><div class="person-name">Melissa Hanson</div><div class="person-role">Sr. Engineer</div></div></div>
+                <div class="person-chip"><div class="person-avatar" style="background:var(--purple-bg);color:var(--purple)">G</div><div><div class="person-name">Grace Shryack</div><div class="person-role">Clinical Lead</div></div></div>
+            </div>
+        </div>
+
+        <div class="review-card">
+            <h3><span class="icon">📝</span> Demo Transcript</h3>
+            <button class="transcript-toggle" onclick="this.nextElementSibling.classList.toggle('visible')">Show/Hide Transcript (85:04 – 96:35)</button>
+            <div class="transcript-box" id="transcript-pcos"></div>
+        </div>
+
+        <div class="input-section">
+            <h3>✏️ Your Assessment</h3>
+            <div class="input-group">
+                <label class="input-label">How would you rate this team's sprint output?</label>
+                <div class="rating-group" data-team="pcos" data-field="rating">
+                    <button class="rating-btn" data-value="1">1 — Needs Work</button>
+                    <button class="rating-btn" data-value="2">2 — Below Expectations</button>
+                    <button class="rating-btn" data-value="3">3 — Met Expectations</button>
+                    <button class="rating-btn" data-value="4">4 — Exceeded</button>
+                    <button class="rating-btn" data-value="5">5 — Outstanding</button>
+                </div>
+            </div>
+            <div class="input-group">
+                <label class="input-label">What worked well?</label>
+                <textarea class="input-textarea" data-team="pcos" data-field="worked_well" placeholder="What impressed you about this team's output?"></textarea>
+            </div>
+            <div class="input-group">
+                <label class="input-label">What didn't work or concerns?</label>
+                <textarea class="input-textarea" data-team="pcos" data-field="concerns" placeholder="What needs improvement or worries you?"></textarea>
+            </div>
+            <div class="input-group">
+                <label class="input-label">Employee standouts (positive or negative)?</label>
+                <textarea class="input-textarea" data-team="pcos" data-field="standouts" placeholder="Which individuals stood out and why?"></textarea>
+            </div>
+            <div class="input-group">
+                <label class="input-label">Next steps / priorities for this team?</label>
+                <textarea class="input-textarea" data-team="pcos" data-field="next_steps" placeholder="What should this team focus on next?"></textarea>
+            </div>
+            <button class="save-btn" onclick="saveTeamReview('pcos')">💾 Save Review</button>
+        </div>
+    </div>
+
+    <!-- ========== SINGLE CGM PANEL ========== -->
+    <div class="team-panel" id="panel-single-cgm">
+        <div class="team-header">
+            <div class="team-icon" style="background:var(--orange-bg);color:var(--orange);">📊</div>
+            <div>
+                <h2>Single CGM / Metabolic Report</h2>
+                <div class="team-meta">Demo: 96:35 – 120:01 • Led by Benji, Claudia, Dmitri, Jake</div>
+            </div>
+        </div>
+
+        <div class="tag-list">
+            <span class="tag tag-orange">Top of Funnel</span>
+            <span class="tag tag-green">$55 Entry Point</span>
+            <span class="tag tag-blue">Conversion Engine</span>
+        </div>
+
+        <div class="two-col">
+            <div class="review-card">
+                <h3><span class="icon">✅</span> What Was Built</h3>
+                <ul class="bullet-list green">
+                    <li><strong>$55 single sensor experience concept:</strong> Lowest price point ever for Signos — massive top-of-funnel expansion</li>
+                    <li><strong>7-day baseline → Day 8 reveal:</strong> Week of normal behavior, then comprehensive metabolic report</li>
+                    <li><strong>Notable events engine:</strong> Sugar crashes, night events, major spikes, rebound meals — all with education</li>
+                    <li><strong>Algorithm development:</strong> New ML algorithms for crash detection, spike classification, rebound meal identification</li>
+                    <li><strong>Beautiful metabolic report prototype:</strong> Animated, branded report with data visualizations (stars, moon for night events)</li>
+                    <li><strong>Glucose notification system:</strong> For PCOS team to use — glucose crash alerts</li>
+                    <li><strong>Upsell conversion flow:</strong> "What you do next counts" — drives single CGM users to 3-6 month plans</li>
+                    <li><strong>Go-to-market strategy thinking:</strong> Cohesive marketing message through to in-app experience to upsell</li>
+                    <li><strong>16+ prototypes:</strong> Concept to commercialization exploration</li>
+                </ul>
+            </div>
+            <div class="review-card">
+                <h3><span class="icon">💡</span> Key Learnings</h3>
+                <ul class="bullet-list blue">
+                    <li><strong>"A bespoke single CGM experience that leaves users wanting more":</strong> The team's north star is brilliant — create desire for more</li>
+                    <li><strong>ML algorithms need extensive research:</strong> Identifying distribution shapes, edge cases in data, population-level validation</li>
+                    <li><strong>UX → Engineering transition is challenging:</strong> "A picture is worth a thousand words" — nudging 8px in Figma is easier than describing it to Claude</li>
+                    <li><strong>Faster consensus through prototyping:</strong> Adding animations, new screens in real-time sped up decision-making</li>
+                    <li><strong>"AI slop" is a real problem:</strong> Seeing cool stuff that's hard to let go but should probably be thrown away</li>
+                    <li><strong>Sensor failure risk (12-15%):</strong> Up to 15% of sensors fail before Day 9 — need contingency plans</li>
+                    <li><strong>Focus on metrics not subject to sensor variability:</strong> Time in Range, spike counts — not absolute readings</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="two-col">
+            <div class="review-card">
+                <h3><span class="icon">🎯</span> What's Left for V1</h3>
+                <ul class="bullet-list yellow">
+                    <li>Finalize ML algorithms, simulations, and test with real data</li>
+                    <li>Data pipeline: ML → Cloud → Mobile</li>
+                    <li>Production mobile code (not throw-away prototypes)</li>
+                    <li>Cloud-mobile integration refinement</li>
+                    <li>Design finalization from Benji</li>
+                    <li>Launch planning and support coordination</li>
+                    <li>Day 8 report delivery pipeline (not on fixed schedule)</li>
+                    <li>Multi-program interaction (PCOS + Single CGM, GLP-1 + Single CGM)</li>
+                </ul>
+            </div>
+            <div class="review-card">
+                <h3><span class="icon">⚠️</span> Risks & Dependencies</h3>
+                <ul class="bullet-list red">
+                    <li><strong>Sensor failure (12-15%):</strong> Need rapid replacement process — at $55 impulse buy, can't lose these users</li>
+                    <li><strong>Sensor variability:</strong> Stelo hot sensors can produce inaccurate absolute readings</li>
+                    <li><strong>One shot to convince:</strong> Only one sensor, must deliver enough value to convert</li>
+                    <li><strong>Cross-program interactions:</strong> PCOS and GLP-1 users have different insight and behavioral needs</li>
+                    <li><strong>Flexible report timing:</strong> Day 8 isn't always the same relative to data cycles</li>
+                    <li><strong>GitHub setup delay:</strong> Late access slowed integrated workflow</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="review-card">
+            <h3><span class="icon">👥</span> Team Members</h3>
+            <div class="people-grid">
+                <div class="person-chip"><div class="person-avatar" style="background:var(--orange-bg);color:var(--orange)">B</div><div><div class="person-name">Benji Michalek</div><div class="person-role">VP Design — Lead</div></div></div>
+                <div class="person-chip"><div class="person-avatar" style="background:var(--orange-bg);color:var(--orange)">C</div><div><div class="person-name">Claudia Wasch</div><div class="person-role">Principal PM, ML</div></div></div>
+                <div class="person-chip"><div class="person-avatar" style="background:var(--orange-bg);color:var(--orange)">D</div><div><div class="person-name">Dmitri Levonian</div><div class="person-role">Head of ML</div></div></div>
+                <div class="person-chip"><div class="person-avatar" style="background:var(--orange-bg);color:var(--orange)">J</div><div><div class="person-name">Jake Smith</div><div class="person-role">Engineering Manager</div></div></div>
+            </div>
+        </div>
+
+        <div class="review-card">
+            <h3><span class="icon">📝</span> Demo Transcript</h3>
+            <button class="transcript-toggle" onclick="this.nextElementSibling.classList.toggle('visible')">Show/Hide Transcript (96:35 – 120:01)</button>
+            <div class="transcript-box" id="transcript-single-cgm"></div>
+        </div>
+
+        <div class="input-section">
+            <h3>✏️ Your Assessment</h3>
+            <div class="input-group">
+                <label class="input-label">How would you rate this team's sprint output?</label>
+                <div class="rating-group" data-team="single-cgm" data-field="rating">
+                    <button class="rating-btn" data-value="1">1 — Needs Work</button>
+                    <button class="rating-btn" data-value="2">2 — Below Expectations</button>
+                    <button class="rating-btn" data-value="3">3 — Met Expectations</button>
+                    <button class="rating-btn" data-value="4">4 — Exceeded</button>
+                    <button class="rating-btn" data-value="5">5 — Outstanding</button>
+                </div>
+            </div>
+            <div class="input-group">
+                <label class="input-label">What worked well?</label>
+                <textarea class="input-textarea" data-team="single-cgm" data-field="worked_well" placeholder="What impressed you about this team's output?"></textarea>
+            </div>
+            <div class="input-group">
+                <label class="input-label">What didn't work or concerns?</label>
+                <textarea class="input-textarea" data-team="single-cgm" data-field="concerns" placeholder="What needs improvement or worries you?"></textarea>
+            </div>
+            <div class="input-group">
+                <label class="input-label">Employee standouts (positive or negative)?</label>
+                <textarea class="input-textarea" data-team="single-cgm" data-field="standouts" placeholder="Which individuals stood out and why?"></textarea>
+            </div>
+            <div class="input-group">
+                <label class="input-label">Next steps / priorities for this team?</label>
+                <textarea class="input-textarea" data-team="single-cgm" data-field="next_steps" placeholder="What should this team focus on next?"></textarea>
+            </div>
+            <button class="save-btn" onclick="saveTeamReview('single-cgm')">💾 Save Review</button>
+        </div>
+    </div>
+
+    <!-- ========== B2B PANEL ========== -->
+    <div class="team-panel" id="panel-b2b">
+        <div class="team-header">
+            <div class="team-icon" style="background:var(--red-bg);color:var(--red);">🏢</div>
+            <div>
+                <h2>B2B Enterprise</h2>
+                <div class="team-meta">Demo: 120:01 – 138:30 • Led by Pavel, Julian</div>
+            </div>
+        </div>
+
+        <div class="tag-list">
+            <span class="tag tag-red">Enterprise Revenue</span>
+            <span class="tag tag-blue">Shopify Integration</span>
+            <span class="tag tag-green">Process Insights</span>
+        </div>
+
+        <div class="two-col">
+            <div class="review-card">
+                <h3><span class="icon">✅</span> What Was Built</h3>
+                <ul class="bullet-list green">
+                    <li><strong>Health outcomes report (V1):</strong> Shared view for employee benefit and functional medicine verticals — activation, engagement, population demographics</li>
+                    <li><strong>Functional medicine workflows:</strong> Removing friction from current discount code system</li>
+                    <li><strong>Seat purchasing via Shopify:</strong> Partners can purchase 1-month and 3-month seats directly</li>
+                    <li><strong>Organization management in admin panel:</strong> Create/edit organizations by type (FM, employee benefit, carrier, affiliate)</li>
+                    <li><strong>Partner dashboard updates:</strong> Switch between personal and org accounts, view available seats</li>
+                    <li><strong>Self-service registration flow (in progress):</strong> For smaller orgs under 500 employees</li>
+                </ul>
+            </div>
+            <div class="review-card">
+                <h3><span class="icon">💡</span> Key Learnings</h3>
+                <ul class="bullet-list blue">
+                    <li><strong>"Waterfall is back":</strong> PRDs must be almost bulletproof before engineering starts now — less natural back-and-forth</li>
+                    <li><strong>But agile still works:</strong> Changes are fast when you do make them, just need to be granular</li>
+                    <li><strong>Don't include code snippets in PRD:</strong> Julian asked Pavel to stop — code in PRD gets into blueprints and confuses downstream generation</li>
+                    <li><strong>T-shirt sizing is impossible now:</strong> "I could be told it'll take a day, a week, or a month and I believe all of those"</li>
+                    <li><strong>Missing a 1-hour meeting = missing a week:</strong> Decisions happen so fast in AI-native development that you can't miss alignment sessions</li>
+                    <li><strong>Multi-system complexity:</strong> Shopify + Cloud + Web + CS workflows — Claude gets confused about "admin" (CS admin vs partner admin)</li>
+                    <li><strong>Pivoted priorities based on stakeholder input:</strong> Moved GLP-1 cost calculator to V2, moved self-service registration to V1 based on needs of incoming FM group</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="two-col">
+            <div class="review-card">
+                <h3><span class="icon">🎯</span> What's Left for V1</h3>
+                <ul class="bullet-list yellow">
+                    <li>UI improvements to health outcomes dashboard (Lizzie feedback)</li>
+                    <li>Complete seat assignment flow (almost done)</li>
+                    <li>Self-service registration for smaller orgs</li>
+                    <li>Client invite portion of purchasing flow</li>
+                    <li>Testing with real org data</li>
+                    <li>Lifecycle user education about new workflows</li>
+                    <li>Colin/stakeholder sign-off on deliverables</li>
+                </ul>
+            </div>
+            <div class="review-card">
+                <h3><span class="icon">⚠️</span> Risks & Dependencies</h3>
+                <ul class="bullet-list red">
+                    <li><strong>Testing data gap:</strong> Orgs don't have users in different activation/registration states for testing</li>
+                    <li><strong>GLP-1 data model dependency (V2):</strong> Need GLP-1 team's data model for cost offset calculator</li>
+                    <li><strong>Three-system coordination:</strong> Shopify, Cloud, Web all need to sync correctly</li>
+                    <li><strong>Incoming FM client:</strong> Major functional medicine group onboarding soon — must be ready</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="review-card">
+            <h3><span class="icon">👥</span> Team Members</h3>
+            <div class="people-grid">
+                <div class="person-chip"><div class="person-avatar" style="background:var(--red-bg);color:var(--red)">P</div><div><div class="person-name">Pavel Kozinski</div><div class="person-role">Principal PM B2B — Lead</div></div></div>
+                <div class="person-chip"><div class="person-avatar" style="background:var(--red-bg);color:var(--red)">J</div><div><div class="person-name">Julian (Contractor)</div><div class="person-role">Full Stack Engineer — Demo</div></div></div>
+            </div>
+        </div>
+
+        <div class="review-card">
+            <h3><span class="icon">📝</span> Demo Transcript</h3>
+            <button class="transcript-toggle" onclick="this.nextElementSibling.classList.toggle('visible')">Show/Hide Transcript (120:01 – 138:30)</button>
+            <div class="transcript-box" id="transcript-b2b"></div>
+        </div>
+
+        <div class="input-section">
+            <h3>✏️ Your Assessment</h3>
+            <div class="input-group">
+                <label class="input-label">How would you rate this team's sprint output?</label>
+                <div class="rating-group" data-team="b2b" data-field="rating">
+                    <button class="rating-btn" data-value="1">1 — Needs Work</button>
+                    <button class="rating-btn" data-value="2">2 — Below Expectations</button>
+                    <button class="rating-btn" data-value="3">3 — Met Expectations</button>
+                    <button class="rating-btn" data-value="4">4 — Exceeded</button>
+                    <button class="rating-btn" data-value="5">5 — Outstanding</button>
+                </div>
+            </div>
+            <div class="input-group">
+                <label class="input-label">What worked well?</label>
+                <textarea class="input-textarea" data-team="b2b" data-field="worked_well" placeholder="What impressed you about this team's output?"></textarea>
+            </div>
+            <div class="input-group">
+                <label class="input-label">What didn't work or concerns?</label>
+                <textarea class="input-textarea" data-team="b2b" data-field="concerns" placeholder="What needs improvement or worries you?"></textarea>
+            </div>
+            <div class="input-group">
+                <label class="input-label">Employee standouts (positive or negative)?</label>
+                <textarea class="input-textarea" data-team="b2b" data-field="standouts" placeholder="Which individuals stood out and why?"></textarea>
+            </div>
+            <div class="input-group">
+                <label class="input-label">Next steps / priorities for this team?</label>
+                <textarea class="input-textarea" data-team="b2b" data-field="next_steps" placeholder="What should this team focus on next?"></textarea>
+            </div>
+            <button class="save-btn" onclick="saveTeamReview('b2b')">💾 Save Review</button>
+        </div>
+    </div>
+
+    <!-- ========== SYNTHESIS PANEL ========== -->
+    <div class="team-panel" id="panel-synthesis">
+        <div class="team-header">
+            <div class="team-icon" style="background:var(--accent-glow);color:var(--accent);">🧠</div>
+            <div>
+                <h2>Synthesis & Going Forward</h2>
+                <div class="team-meta">Cross-cutting assessment for executive discussion</div>
+            </div>
+        </div>
+
+        <div class="review-card">
+            <h3><span class="icon">🏆</span> Sprint Closing Remarks (from Roger & Sharam)</h3>
+            <ul class="bullet-list green">
+                <li>"Stay in your pods and think about what's left to get to V1 — that really is the goal here, shipable V1s for everything"</li>
+                <li>"Next week will need time for synthesis, digesting different processes across the board"</li>
+                <li>"Keep working towards V1 goals. Really appreciate all the effort — it was really cool to see things come to life."</li>
+                <li>"We'll start synthesizing on Monday. Stay the course — looks like we've got some really promising stuff to get out the door."</li>
+            </ul>
+        </div>
+
+        <div class="two-col">
+            <div class="review-card">
+                <h3><span class="icon">✅</span> What Worked Across the Sprint</h3>
+                <ul class="bullet-list green">
+                    <li>AI-native development velocity — teams built months of work in 2 weeks</li>
+                    <li>Claude skills & tooling sharing across teams (SignalHQ repo)</li>
+                    <li>Cross-pod coordination improved significantly (shared specs, aligned onboarding)</li>
+                    <li>Internal tooling/QA panels — multiple teams built testing infrastructure</li>
+                    <li>PRD-first development process matured — every team recognized its importance</li>
+                    <li>Creative energy was high — teams excited about what they could build</li>
+                    <li>Demo quality showed real potential — actual working prototypes, not slides</li>
+                </ul>
+            </div>
+            <div class="review-card">
+                <h3><span class="icon">⚠️</span> What Didn't Work / Concerns</h3>
+                <ul class="bullet-list red">
+                    <li><strong>AI debt accumulated fast:</strong> 400+ unreviewed files per team, feature branches not merged</li>
+                    <li><strong>QA bottleneck:</strong> Can't test until features merge — 6 pods shipping simultaneously</li>
+                    <li><strong>iOS-Android divergence:</strong> Same PRDs produce different mobile outputs</li>
+                    <li><strong>Prototype vs Production gap:</strong> "Looks like it works but we haven't tested it"</li>
+                    <li><strong>PRD change ripple effects:</strong> Changes cascade unpredictably through AI-generated artifacts</li>
+                    <li><strong>Process still evolving:</strong> Each team developed slightly different workflows — not yet standardized</li>
+                    <li><strong>Missing the design layer:</strong> Some teams built without Figma designs — UX debt</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="review-card">
+            <h3><span class="icon">🤔</span> Key Questions for Offsite Discussion</h3>
+            <ul class="bullet-list purple">
+                <li><strong>How do we manage AI debt?</strong> Should we dedicate a sprint to code review/cleanup before pushing to V1?</li>
+                <li><strong>What's the right sprint cadence going forward?</strong> 2 weeks was intense — is this sustainable?</li>
+                <li><strong>How do we standardize the development process?</strong> GLP-1 team's process was best — should all teams adopt it?</li>
+                <li><strong>How should QA scale?</strong> One QA team for 6 pods won't work — what's the model?</li>
+                <li><strong>Which V1s ship first?</strong> Can we sequence launches to manage risk and capacity?</li>
+                <li><strong>Should pod structures change?</strong> Thomas suggested rotation. Is there a better structure?</li>
+                <li><strong>What's the role of design?</strong> Some teams prototyped without design. What's the right process?</li>
+                <li><strong>How do we handle cross-pod features?</strong> Symptom tracking, onboarding, macro display all cross boundaries.</li>
+            </ul>
+        </div>
+
+        <div class="input-section">
+            <h3>✏️ Overall Sprint Assessment</h3>
+            <div class="input-group">
+                <label class="input-label">How would you rate the overall sprint?</label>
+                <div class="rating-group" data-team="overall" data-field="rating">
+                    <button class="rating-btn" data-value="1">1 — Needs Work</button>
+                    <button class="rating-btn" data-value="2">2 — Below Expectations</button>
+                    <button class="rating-btn" data-value="3">3 — Met Expectations</button>
+                    <button class="rating-btn" data-value="4">4 — Exceeded</button>
+                    <button class="rating-btn" data-value="5">5 — Outstanding</button>
+                </div>
+            </div>
+            <div class="input-group">
+                <label class="input-label">Top 3 things that should change for the next sprint?</label>
+                <textarea class="input-textarea" data-team="overall" data-field="changes" placeholder="What are the biggest process/structure changes needed?"></textarea>
+            </div>
+            <div class="input-group">
+                <label class="input-label">Which team impressed you most and why?</label>
+                <textarea class="input-textarea" data-team="overall" data-field="most_impressed" placeholder="Which pod's output was strongest?"></textarea>
+            </div>
+            <div class="input-group">
+                <label class="input-label">Which V1 should ship first and why?</label>
+                <textarea class="input-textarea" data-team="overall" data-field="ship_first" placeholder="What's the right launch sequence?"></textarea>
+            </div>
+            <div class="input-group">
+                <label class="input-label">How should we restructure teams/pods based on what we learned?</label>
+                <textarea class="input-textarea" data-team="overall" data-field="restructure" placeholder="Any changes to team composition, pod structure, or org design?"></textarea>
+            </div>
+            <div class="input-group">
+                <label class="input-label">How does this sprint inform our board messaging?</label>
+                <textarea class="input-textarea" data-team="overall" data-field="board_messaging" placeholder="How do we communicate sprint progress and strategy to the board?"></textarea>
+            </div>
+            <div class="input-group">
+                <label class="input-label">Any other thoughts?</label>
+                <textarea class="input-textarea" data-team="overall" data-field="other" placeholder="Anything else on your mind?"></textarea>
+            </div>
+            <button class="save-btn" onclick="saveTeamReview('overall')">💾 Save Overall Assessment</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast"></div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script>
+// ========== TRANSCRIPT DATA ==========
+const TRANSCRIPT_SEGMENTS = {
+    'ai-infra': { start: 0, end: 756 },
+    'meal-log': { start: 756, end: 3006 },
+    'glp1': { start: 3006, end: 5104 },
+    'pcos': { start: 5104, end: 5795 },
+    'single-cgm': { start: 5795, end: 7201 },
+    'b2b': { start: 7201, end: 8310 }
+};
+
+let fullTranscript = [];
+let currentUser = null;
+let supabaseClient = null;
+
+// ========== INITIALIZATION ==========
+document.addEventListener('DOMContentLoaded', async () => {
+    // Check if already logged in
+    const savedUser = localStorage.getItem('sprint_review_user');
+    if (savedUser) {
+        currentUser = savedUser;
+        document.getElementById('loginModal').classList.add('hidden');
+        document.getElementById('userBadge').textContent = currentUser;
+    }
+    
+    // Init Supabase
+    try {
+        supabaseClient = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+    } catch (e) {
+        console.warn('Supabase init failed, using localStorage fallback', e);
+    }
+    
+    // Load transcript
+    await loadTranscript();
+    
+    // Setup nav
+    setupNavigation();
+    
+    // Setup rating buttons
+    setupRatingButtons();
+    
+    // Load saved reviews
+    if (currentUser) {
+        loadSavedReviews();
+    }
+    
+    // Login form
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const username = document.getElementById('loginUsername').value.toLowerCase().trim();
+        const password = document.getElementById('loginPassword').value;
+        
+        const exec = CONFIG.EXECUTIVES.find(e => e.username === username && e.password === password);
+        if (exec) {
+            currentUser = exec.name;
+            localStorage.setItem('sprint_review_user', currentUser);
+            document.getElementById('loginModal').classList.add('hidden');
+            document.getElementById('userBadge').textContent = currentUser;
+            loadSavedReviews();
+        } else {
+            document.getElementById('loginError').style.display = 'block';
+        }
+    });
+});
+
+// ========== TRANSCRIPT ==========
+async function loadTranscript() {
+    try {
+        const resp = await fetch('sprint_demo_transcript.txt');
+        if (!resp.ok) throw new Error('Failed to load transcript');
+        const text = await resp.text();
+        fullTranscript = text.split('\n').filter(l => l.trim()).map(line => {
+            const match = line.match(/^\[(\d+:\d+)\]\s*(.*)$/);
+            if (match) {
+                const [min, sec] = match[1].split(':').map(Number);
+                return { time: min * 60 + sec, timestamp: match[1], text: match[2] };
+            }
+            return { time: 0, timestamp: '00:00', text: line };
+        });
+        
+        // Populate transcript boxes
+        populateTranscript('ai-infra', 0, 756);
+        populateTranscript('meal-log', 756, 3006);
+        populateTranscript('glp1', 3006, 5104);
+        populateTranscript('pcos', 5104, 5795);
+        populateTranscript('single-cgm', 5795, 7201);
+        populateTranscript('b2b', 7201, 8310);
+    } catch (e) {
+        console.warn('Could not load transcript file:', e);
+    }
+}
+
+function populateTranscript(teamId, startSec, endSec) {
+    const box = document.getElementById(`transcript-${teamId}`);
+    if (!box) return;
+    
+    const segments = fullTranscript.filter(s => s.time >= startSec && s.time <= endSec);
+    box.innerHTML = segments.map(s => 
+        `<span class="timestamp">[${s.timestamp}]</span> ${s.text}<br>`
+    ).join('');
+}
+
+// ========== NAVIGATION ==========
+function setupNavigation() {
+    document.querySelectorAll('.team-nav-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.team-nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.team-panel').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            const teamId = btn.dataset.team;
+            document.getElementById(`panel-${teamId}`).classList.add('active');
+        });
+    });
+}
+
+// ========== RATING BUTTONS ==========
+function setupRatingButtons() {
+    document.querySelectorAll('.rating-group').forEach(group => {
+        group.querySelectorAll('.rating-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                group.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+            });
+        });
+    });
+}
+
+// ========== SAVE / LOAD REVIEWS ==========
+async function saveTeamReview(teamId) {
+    if (!currentUser) {
+        showToast('⚠️ Please log in first', 'var(--yellow)');
+        return;
+    }
+    
+    const reviewData = {
+        exec_name: currentUser,
+        team_id: teamId,
+        updated_at: new Date().toISOString()
+    };
+    
+    // Gather rating
+    const ratingGroup = document.querySelector(`.rating-group[data-team="${teamId}"]`);
+    const selectedRating = ratingGroup?.querySelector('.rating-btn.selected');
+    reviewData.rating = selectedRating ? parseInt(selectedRating.dataset.value) : null;
+    
+    // Gather text fields
+    document.querySelectorAll(`.input-textarea[data-team="${teamId}"]`).forEach(ta => {
+        reviewData[ta.dataset.field] = ta.value;
+    });
+    
+    try {
+        if (supabaseClient) {
+            // Check for existing
+            const { data: existing } = await supabaseClient
+                .from('sprint_reviews')
+                .select('id')
+                .eq('exec_name', currentUser)
+                .eq('team_id', teamId)
+                .single();
+            
+            if (existing) {
+                reviewData.id = existing.id;
+            }
+            
+            const { error } = await supabaseClient
+                .from('sprint_reviews')
+                .upsert(reviewData)
+                .select();
+            
+            if (error) throw error;
+        }
+    } catch (e) {
+        console.warn('Supabase save failed, using localStorage', e);
+    }
+    
+    // Always save to localStorage as backup
+    const key = `sprint_review_${currentUser}_${teamId}`;
+    localStorage.setItem(key, JSON.stringify(reviewData));
+    
+    showToast('✅ Review saved!');
+}
+
+async function loadSavedReviews() {
+    if (!currentUser) return;
+    
+    const teams = ['ai-infra', 'meal-log', 'glp1', 'pcos', 'single-cgm', 'b2b', 'overall'];
+    
+    for (const teamId of teams) {
+        let reviewData = null;
+        
+        try {
+            if (supabaseClient) {
+                const { data } = await supabaseClient
+                    .from('sprint_reviews')
+                    .select('*')
+                    .eq('exec_name', currentUser)
+                    .eq('team_id', teamId)
+                    .single();
+                
+                if (data) reviewData = data;
+            }
+        } catch (e) {
+            // Fall through to localStorage
+        }
+        
+        if (!reviewData) {
+            const key = `sprint_review_${currentUser}_${teamId}`;
+            const stored = localStorage.getItem(key);
+            if (stored) reviewData = JSON.parse(stored);
+        }
+        
+        if (reviewData) {
+            // Restore rating
+            if (reviewData.rating) {
+                const ratingGroup = document.querySelector(`.rating-group[data-team="${teamId}"]`);
+                if (ratingGroup) {
+                    const btn = ratingGroup.querySelector(`.rating-btn[data-value="${reviewData.rating}"]`);
+                    if (btn) {
+                        ratingGroup.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+                        btn.classList.add('selected');
+                    }
+                }
+            }
+            
+            // Restore text fields
+            const fields = ['worked_well', 'concerns', 'standouts', 'next_steps', 'changes', 'most_impressed', 'ship_first', 'restructure', 'board_messaging', 'other'];
+            for (const field of fields) {
+                if (reviewData[field]) {
+                    const ta = document.querySelector(`.input-textarea[data-team="${teamId}"][data-field="${field}"]`);
+                    if (ta) ta.value = reviewData[field];
+                }
+            }
+        }
+    }
+}
+
+// ========== TOAST ==========
+function showToast(message, color = 'var(--green)') {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.style.background = color;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>
