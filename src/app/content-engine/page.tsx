@@ -38,6 +38,9 @@ import {
   MessageCircle,
   Send,
   RefreshCw,
+  ExternalLink,
+  Bot,
+  Palette,
 } from 'lucide-react';
 import { useState, useCallback, useRef, useEffect } from 'react';
 
@@ -288,6 +291,48 @@ async function feedbackSynthesize(contentType?: string) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ action: 'synthesize', contentType }),
+  });
+  return res.json();
+}
+
+// ─── Figma Cloud Agent API helpers ────────────────────────────────────────────
+
+async function figmaAgentLaunch(adConcept: {
+  contentType: string; headline: string; subheadline?: string; ctaText: string;
+  attribution?: string; backgroundImageUrl: string; figmaTemplateUrl?: string;
+  style?: string; targetEmotion?: string; notes?: string;
+}) {
+  const res = await fetch('/api/content/figma-agent', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'launch', adConcept }),
+  });
+  return res.json();
+}
+
+async function figmaAgentStatus(agentId: string) {
+  const res = await fetch('/api/content/figma-agent', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'status', agentId }),
+  });
+  return res.json();
+}
+
+async function figmaAgentFollowup(agentId: string, followupText: string) {
+  const res = await fetch('/api/content/figma-agent', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'followup', agentId, followupText }),
+  });
+  return res.json();
+}
+
+async function figmaAgentList() {
+  const res = await fetch('/api/content/figma-agent', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'list' }),
   });
   return res.json();
 }
@@ -1520,11 +1565,12 @@ export default function ContentEnginePage() {
       {/* ── API Key Status ── */}
       <div className="rounded-lg border border-white/[0.04] bg-surface-2 p-4">
         <p className="text-xs font-medium text-zinc-500 mb-2">Required Environment Variables</p>
-        <div className="grid grid-cols-1 gap-2 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-5">
           <EnvVarStatus name="ANTHROPIC_API_KEY" description="Claude for ad scripts + review" />
           <EnvVarStatus name="RECRAFT_API_KEY" description="Recraft V3 for finished image ads" />
           <EnvVarStatus name="FAL_KEY" description="fal.ai for TTS + Avatar (video)" />
           <EnvVarStatus name="SHOTSTACK_API_KEY" description="Video overlays (optional)" />
+          <EnvVarStatus name="CURSOR_API_KEY" description="Cloud Agents for Figma workflow" />
         </div>
       </div>
     </div>
@@ -2019,6 +2065,180 @@ function VerdictBadge({ verdict }: { verdict: string }) {
   return <span className={cn('inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-xs font-semibold', config.color)}><Icon className="h-3 w-3" />{config.label}</span>;
 }
 
+function FigmaAgentPanel({ job }: { job: ContentJob }) {
+  const [launching, setLaunching] = useState(false);
+  const [agentId, setAgentId] = useState<string | null>(null);
+  const [agentStatus, setAgentStatus] = useState<string | null>(null);
+  const [polling, setPolling] = useState(false);
+  const [followup, setFollowup] = useState('');
+  const [sendingFollowup, setSendingFollowup] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const isImage = IMAGE_ONLY_TYPES.includes(job.contentType);
+  if (!isImage) return null;
+
+  const handleLaunch = async () => {
+    if (!job.imageUrl && !job.finalImageUrl) return;
+    setLaunching(true);
+    setError(null);
+    try {
+      const result = await figmaAgentLaunch({
+        contentType: job.contentType,
+        headline: job.idea.headline || job.idea.hook,
+        subheadline: job.idea.subheadline || '',
+        ctaText: job.idea.ctaText || 'Learn More',
+        attribution: job.contentType === 'testimonial' ? `— ${job.idea.hook.split('"')[0] || 'Signos Member'}` : undefined,
+        backgroundImageUrl: job.finalImageUrl || job.imageUrl || '',
+        style: job.idea.targetEmotion,
+        targetEmotion: job.idea.targetEmotion,
+      });
+      if (result.success && result.agentId) {
+        setAgentId(result.agentId);
+        setAgentStatus(result.agent?.status || 'running');
+        startPolling(result.agentId);
+      } else {
+        setError(result.error || 'Failed to launch agent');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Launch failed');
+    } finally {
+      setLaunching(false);
+    }
+  };
+
+  const startPolling = (id: string) => {
+    setPolling(true);
+    const interval = setInterval(async () => {
+      try {
+        const result = await figmaAgentStatus(id);
+        if (result.success && result.agent) {
+          setAgentStatus(result.agent.status);
+          if (['completed', 'stopped', 'failed', 'error'].includes(result.agent.status)) {
+            setPolling(false);
+            clearInterval(interval);
+          }
+        }
+      } catch {
+        // keep polling
+      }
+    }, 15000);
+  };
+
+  const handleFollowup = async () => {
+    if (!agentId || !followup.trim()) return;
+    setSendingFollowup(true);
+    try {
+      await figmaAgentFollowup(agentId, followup);
+      setFollowup('');
+    } finally {
+      setSendingFollowup(false);
+    }
+  };
+
+  const statusColor = {
+    running: 'text-blue-400 border-blue-500/30 bg-blue-500/10',
+    completed: 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10',
+    stopped: 'text-amber-400 border-amber-500/30 bg-amber-500/10',
+    failed: 'text-red-400 border-red-500/30 bg-red-500/10',
+    error: 'text-red-400 border-red-500/30 bg-red-500/10',
+  }[agentStatus || ''] || 'text-zinc-400 border-white/[0.06] bg-surface-3';
+
+  if (agentId) {
+    return (
+      <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/[0.03] p-4 space-y-3">
+        <div className="flex items-center gap-2">
+          <Palette className="h-4 w-4 text-indigo-400" />
+          <span className="text-xs font-bold uppercase tracking-wider text-indigo-400">Figma Cloud Agent</span>
+          <span className={cn('ml-auto rounded-md border px-2 py-0.5 text-[10px] font-bold uppercase', statusColor)}>
+            {agentStatus || 'unknown'}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-3 text-xs text-zinc-400">
+          <span className="font-mono text-[10px] text-zinc-500">{agentId}</span>
+          <a
+            href={`https://cursor.com/agents`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 text-indigo-400 hover:text-indigo-300 transition-colors"
+          >
+            <ExternalLink className="h-3 w-3" />
+            View in Cursor
+          </a>
+        </div>
+
+        {polling && (
+          <div className="flex items-center gap-2 text-[10px] text-zinc-500">
+            <Loader2 className="h-3 w-3 animate-spin" />
+            Agent is working in Figma... polling every 15s
+          </div>
+        )}
+
+        {agentStatus === 'completed' && (
+          <div className="flex items-center gap-2 rounded-md border border-emerald-500/20 bg-emerald-500/[0.03] px-3 py-2">
+            <Check className="h-4 w-4 text-emerald-400" />
+            <span className="text-xs text-emerald-400 font-medium">Agent finished — check the repo for the exported ad PNG</span>
+          </div>
+        )}
+
+        {/* Follow-up input */}
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={followup}
+            onChange={(e) => setFollowup(e.target.value)}
+            placeholder="Send a follow-up instruction to the agent..."
+            className="flex-1 rounded-lg border border-white/[0.06] bg-surface-3 px-3 py-1.5 text-xs text-white placeholder:text-zinc-600 focus:border-indigo-500/40 focus:outline-none"
+            onKeyDown={(e) => e.key === 'Enter' && handleFollowup()}
+          />
+          <button
+            onClick={handleFollowup}
+            disabled={sendingFollowup || !followup.trim()}
+            className={cn('flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all',
+              sendingFollowup ? 'bg-zinc-700 text-zinc-500' : 'bg-indigo-600 text-white hover:bg-indigo-500'
+            )}
+          >
+            {sendingFollowup ? <Loader2 className="h-3 w-3 animate-spin" /> : <Send className="h-3 w-3" />}
+            Send
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="rounded-lg border border-indigo-500/15 bg-indigo-500/[0.02] p-4 space-y-3">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Palette className="h-4 w-4 text-indigo-400" />
+          <span className="text-xs font-bold uppercase tracking-wider text-indigo-400">Figma Design Agent</span>
+        </div>
+      </div>
+      <p className="text-xs text-zinc-400">
+        Launch a Cursor Cloud Agent to open Figma and create a polished ad with perfect typography using the AI-generated background image.
+      </p>
+      {error && (
+        <div className="flex items-center gap-2 text-xs text-red-400">
+          <AlertCircle className="h-3 w-3" />
+          {error}
+        </div>
+      )}
+      <button
+        onClick={handleLaunch}
+        disabled={launching}
+        className={cn('flex items-center gap-2 rounded-lg px-5 py-2 text-xs font-bold transition-all w-full justify-center',
+          launching
+            ? 'bg-zinc-700 text-zinc-500'
+            : 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white hover:from-indigo-500 hover:to-violet-500 shadow-lg shadow-indigo-500/20'
+        )}
+      >
+        {launching ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Bot className="h-3.5 w-3.5" />}
+        {launching ? 'Launching Cloud Agent...' : 'Create Ad in Figma with Cloud Agent'}
+      </button>
+    </div>
+  );
+}
+
 function ReviewFeedbackPanel({ job, onIterate, onFeedbackOnly, feedbackDone, hasChildIteration }: {
   job: ContentJob;
   onIterate?: (job: ContentJob, rating: number, tags: string[], notes: string) => Promise<void>;
@@ -2319,6 +2539,9 @@ function ReviewCard({ job, expanded, onToggle, onIterate, onFeedbackOnly, feedba
               <ul className="space-y-1">{review.improvements.map((imp, i) => <li key={i} className="flex items-start gap-1.5 text-xs text-zinc-400"><ArrowUpRight className="mt-0.5 h-3 w-3 flex-shrink-0 text-blue-500/50" />{imp}</li>)}</ul>
             </div>
           </div>
+
+          {/* ── Figma Cloud Agent ── */}
+          {isImage && <FigmaAgentPanel job={job} />}
 
           {/* ── Feedback & Iterate Section ── */}
           {isImage && (onIterate || onFeedbackOnly) && (

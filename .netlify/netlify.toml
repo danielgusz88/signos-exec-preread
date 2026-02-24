@@ -7,7 +7,6 @@ headersOrigin = "inline"
 publish = "/Users/dangusz/Exec_Dashboard/funnel-ai/out"
 publishOrigin = "config"
 commandOrigin = "config"
-base = "/Users/dangusz/Exec_Dashboard/funnel-ai"
 command = "npm run build && rm -rf out/api"
 functions = "/Users/dangusz/Exec_Dashboard/funnel-ai/netlify/functions"
 
@@ -217,6 +216,18 @@ force = true
 [[redirects]]
 from = "/api/content/iterate"
 to = "/.netlify/functions/content-iterate"
+status = 200.0
+force = true
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/api/content/figma-agent"
+to = "/.netlify/functions/content-figma-agent"
 status = 200.0
 force = true
 
