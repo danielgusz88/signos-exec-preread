@@ -1,0 +1,792 @@
+// FunnelAI - LTV Intelligence Platform for Signos
+// Full customer lifecycle: signos.com → Shopify → App Download → Subscription → Renewal/Sustain
+// Includes planned expansion: GLP-1, supplements, labs, meal logging, 15-day baseline
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-1.0.x", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ============================================================================
+// CORE: Unified Customer Record
+// The single source of truth for every person who interacts with Signos
+// ============================================================================
+
+model Customer {
+  id                String    @id @default(cuid())
+  
+  // Identity
+  externalId        String?   @unique  // Signos internal user ID
+  shopifyCustomerId String?   @unique  // Shopify customer ID
+  email             String?   @unique
+  phone             String?
+  firstName         String?
+  lastName          String?
+  
+  // Demographics
+  persona           String?   // "pcos", "prediabetes", "weight_loss", "glp1", "athlete", "menopause"
+  ageRange          String?   // "18-24", "25-34", "35-44", "45-54", "55+"
+  gender            String?
+  geo               String?   // State/region
+  zipCode           String?
+  
+  // Lifecycle state
+  lifecycleStage    String    @default("lead") // "lead", "free_user", "trialing", "active", "at_risk", "churned", "win_back", "reactivated"
+  currentPlan       String?   // Current active plan
+  
+  // Key dates
+  firstVisitDate    DateTime?
+  quizCompletedDate DateTime?
+  purchaseDate      DateTime?
+  appDownloadDate   DateTime?
+  cgmActivationDate DateTime?
+  firstValueDate    DateTime? // First CGM scan or first insight viewed
+  acquisitionDate   DateTime?
+  churnDate         DateTime?
+  reactivationDate  DateTime?
+  
+  // Computed scores
+  engagementScore   Float?    // 0-100
+  churnRiskScore    Float?    // 0-100 (higher = more likely to churn)
+  ltvProjected      Float?    // Current projected LTV
+  ltvActual         Float?    // Actual revenue to date
+  
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  // Relations
+  acquisition       Acquisition?
+  webVisits         WebVisit[]
+  shopifyOrders     ShopifyOrder[]
+  subscriptions     Subscription[]
+  planTransitions   PlanTransition[]
+  onboardingEvents  OnboardingEvent[]
+  usageSnapshots    UsageSnapshot[]
+  paymentEvents     PaymentEvent[]
+  churnSignals      ChurnSignal[]
+  ltvRecords        LTVRecord[]
+  referralsMade     Referral[]       @relation("ReferralReferrer")
+  referralReceived  Referral?        @relation("ReferralReferred")
+  costRecords       CustomerCOGS[]
+  leadRecord        Lead?
+  
+  @@index([lifecycleStage])
+  @@index([persona])
+  @@index([currentPlan])
+  @@index([acquisitionDate])
+}
+
+// ============================================================================
+// LEADS: Free tier users (meal logging app, 15-day baseline)
+// Top-of-funnel before Shopify purchase
+// ============================================================================
+
+model Lead {
+  id                String    @id @default(cuid())
+  customerId        String    @unique
+  
+  // Lead source
+  leadType          String    // "meal_logging_app", "15_day_baseline", "quiz_only", "email_capture"
+  source            String?   // UTM source
+  medium            String?   // UTM medium
+  campaign          String?   // UTM campaign
+  
+  // Engagement with free product
+  mealLoggingSignupDate  DateTime?
+  mealsLoggedCount       Int       @default(0)
+  baselineStartDate      DateTime?
+  baselineCompleteDate   DateTime?
+  baselineDaysCompleted  Int       @default(0)
+  quizCompleted          Boolean   @default(false)
+  
+  // Conversion tracking
+  convertedToPaid   Boolean   @default(false)
+  conversionDate    DateTime?
+  daysToConvert     Int?
+  convertedPlan     String?   // Which plan they converted to
+  
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  
+  customer          Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  
+  @@index([leadType])
+  @@index([convertedToPaid])
+}
+
+// ============================================================================
+// WEB VISITS: Pre-purchase website activity (signos.com)
+// ============================================================================
+
+model WebVisit {
+  id                String    @id @default(cuid())
+  customerId        String?
+  anonymousId       String?   // For pre-identification tracking
+  
+  // Visit info
+  visitDate         DateTime  @default(now())
+  landingPage       String?   // "/", "/glp-1", "/pcos", "/quiz", "/pricing"
+  referrer          String?
+  
+  // UTM parameters
+  utmSource         String?
+  utmMedium         String?
+  utmCampaign       String?
+  utmContent        String?
+  utmTerm           String?
+  
+  // Engagement
+  pagesViewed       Int       @default(1)
+  timeOnSite        Int?      // seconds
+  quizStarted       Boolean   @default(false)
+  quizCompleted     Boolean   @default(false)
+  addedToCart       Boolean   @default(false)
+  purchased         Boolean   @default(false)
+  
+  // Device
+  device            String?   // "mobile", "desktop", "tablet"
+  browser           String?
+  
+  customer          Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  
+  @@index([customerId])
+  @@index([visitDate])
+  @@index([utmSource, utmMedium])
+  @@index([landingPage])
+}
+
+// ============================================================================
+// ACQUISITION: How users were acquired (channel-level attribution)
+// ============================================================================
+
+model Acquisition {
+  id              String    @id @default(cuid())
+  customerId      String    @unique
+  
+  // Channel
+  channel         String    // "meta", "google_brand", "google_search", "google_display", "youtube", "seo", "influencer", "affiliate", "b2b", "referral", "direct"
+  subChannel      String?   // "meta_pcos", "meta_weight_loss", "google_brand_exact", etc.
+  campaignName    String?
+  adSetName       String?
+  creativeName    String?
+  keyword         String?
+  landingPage     String?
+  
+  // Cost
+  cac             Float?    // Total acquisition cost for this user
+  
+  // Attribution
+  firstTouchDate  DateTime
+  conversionDate  DateTime?
+  daysToConvert   Int?
+  touchPoints     Int       @default(1)
+  promoCode       String?
+  discountPct     Float?    // 0-100, discount applied at purchase
+  
+  customer        Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  
+  @@index([channel])
+  @@index([conversionDate])
+}
+
+// ============================================================================
+// SHOPIFY ORDERS: Every transaction through Shopify
+// ============================================================================
+
+model ShopifyOrder {
+  id                String    @id @default(cuid())
+  shopifyOrderId    String    @unique
+  customerId        String
+  
+  // Order details
+  orderNumber       Int?
+  orderDate         DateTime
+  financialStatus   String    // "paid", "pending", "refunded", "partially_refunded", "voided"
+  fulfillmentStatus String?   // "fulfilled", "partial", "unfulfilled", "null"
+  
+  // Financials
+  subtotalPrice     Float
+  totalDiscounts    Float     @default(0)
+  totalTax          Float     @default(0)
+  totalPrice        Float
+  currency          String    @default("USD")
+  
+  // Discount details
+  discountCodes     String    @default("[]") // JSON array of discount codes used
+  
+  // Fulfillment
+  fulfillmentDate   DateTime?
+  shippingCity      String?
+  shippingState     String?
+  shippingZip       String?
+  
+  // Order classification
+  orderType         String?   // "initial_purchase", "renewal", "upsell", "addon", "reactivation"
+  isSubscription    Boolean   @default(false)
+  
+  createdAt         DateTime  @default(now())
+  
+  customer          Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  lineItems         ShopifyLineItem[]
+  
+  @@index([customerId])
+  @@index([orderDate])
+  @@index([orderType])
+}
+
+model ShopifyLineItem {
+  id                String    @id @default(cuid())
+  orderId           String
+  
+  shopifyLineItemId String?
+  productTitle      String
+  variantTitle      String?
+  sku               String?
+  quantity          Int       @default(1)
+  price             Float
+  totalDiscount     Float     @default(0)
+  
+  // Product classification
+  productCategory   String?   // "cgm_subscription", "cgm_hardware", "glp1_medication", "supplement_nausea", "supplement_digestive", "supplement_metabolic", "lab_kit", "coaching"
+  isRecurring       Boolean   @default(false)
+  
+  order             ShopifyOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  
+  @@index([orderId])
+  @@index([productCategory])
+}
+
+// ============================================================================
+// SUBSCRIPTIONS: Active plan tracking
+// Signos plans: 3-month CGM, 6-month CGM, Sustain (app-only), GLP-1 bundles
+// ============================================================================
+
+model Subscription {
+  id              String    @id @default(cuid())
+  customerId      String
+  shopifySubId    String?   @unique // Shopify subscription ID
+  
+  // Plan details
+  plan            String    // "cgm_3mo", "cgm_6mo", "sustain", "glp1_monthly", "glp1_3mo_bundle", "glp1_6mo_bundle", "15_day_baseline", "meal_logging_free"
+  planDisplayName String?
+  priceMonthly    Float
+  billingInterval String    @default("month") // "month", "quarter", "biannual"
+  
+  // Status
+  status          String    // "trialing", "active", "past_due", "paused", "canceled", "expired"
+  startDate       DateTime
+  currentPeriodStart DateTime?
+  currentPeriodEnd   DateTime?
+  endDate         DateTime?
+  cancelDate      DateTime?
+  cancelReason    String?   // "too_expensive", "not_seeing_results", "low_engagement", "competitor", "reached_goal", "side_effects", "doctor_advice", "other"
+  cancelSaveAttempted Boolean @default(false)
+  cancelSaveSaved    Boolean @default(false)
+  cancelSaveOffer    String? // What offer was made to retain
+  pauseDate       DateTime?
+  pauseResumeDate DateTime?
+  
+  // Renewal tracking
+  renewalCount    Int       @default(0)
+  autoRenew       Boolean   @default(true)
+  nextRenewalDate DateTime?
+  
+  // Add-ons (active on this subscription)
+  addOns          String    @default("[]") // JSON: ["supplements_nausea", "labs_quarterly", "coaching_async"]
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  customer        Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  
+  @@index([customerId])
+  @@index([status])
+  @@index([plan])
+  @@index([nextRenewalDate])
+}
+
+// ============================================================================
+// PLAN TRANSITIONS: Track every plan change (upgrade, downgrade, churn, sustain)
+// CGM 3mo → CGM 6mo → Sustain → GLP-1 Bundle (or cancel at any point)
+// ============================================================================
+
+model PlanTransition {
+  id              String    @id @default(cuid())
+  customerId      String
+  
+  fromPlan        String?   // null = new customer
+  toPlan          String?   // null = churned
+  transitionType  String    // "new_purchase", "upgrade", "downgrade", "plan_change", "add_addon", "remove_addon", "cancel", "pause", "resume", "reactivate", "sustain_transition"
+  
+  // Revenue impact
+  previousMRR     Float?
+  newMRR          Float?
+  mrrChange       Float?    // positive = expansion, negative = contraction
+  
+  // Context
+  reason          String?
+  trigger         String?   // "auto_renewal", "user_initiated", "payment_failure", "admin", "promo_offer"
+  promoOffer      String?   // If a promo was involved
+  
+  transitionDate  DateTime  @default(now())
+  
+  customer        Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  
+  @@index([customerId])
+  @@index([transitionType])
+  @@index([transitionDate])
+}
+
+// ============================================================================
+// ONBOARDING: Step-by-step onboarding progress
+// Purchase → App Download → CGM Setup → First Scan → First Insight → Habit Formed
+// ============================================================================
+
+model OnboardingEvent {
+  id              String    @id @default(cuid())
+  customerId      String
+  
+  step            String    // "app_downloaded", "account_created", "profile_completed", "cgm_shipped", "cgm_received", "cgm_activated", "first_scan", "first_meal_logged", "first_insight_viewed", "push_notifications_enabled", "baseline_started", "baseline_completed", "first_week_completed"
+  completedAt     DateTime  @default(now())
+  
+  // Context
+  daysFromPurchase Int?     // How many days after purchase this happened
+  metadata        String    @default("{}") // JSON - additional context
+  
+  customer        Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  
+  @@unique([customerId, step])
+  @@index([customerId])
+  @@index([step])
+}
+
+// ============================================================================
+// USAGE: Product engagement snapshots (weekly from Mode/app backend)
+// ============================================================================
+
+model UsageSnapshot {
+  id                String    @id @default(cuid())
+  customerId        String
+  periodStart       DateTime
+  periodEnd         DateTime
+  
+  // App engagement
+  appOpens          Int       @default(0)
+  sessionDurationAvg Int?     // seconds
+  
+  // CGM usage
+  cgmReadings       Int       @default(0)
+  cgmDaysWorn       Int       @default(0) // out of 7
+  
+  // Feature usage
+  mealsLogged       Int       @default(0)
+  glucoseScoreViews Int       @default(0)
+  insightsViewed    Int       @default(0)
+  coachInteractions Int       @default(0)
+  badgesEarned      Int       @default(0)
+  challengesJoined  Int       @default(0)
+  
+  // Health outcomes
+  avgGlucoseScore   Float?    // Weekly average
+  glucoseScoreTrend Float?    // Change from prior week
+  weightLogged      Float?    // If user logged weight
+  weightTrend       Float?    // Change from prior week
+  
+  // Notification engagement
+  pushNotifsSent    Int       @default(0)
+  pushNotifsOpened  Int       @default(0)
+  
+  // Computed
+  engagementScore   Float?    // 0-100 composite score
+  
+  customer          Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  
+  @@unique([customerId, periodStart])
+  @@index([customerId])
+  @@index([periodStart])
+}
+
+// ============================================================================
+// PAYMENT EVENTS: Track payment health (failed payments, dunning, recovery)
+// ============================================================================
+
+model PaymentEvent {
+  id              String    @id @default(cuid())
+  customerId      String
+  
+  eventType       String    // "charge_success", "charge_failed", "dunning_attempt_1", "dunning_attempt_2", "dunning_attempt_3", "dunning_recovered", "dunning_failed", "refund", "chargeback"
+  amount          Float?
+  currency        String    @default("USD")
+  
+  // Payment method
+  paymentMethod   String?   // "credit_card", "debit_card", "paypal", "apple_pay", "google_pay"
+  cardBrand       String?   // "visa", "mastercard", "amex"
+  failureReason   String?   // "insufficient_funds", "expired_card", "declined", "processing_error"
+  
+  // Dunning
+  dunningStep     Int?      // 1, 2, 3
+  recovered       Boolean   @default(false)
+  
+  eventDate       DateTime  @default(now())
+  
+  customer        Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  
+  @@index([customerId])
+  @@index([eventType])
+  @@index([eventDate])
+}
+
+// ============================================================================
+// CHURN SIGNALS: Early warning indicators
+// ============================================================================
+
+model ChurnSignal {
+  id              String    @id @default(cuid())
+  customerId      String
+  signalType      String    // "usage_decline", "support_escalation", "payment_failure", "engagement_drop", "email_unsub", "push_notif_disabled", "cgm_not_worn", "no_meals_logged", "cancel_page_visited"
+  severity        String    // "low", "medium", "high", "critical"
+  description     String?
+  detectedAt      DateTime  @default(now())
+  resolved        Boolean   @default(false)
+  resolvedAt      DateTime?
+  
+  customer        Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  
+  @@index([customerId, detectedAt])
+  @@index([severity])
+  @@index([signalType])
+}
+
+// ============================================================================
+// REFERRALS: Track referral activity and referred user LTV
+// ============================================================================
+
+model Referral {
+  id              String    @id @default(cuid())
+  referrerId      String
+  referredId      String    @unique
+  
+  referralCode    String?
+  referralChannel String?   // "email", "sms", "social", "link"
+  referralDate    DateTime  @default(now())
+  
+  // Conversion
+  converted       Boolean   @default(false)
+  convertedDate   DateTime?
+  convertedPlan   String?
+  
+  // Value
+  referrerReward   Float?    // Reward given to referrer
+  referredDiscount Float?    // Discount given to referred
+  
+  referrer        Customer  @relation("ReferralReferrer", fields: [referrerId], references: [id], onDelete: Cascade)
+  referred        Customer  @relation("ReferralReferred", fields: [referredId], references: [id], onDelete: Cascade)
+  
+  @@index([referrerId])
+  @@index([referralDate])
+}
+
+// ============================================================================
+// CUSTOMER COGS: Per-customer cost tracking for gross profit LTV
+// ============================================================================
+
+model CustomerCOGS {
+  id              String    @id @default(cuid())
+  customerId      String
+  month           String    // "2026-01"
+  
+  // Direct costs
+  cgmHardwareCost Float     @default(0)  // CGM sensor cost
+  cgmShippingCost Float     @default(0)
+  medicationCost  Float     @default(0)  // GLP-1 medication COGS
+  supplementCost  Float     @default(0)
+  labKitCost      Float     @default(0)
+  coachingCost    Float     @default(0)  // Per-user coaching cost
+  
+  // Platform costs (allocated per user)
+  appInfraCost    Float     @default(0)
+  supportCost     Float     @default(0)  // Based on support tickets
+  paymentProcFees Float     @default(0)  // ~2.9% + $0.30
+  
+  // Total
+  totalCOGS       Float     @default(0)
+  
+  customer        Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  
+  @@unique([customerId, month])
+  @@index([customerId])
+  @@index([month])
+}
+
+// ============================================================================
+// LTV RECORDS: Computed lifetime value (revenue AND gross profit)
+// ============================================================================
+
+model LTVRecord {
+  id              String    @id @default(cuid())
+  customerId      String?
+  cohortKey       String?   // e.g., "2026-01_meta_pcos"
+  segmentType     String    // "individual", "cohort", "channel", "persona", "plan"
+  segmentValue    String
+  
+  // Revenue LTV
+  projectedLTV    Float     // Total projected revenue
+  actualLTV       Float?    // Actual revenue to date
+  
+  // Gross Profit LTV
+  projectedGPLTV  Float?    // Revenue - COGS
+  actualGPLTV     Float?
+  
+  // Components
+  baseRevenue     Float?    // Subscription revenue
+  upsellRevenue   Float?    // Add-ons, upgrades
+  referralValue   Float?    // Value of referrals made
+  
+  // Retention
+  monthsRetained  Int       @default(0)
+  predictedMonths Float?    // ML-predicted total months
+  confidence      Float     @default(0.5)
+  computedAt      DateTime  @default(now())
+  
+  customer        Customer? @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  
+  @@index([cohortKey])
+  @@index([segmentType, segmentValue])
+  @@index([computedAt])
+}
+
+// ============================================================================
+// COHORTS: Aggregated cohort-level data
+// ============================================================================
+
+model Cohort {
+  id              String    @id @default(cuid())
+  name            String
+  cohortKey       String    @unique  // "2026-01_meta_pcos"
+  acquisitionMonth String
+  channel         String?
+  persona         String?
+  plan            String?
+  customerCount   Int       @default(0)
+  avgCAC          Float?
+  avgLTV          Float?
+  avgGPLTV        Float?    // Gross profit LTV
+  ltvCacRatio     Float?
+  retentionCurve  String    @default("[]") // JSON: [100, 85, 72, 65, ...]
+  medianLifespan  Float?
+  churnRate30     Float?
+  churnRate90     Float?
+  churnRateAnnual Float?
+  
+  // Funnel metrics
+  freeToTrialRate    Float?  // Free tier → trial conversion
+  trialToPaidRate    Float?  // Trial → paid conversion
+  sustainTransRate   Float?  // Active → Sustain transition rate
+  upsellRate         Float?  // Users who add products
+  
+  updatedAt       DateTime  @updatedAt
+  
+  @@index([acquisitionMonth])
+  @@index([channel])
+  @@index([persona])
+}
+
+// ============================================================================
+// AD CAMPAIGNS: Paid media performance (Meta, Google)
+// ============================================================================
+
+model AdCampaign {
+  id              String    @id @default(cuid())
+  platform        String    // "meta", "google"
+  externalId      String    @unique  // Platform campaign ID
+  campaignName    String
+  adSetName       String?
+  
+  // Targeting
+  targetPersona   String?   // "pcos", "weight_loss", "glp1", etc.
+  targetGeo       String?
+  targetAgeRange  String?
+  
+  // Performance (latest snapshot)
+  spend           Float     @default(0)
+  impressions     Int       @default(0)
+  clicks          Int       @default(0)
+  ctr             Float?
+  cpc             Float?
+  conversions     Int       @default(0)
+  cpa             Float?    // Cost per acquisition
+  roas            Float?    // Return on ad spend
+  
+  // LTV-attributed metrics
+  customersAcquired  Int    @default(0)
+  avgLTV             Float? // Average LTV of customers from this campaign
+  projectedROI       Float? // LTV-based ROI (not just first-purchase ROAS)
+  
+  dateStart       DateTime?
+  dateEnd         DateTime?
+  lastSyncAt      DateTime?
+  
+  @@index([platform])
+  @@index([targetPersona])
+}
+
+// ============================================================================
+// SCENARIOS: What-if simulation models
+// ============================================================================
+
+model Scenario {
+  id              String    @id @default(cuid())
+  name            String
+  description     String    @db.Text
+  category        String    // "retention", "engagement", "acquisition", "upsell", "new_product", "pricing", "top_of_funnel"
+  status          String    @default("draft")
+
+  targetSegment   String?
+  targetPlan      String?
+
+  // Input assumptions
+  churnReduction    Float?
+  engagementLift    Float?
+  conversionLift    Float?
+  aovIncrease       Float?
+  newCustomersMonth Int?
+  retentionBoost    Float?
+  freeToTrialLift   Float?   // For top-of-funnel programs
+
+  // Cost inputs
+  investmentRequired Float?
+  ongoingCostMonth   Float?
+  cogsPerUser        Float?
+  timeToLaunchWeeks  Int?
+
+  // Computed outputs
+  projectedLTVImpact      Float?
+  projectedAnnualRevenue  Float?
+  projectedGrossMargin    Float?
+  roiMultiple             Float?
+  paybackMonths           Float?
+  priorityScore           Float?
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+// ============================================================================
+// INSIGHTS: AI-generated findings
+// ============================================================================
+
+model Insight {
+  id              String    @id @default(cuid())
+  insightType     String
+  category        String
+  title           String
+  description     String    @db.Text
+  impact          String
+  confidence      Float
+  recommendation  String?   @db.Text
+  dataPoints      String    @default("{}")
+  status          String    @default("new")
+  generatedAt     DateTime  @default(now())
+
+  @@index([generatedAt])
+  @@index([category])
+  @@index([status])
+}
+
+// ============================================================================
+// DATA SYNC: Track integration health
+// ============================================================================
+
+model DataSync {
+  id              String    @id @default(cuid())
+  source          String    // "mode", "iterable", "shopify", "meta_ads", "google_ads", "openloop", "app_backend"
+  syncType        String
+  status          String
+  startedAt       DateTime  @default(now())
+  completedAt     DateTime?
+  recordsProcessed Int      @default(0)
+  recordsFailed    Int      @default(0)
+  errorMessage    String?   @db.Text
+  metadata        String    @default("{}")
+
+  @@index([source])
+  @@index([startedAt])
+}
+
+// ============================================================================
+// MODE REPORTS: Configured Mode report connections
+// ============================================================================
+
+model ModeReport {
+  id              String    @id @default(cuid())
+  reportToken     String    @unique
+  name            String
+  description     String?
+  category        String
+  reportUrl       String?
+  lastSyncAt      DateTime?
+  syncStatus      String    @default("pending")
+  
+  snapshots       ModeSnapshot[]
+  
+  @@index([category])
+}
+
+model ModeSnapshot {
+  id              String    @id @default(cuid())
+  modeReportId    String
+  snapshotDate    DateTime  @default(now())
+  metricsJson     String    @default("{}")
+  dataPreviewJson String    @default("[]")
+  rowCount        Int       @default(0)
+  
+  report          ModeReport @relation(fields: [modeReportId], references: [id], onDelete: Cascade)
+
+  @@index([modeReportId])
+  @@index([snapshotDate])
+}
+
+// ============================================================================
+// ITERABLE CAMPAIGNS: Email campaign tracking
+// ============================================================================
+
+model IterableCampaignRecord {
+  id                  String    @id @default(cuid())
+  iterableCampaignId  Int       @unique
+  name                String
+  type                String?
+  messageMedium       String?
+  campaignState       String?
+  lastSyncAt          DateTime?
+  
+  metrics             IterableMetricSnapshot[]
+}
+
+model IterableMetricSnapshot {
+  id                  String    @id @default(cuid())
+  campaignRecordId    String
+  snapshotDate        DateTime  @default(now())
+  totalSent           Int       @default(0)
+  totalDelivered      Int       @default(0)
+  uniqueOpens         Int       @default(0)
+  totalOpens          Int       @default(0)
+  uniqueClicks        Int       @default(0)
+  totalClicks         Int       @default(0)
+  unsubscribes        Int       @default(0)
+  complaints          Int       @default(0)
+  bounces             Int       @default(0)
+  openRate            Float?
+  clickRate           Float?
+  revenue             Float     @default(0)
+
+  campaign            IterableCampaignRecord @relation(fields: [campaignRecordId], references: [id], onDelete: Cascade)
+
+  @@index([campaignRecordId])
+  @@index([snapshotDate])
+}

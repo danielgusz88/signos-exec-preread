@@ -1,0 +1,14 @@
+import { NextResponse } from 'next/server';
+import { testIterableConnection } from '@/lib/integrations/iterable';
+
+export async function GET() {
+  try {
+    const result = await testIterableConnection();
+    return NextResponse.json(result);
+  } catch (error: any) {
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 500 }
+    );
+  }
+}

@@ -1,0 +1,269 @@
+functionsDirectory = "/Users/dangusz/Exec_Dashboard/funnel-ai/netlify/functions"
+functionsDirectoryOrigin = "config"
+redirectsOrigin = "inline"
+headersOrigin = "inline"
+
+[build]
+publish = "/Users/dangusz/Exec_Dashboard/funnel-ai/out"
+publishOrigin = "config"
+commandOrigin = "config"
+base = "/Users/dangusz/Exec_Dashboard/funnel-ai"
+command = "npm run build && rm -rf out/api"
+functions = "/Users/dangusz/Exec_Dashboard/funnel-ai/netlify/functions"
+
+[build.environment]
+NODE_VERSION = "18"
+NPM_FLAGS = "--legacy-peer-deps"
+
+[build.processing]
+
+[build.processing.css]
+
+[build.processing.html]
+
+[build.processing.images]
+
+[build.processing.js]
+
+[build.services]
+
+[functions]
+
+[functions.content-cron]
+schedule = "0 8 * * *"
+
+[functions."*"]
+
+[[plugins]]
+origin = "default"
+package = "@netlify/plugin-nextjs"
+
+[plugins.inputs]
+
+[[headers]]
+for = "/_next/static/*"
+
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
+
+[[redirects]]
+from = "/api/integrations/mode/test"
+to = "/.netlify/functions/mode-test"
+status = 200.0
+force = true
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/api/integrations/iterable/campaigns"
+to = "/.netlify/functions/iterable-campaigns"
+status = 200.0
+force = true
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/api/integrations/iterable/test"
+to = "/.netlify/functions/iterable-test"
+status = 200.0
+force = true
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/api/integrations/shopify/test"
+to = "/.netlify/functions/shopify-test"
+status = 200.0
+force = true
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/api/data/status"
+to = "/.netlify/functions/data-status"
+status = 200.0
+force = true
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/api/data/mode"
+to = "/.netlify/functions/mode-data"
+status = 200.0
+force = true
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/api/data/mode-shopify"
+to = "/.netlify/functions/mode-shopify-data"
+status = 200.0
+force = true
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/api/content/ideate"
+to = "/.netlify/functions/content-ideate"
+status = 200.0
+force = true
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/api/content/fal"
+to = "/.netlify/functions/content-fal"
+status = 200.0
+force = true
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/api/content/cron"
+to = "/.netlify/functions/content-cron"
+status = 200.0
+force = true
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/api/content/review"
+to = "/.netlify/functions/content-review"
+status = 200.0
+force = true
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/api/content/compose"
+to = "/.netlify/functions/content-compose"
+status = 200.0
+force = true
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/api/content/recraft"
+to = "/.netlify/functions/content-recraft"
+status = 200.0
+force = true
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/api/content/feedback"
+to = "/.netlify/functions/content-feedback"
+status = 200.0
+force = true
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/api/content/iterate"
+to = "/.netlify/functions/content-iterate"
+status = 200.0
+force = true
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/_next/image"
+to = "/.netlify/images?url=:url&w=:width&q=:quality"
+status = 200.0
+force = false
+
+[redirects.query]
+url = ":url"
+w = ":width"
+q = ":quality"
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/_ipx/*"
+to = "/.netlify/images?url=:url&w=:width&q=:quality"
+status = 200.0
+force = false
+
+[redirects.query]
+url = ":url"
+w = ":width"
+q = ":quality"
+
+[redirects.conditions]
+
+[redirects.headers]
