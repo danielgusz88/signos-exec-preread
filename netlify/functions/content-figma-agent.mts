@@ -41,14 +41,28 @@ function buildFigmaPrompt(concept: FigmaAgentRequest["adConcept"]): string {
     ? `Open this Figma template file: ${figmaTemplateUrl}`
     : `Create a new Figma Design file in the browser at figma.com`;
 
-  return `# Task: Create a Signos Ad in Figma
+  return `# Task: Create a Signos Ad in Figma Using the Browser
 
-You are creating a professional advertising image for Signos, a CGM/metabolic health company. Your job is to open Figma in the browser, create the ad design, and export the final result as a PNG.
+## CRITICAL: YOU MUST USE THE BROWSER — NOT CODE
 
-## Step 1: Open Figma
-${templateInstruction}
+You are a cloud agent with FULL BROWSER AND COMPUTER USE capabilities. You MUST use the browser to open figma.com and create the design visually in Figma's editor. 
 
-If Figma asks you to log in, stop and report that login is needed.
+**ABSOLUTE RULES:**
+- You MUST open a browser and navigate to figma.com
+- You MUST use Figma's visual editor (click tools, type text, drag elements)
+- You MUST NOT write Python, Node.js, or any code to generate the image
+- You MUST NOT use Pillow, Canvas, Sharp, Puppeteer, or any programmatic image generation
+- You MUST NOT use any CLI tools to create the image
+- If you cannot open a browser, STOP IMMEDIATELY and report: "BROWSER ACCESS NEEDED — cannot complete task without browser/computer use capability"
+- If Figma asks you to log in, STOP IMMEDIATELY and report: "FIGMA LOGIN NEEDED — please log into Figma in the agent's VM browser at cursor.com/agents"
+
+The ONLY acceptable output is a design created in Figma's visual editor using the browser. Any code-based workaround is FORBIDDEN.
+
+## Step 1: Open Figma in the Browser
+- Open the browser (Chrome or whatever is available)
+- Navigate to https://www.figma.com
+- ${templateInstruction}
+- If you see a login screen, STOP and report "FIGMA LOGIN NEEDED" — do not try to work around it
 
 ## Step 2: Set Up the Frame
 - Create a new frame: 1080 x 1350 pixels (Instagram 4:5 ratio)
@@ -180,11 +194,14 @@ ${targetEmotion ? `\nTarget emotion: ${targetEmotion}` : ""}
 ${notes ? `\nAdditional notes: ${notes}` : ""}
 
 ## IMPORTANT RULES
+- You MUST use the browser to do this in Figma. DO NOT write code. DO NOT use Python/Pillow/Canvas.
+- If you catch yourself about to write a script to generate the image, STOP. Open the browser instead.
 - Use ONLY real, properly spelled text. Double-check every word.
 - NEVER include CGM devices, glucose monitors, or medical sensors in the design.
 - The ad should look like it was made by a professional designer, not AI.
 - If Figma is slow or unresponsive, wait and retry — don't skip steps.
-- Record your screen as you work so the result can be verified.`;
+- Record your screen as you work so the result can be verified.
+- If at any point you cannot use the browser or Figma, STOP and report the issue. Do NOT fall back to code.`;
 }
 
 export default async function handler(req: Request, _context: Context) {
