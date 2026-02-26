@@ -1,0 +1,10 @@
+{
+  "campaignId": "campaign_1772073083573",
+  "figmaUrl": "https://www.figma.com/design/Drc6lJJCmAlVZsuF66OHx/Signos-Campaign----Master-Your-Maintenance-Mode",
+  "variants": [
+    { "name": "Variant A — Bold", "exportPath": "generated-ads/campaign_1772073083573/variant-a-bold-1772073232860.png" },
+    { "name": "Variant B — Clean", "exportPath": "generated-ads/campaign_1772073083573/variant-b-clean-1772073232860.png" }
+  ],
+  "caption": "You crushed your GLP-1 journey – now comes the real challenge: keeping it off for life. 📊 Master maintenance mode with real-time glucose insights that show exactly how your body responds to every cho",
+  "timestamp": 1772073232860
+}
