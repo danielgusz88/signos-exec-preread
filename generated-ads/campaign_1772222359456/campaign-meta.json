@@ -1,0 +1,10 @@
+{
+  "campaignId": "campaign_1772222359456",
+  "figmaUrl": "https://www.figma.com/design/trcoUFm4fgTLHlM3nVb5Pa/Signos-Campaign-----She-Kept-Off-30-Pounds",
+  "variants": [
+    { "name": "Variant A — Bold", "exportPath": "generated-ads/campaign_1772222359456/variant-a-bold-1772222576632.png" },
+    { "name": "Variant B — Clean", "exportPath": "generated-ads/campaign_1772222359456/variant-b-clean-1772222576632.png" }
+  ],
+  "caption": "Meet Sarah — she lost 30 pounds on GLP-1, but the real victory? Keeping it off for 8 months with Signos CGM. See how continuous glucose monitoring helped her maintain her results with smart food choices and metabolic insights. Your graduation story starts here. #GLP1Graduation #WeightMaintenance #CGM #Signos #MetabolicHealth #WeightLossSuccess #HealthyLifestyle #GlucoseMonitoring",
+  "timestamp": 1772222576632
+}
