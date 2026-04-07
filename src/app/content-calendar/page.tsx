@@ -198,7 +198,7 @@ function parseAiJson<T>(raw: string): T {
   return JSON.parse(cleaned) as T;
 }
 
-const WEEKLY_GOALS = { email: 2, social: 5 };
+const WEEKLY_GOALS = { email: 1, social: 3 };
 
 interface WeekRange {
   label: string;
