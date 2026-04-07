@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import {
   Send, Loader2, Copy, Check, MessageSquare, Sparkles, Eye, Code,
   ChevronDown, Save, FolderOpen, Trash2, ImagePlus, Monitor,
   Smartphone, Sun, Moon, X, ArrowLeft, RotateCcw, Upload, Link2,
-  Palette, FileText, Pencil, PencilOff, Users, UserX,
+  Palette, FileText, Pencil, PencilOff, Users, UserX, Share2,
 } from 'lucide-react';
 
 type ViewMode = 'preview' | 'code';
@@ -17,7 +18,40 @@ type Phase = 'input' | 'generating' | 'options' | 'refining';
 type ReviewStatus = 'pending' | 'reviewing' | 'done' | 'error';
 type EmailOption = { id: string; html: string; summary: string; reviewStatus: ReviewStatus; audience: string };
 
-export default function EmailHubPage() {
+function DraftRow({ draft, onLoad, onCopyLink, onDelete }: {
+  draft: Draft;
+  onLoad: (id: string) => void;
+  onCopyLink: (id: string) => void;
+  onDelete: (id: string) => void;
+}) {
+  const [linkCopied, setLinkCopied] = useState(false);
+  return (
+    <div className="flex items-center justify-between px-3 py-2 hover:bg-gray-50">
+      <button onClick={() => onLoad(draft.id)} className="text-xs font-medium text-gray-800 truncate flex-1 text-left">{draft.title}</button>
+      <div className="flex items-center gap-1 ml-2">
+        <button
+          onClick={() => { onCopyLink(draft.id); setLinkCopied(true); setTimeout(() => setLinkCopied(false), 1500); }}
+          title="Copy share link"
+          className="text-gray-400 hover:text-brand-500 p-0.5"
+        >
+          {linkCopied ? <Check className="h-3 w-3 text-green-500" /> : <Share2 className="h-3 w-3" />}
+        </button>
+        <button onClick={() => onDelete(draft.id)} className="text-gray-400 hover:text-red-500 p-0.5"><Trash2 className="h-3 w-3" /></button>
+      </div>
+    </div>
+  );
+}
+
+export default function EmailHubPageWrapper() {
+  return (
+    <Suspense fallback={<div className="flex h-screen items-center justify-center text-gray-400">Loading…</div>}>
+      <EmailHubPage />
+    </Suspense>
+  );
+}
+
+function EmailHubPage() {
+  const searchParams = useSearchParams();
   const [phase, setPhase] = useState<Phase>('input');
 
   const [concept, setConcept] = useState('');
@@ -44,6 +78,7 @@ export default function EmailHubPage() {
   const [deviceMode, setDeviceMode] = useState<DeviceMode>('desktop');
   const [colorMode, setColorMode] = useState<ColorMode>('light');
   const [copied, setCopied] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
   const [inlineEditMode, setInlineEditMode] = useState(false);
 
   const [draftId, setDraftId] = useState('');
@@ -57,6 +92,26 @@ export default function EmailHubPage() {
   const editScrollRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const deepLinkHandled = useRef(false);
+
+  const updateUrl = useCallback((id: string | null) => {
+    const url = new URL(window.location.href);
+    if (id) {
+      url.searchParams.set('draft', id);
+    } else {
+      url.searchParams.delete('draft');
+    }
+    window.history.replaceState({}, '', url.toString());
+  }, []);
+
+  const copyShareLink = useCallback(() => {
+    if (!draftId) return;
+    const url = new URL(window.location.href);
+    url.searchParams.set('draft', draftId);
+    navigator.clipboard.writeText(url.toString());
+    setCopiedLink(true);
+    setTimeout(() => setCopiedLink(false), 2000);
+  }, [draftId]);
 
   // ── Drafts ──────────────────────────────────────────────
 
@@ -74,6 +129,34 @@ export default function EmailHubPage() {
 
   useEffect(() => { loadDrafts(); }, [loadDrafts]);
 
+  // Deep-link: auto-load draft from ?draft=ID on first mount
+  useEffect(() => {
+    if (deepLinkHandled.current) return;
+    const id = searchParams.get('draft');
+    if (!id) return;
+    deepLinkHandled.current = true;
+    (async () => {
+      try {
+        const res = await fetch('/api/email-hub', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'load-draft', id }),
+        });
+        const data = await res.json();
+        if (data.draft) {
+          setConcept(data.draft.theme || '');
+          setDetails(data.draft.details || '');
+          setAudience(data.draft.audience || 'both');
+          setSelectedHtml(data.draft.html || '');
+          setDraftId(data.draft.id);
+          setDraftTitle(data.draft.title || '');
+          setEditHistory([{ role: 'system', text: `Loaded "${data.draft.title}" from shared link` }]);
+          setPhase('refining');
+        }
+      } catch { /* ignore — draft may not exist */ }
+    })();
+  }, [searchParams]);
+
   const handleSave = async () => {
     if (!selectedHtml) return;
     setSaving(true);
@@ -89,7 +172,10 @@ export default function EmailHubPage() {
         }),
       });
       const data = await res.json();
-      if (data.id) setDraftId(data.id);
+      if (data.id) {
+        setDraftId(data.id);
+        updateUrl(data.id);
+      }
       loadDrafts();
     } catch { /* ignore */ }
     setSaving(false);
@@ -111,6 +197,7 @@ export default function EmailHubPage() {
       setDraftTitle(data.draft.title || '');
       setEditHistory([{ role: 'system', text: `Loaded "${data.draft.title}"` }]);
       setPhase('refining');
+      updateUrl(data.draft.id);
     }
     setShowDrafts(false);
   };
@@ -292,6 +379,7 @@ export default function EmailHubPage() {
   const handleBackToInput = () => {
     setPhase('input');
     setError('');
+    updateUrl(null);
   };
 
   // ── Inline text editing ─────────────────────────────────
@@ -428,14 +516,18 @@ body,.wrapper,.bg-pebble-lt { background-color: #21263a !important; }
 
   // ── Shared UI ───────────────────────────────────────────
 
+  const copyDraftLink = (id: string) => {
+    const url = new URL(window.location.href);
+    url.search = '';
+    url.searchParams.set('draft', id);
+    navigator.clipboard.writeText(url.toString());
+  };
+
   const draftsDropdown = showDrafts && drafts.length > 0 && (
     <div className="border-b border-gray-200 bg-white px-6 py-2">
-      <div className="max-h-40 overflow-y-auto rounded-lg border border-gray-200 divide-y divide-gray-100">
+      <div className="max-h-48 overflow-y-auto rounded-lg border border-gray-200 divide-y divide-gray-100">
         {drafts.map(d => (
-          <div key={d.id} className="flex items-center justify-between px-3 py-2 hover:bg-gray-50">
-            <button onClick={() => handleLoadDraft(d.id)} className="text-xs font-medium text-gray-800 truncate flex-1 text-left">{d.title}</button>
-            <button onClick={() => handleDeleteDraft(d.id)} className="ml-2 text-gray-400 hover:text-red-500"><Trash2 className="h-3 w-3" /></button>
-          </div>
+          <DraftRow key={d.id} draft={d} onLoad={handleLoadDraft} onCopyLink={copyDraftLink} onDelete={handleDeleteDraft} />
         ))}
       </div>
     </div>
@@ -907,6 +999,11 @@ body,.wrapper,.bg-pebble-lt { background-color: #21263a !important; }
           <button onClick={handleSave} disabled={saving} className="flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50">
             {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />} Save
           </button>
+          {draftId && (
+            <button onClick={copyShareLink} className="flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+              {copiedLink ? <><Check className="h-3.5 w-3.5 text-green-500" /> Link Copied!</> : <><Share2 className="h-3.5 w-3.5" /> Share Link</>}
+            </button>
+          )}
           <button onClick={handleCopy} className="flex items-center gap-1.5 rounded-lg bg-brand-500 px-3 py-1.5 text-xs font-medium text-white hover:bg-brand-600 transition-colors">
             {copied ? <><Check className="h-3.5 w-3.5" /> Copied!</> : <><Copy className="h-3.5 w-3.5" /> Copy HTML</>}
           </button>
