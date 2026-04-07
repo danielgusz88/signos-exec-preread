@@ -106,10 +106,423 @@
   status = 200
   force = true
 
+[[redirects]]
+  from = "/api/content-calendar/store"
+  to = "/.netlify/functions/content-calendar-store"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/content-calendar/draft"
+  to = "/.netlify/functions/content-calendar-draft"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/content-calendar/iterable-push"
+  to = "/.netlify/functions/iterable-push"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/blog-hub/store"
+  to = "/.netlify/functions/blog-hub-store"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/blog-hub/review"
+  to = "/.netlify/functions/blog-hub-review"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/influencers/store"
+  to = "/.netlify/functions/influencer-store"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/ga4/data"
+  to = "/.netlify/functions/ga4-data"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/landing-pages/store"
+  to = "/.netlify/functions/landing-page-store"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/campaign/store"
+  to = "/.netlify/functions/campaign-store"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/campaign/instagram"
+  to = "/.netlify/functions/campaign-instagram"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/marketing/grid"
+  to = "/.netlify/functions/marketing-grid"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/marketing/todos"
+  to = "/.netlify/functions/marketing-todos"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/marketing/activity"
+  to = "/.netlify/functions/marketing-activity"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/marketing/slack-events"
+  to = "/.netlify/functions/marketing-slack-events"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/marketing/slack-morning"
+  to = "/.netlify/functions/marketing-slack-morning"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/marketing/ai"
+  to = "/.netlify/functions/marketing-ai"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/marketing/performance"
+  to = "/.netlify/functions/marketing-performance"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/marketing/marketing-slack"
+  to = "/.netlify/functions/marketing-daily-slack"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/marketing/marketing-documents"
+  to = "/.netlify/functions/marketing-documents"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/marketing/todo-owner-dm"
+  to = "/.netlify/functions/marketing-todo-owner-dm"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/slack/connect"
+  to = "/.netlify/functions/slack-oauth?action=connect"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/slack/callback"
+  to = "/.netlify/functions/slack-oauth?action=callback"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/slack/dm"
+  to = "/.netlify/functions/slack-oauth"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/migrate-to-supabase"
+  to = "/.netlify/functions/migrate-to-supabase"
+  status = 200
+  force = true
+
+[functions."marketing-grid"]
+  timeout = 60
+
+[functions."marketing-ai"]
+  timeout = 60
+
+[functions."marketing-documents"]
+  timeout = 60
+
+[functions."content-recraft"]
+  timeout = 60
+
+[functions."content-calendar-draft"]
+  timeout = 60
+
+[functions."iterable-push"]
+  timeout = 30
+
+[functions."blog-hub-review"]
+  timeout = 60
+
+[functions."ad-review-ai"]
+  timeout = 60
+
+[functions."ad-concepts-ai"]
+  timeout = 60
+
+[functions."ga4-data"]
+  timeout = 30
+
+[functions."mode-shopify-data"]
+  timeout = 120
+
+[functions."mode-data"]
+  timeout = 60
+
+[functions."mode-subscription-sales"]
+  timeout = 120
+
+[functions."ad-factory-engine"]
+  timeout = 120
+
+[functions."figma-jobs"]
+  timeout = 30
+
+[functions."figma-review"]
+  timeout = 120
+
 [functions."content-cron"]
   schedule = "0 8 * * *"
 
-# SPA catch-all (client-side routing)
+[functions."marketing-daily-slack"]
+  schedule = "0 12 * * 1-5"
+
+[functions."marketing-todo-owner-dm"]
+  schedule = "0 * * * *"
+  timeout = 120
+
+[functions."marketing-slack-events"]
+  timeout = 120
+
+[functions."marketing-slack-morning"]
+  schedule = "0 * * * *"
+  timeout = 60
+
+[[redirects]]
+  from = "/api/auth/google"
+  to = "/.netlify/functions/google-auth"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/ad-review/store"
+  to = "/.netlify/functions/ad-review-store"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/ad-review/ai"
+  to = "/.netlify/functions/ad-review-ai"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/ad-concepts/store"
+  to = "/.netlify/functions/ad-concepts-store"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/ad-concepts/ai"
+  to = "/.netlify/functions/ad-concepts-ai"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/platform-data/store"
+  to = "/.netlify/functions/platform-data-store"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/data/subscription-sales"
+  to = "/.netlify/functions/mode-subscription-sales"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/auth/config"
+  to = "/.netlify/functions/auth-config"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/team/store"
+  to = "/.netlify/functions/team-store"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/ad-factory/engine"
+  to = "/.netlify/functions/ad-factory-engine"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/figma-jobs"
+  to = "/.netlify/functions/figma-jobs"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/figma-review"
+  to = "/.netlify/functions/figma-review"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/design-system"
+  to = "/.netlify/functions/design-system-store"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/spekk-report"
+  to = "/.netlify/functions/spekk-report"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/ad-factory/news"
+  to = "/.netlify/functions/ad-factory-news"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/ad-factory/templates"
+  to = "/.netlify/functions/ad-factory-templates"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/pr/store"
+  to = "/.netlify/functions/pr-store"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/growth-marketing/store"
+  to = "/.netlify/functions/growth-marketing-store"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/idea-bank/store"
+  to = "/.netlify/functions/idea-bank-store"
+  status = 200
+  force = true
+
+[functions."pr-store"]
+  timeout = 30
+
+[functions."growth-marketing-store"]
+  timeout = 30
+
+[functions."ad-factory-news"]
+  timeout = 30
+
+[functions."ad-factory-templates"]
+  timeout = 30
+
+[[redirects]]
+  from = "/api/ad-sketch"
+  to = "/.netlify/functions/ad-sketch"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/email-hub"
+  to = "/.netlify/functions/email-hub"
+  status = 200
+  force = true
+
+[functions."ad-sketch"]
+  timeout = 60
+
+[functions."email-hub"]
+  timeout = 120
+
+[[redirects]]
+  from = "/api/blog-engine/store"
+  to = "/.netlify/functions/blog-engine-store"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/blog-engine/generate"
+  to = "/.netlify/functions/blog-engine-generate"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/blog-engine/iterate"
+  to = "/.netlify/functions/blog-engine-iterate"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/blog-engine/score"
+  to = "/.netlify/functions/blog-engine-score"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/blog-engine/data"
+  to = "/.netlify/functions/blog-engine-data"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/blog-engine/export"
+  to = "/.netlify/functions/blog-engine-export"
+  status = 200
+  force = true
+
+[functions."blog-engine-store"]
+  timeout = 30
+
+[functions."blog-engine-generate"]
+  timeout = 120
+
+[functions."blog-engine-iterate"]
+  timeout = 120
+
+[functions."blog-engine-score"]
+  timeout = 60
+
+[functions."blog-engine-data"]
+  timeout = 60
+
+[functions."blog-engine-export"]
+  timeout = 120
+
+[[redirects]]
+  from = "/api/ad-studio"
+  to = "/.netlify/functions/ad-studio"
+  status = 200
+  force = true
+
+[functions."ad-studio"]
+  timeout = 120
+
+# SPA catch-all (client-side routing) — runs only when no static file matches
 [[redirects]]
   from = "/*"
   to = "/index.html"
