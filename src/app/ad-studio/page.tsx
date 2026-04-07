@@ -72,6 +72,10 @@ function MiniData() { return <MiniBox className="bg-[#1f2746]"><div className="a
 
 const API = '/api/ad-studio';
 
+/** Root layout uses `text-white`; inputs must override so typed text is visible on light fields. */
+const fieldClass =
+  'bg-white text-gray-900 placeholder:text-gray-500';
+
 async function apiStream(payload: Record<string, unknown>, onChunk: (html: string) => void): Promise<string> {
   const res = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
   if (!res.ok) { const t = await res.text(); try { throw new Error(JSON.parse(t).error); } catch (e) { if (e instanceof Error && e.message) throw e; throw new Error('Request failed'); } }
@@ -300,13 +304,15 @@ export default function AdStudioPage() {
               <label className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Keywords / Themes *</label>
               <textarea value={rsaKeywords} onChange={e => setRsaKeywords(e.target.value)} rows={4}
                 placeholder="e.g. GLP-1 weight loss, CGM glucose monitor, metabolic health app, insulin resistance"
-                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" />
+                className={cn('mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm', fieldClass)}
+              />
             </div>
             <div>
               <label className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Campaign Topic (optional)</label>
               <input value={rsaTopic} onChange={e => setRsaTopic(e.target.value)}
                 placeholder="e.g. GLP-1 graduation campaign"
-                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" />
+                className={cn('mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm', fieldClass)}
+              />
             </div>
             <button onClick={handleGoogleRSA} disabled={rsaLoading || !rsaKeywords.trim()}
               className="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50">
@@ -466,34 +472,34 @@ export default function AdStudioPage() {
                 <div>
                   <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wide text-gray-500">Topic / Angle *</label>
                   <input value={topic} onChange={e => setTopic(e.target.value)} placeholder="e.g. GLP-1 graduation, blood sugar control"
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" />
+                    className={cn('w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none', fieldClass)} />
                 </div>
                 <div>
                   <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wide text-gray-500">Headline (optional)</label>
                   <input value={headline} onChange={e => setHeadline(e.target.value)} placeholder="AI will generate one if empty"
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" />
+                    className={cn('w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none', fieldClass)} />
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   <div>
                     <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wide text-gray-500">Subhead</label>
                     <input value={subhead} onChange={e => setSubhead(e.target.value)} placeholder="Supporting text"
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" />
+                      className={cn('w-full rounded-lg border border-gray-300 px-3 py-2 text-sm', fieldClass)} />
                   </div>
                   <div>
                     <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wide text-gray-500">CTA</label>
                     <input value={cta} onChange={e => setCta(e.target.value)} placeholder="Learn More"
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" />
+                      className={cn('w-full rounded-lg border border-gray-300 px-3 py-2 text-sm', fieldClass)} />
                   </div>
                 </div>
                 <div>
                   <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wide text-gray-500">Extra Details</label>
                   <textarea value={details} onChange={e => setDetails(e.target.value)} rows={2} placeholder="Style notes, specific imagery..."
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" />
+                    className={cn('w-full rounded-lg border border-gray-300 px-3 py-2 text-sm', fieldClass)} />
                 </div>
                 <div>
                   <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wide text-gray-500">Background Image URL (optional)</label>
                   <input value={imageUrl} onChange={e => setImageUrl(e.target.value)} placeholder="https://..."
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" />
+                    className={cn('w-full rounded-lg border border-gray-300 px-3 py-2 text-sm', fieldClass)} />
                 </div>
                 <div className="flex gap-2">
                   <button onClick={handleGenerate} disabled={generating || (!topic.trim() && !headline.trim())}
@@ -540,7 +546,7 @@ export default function AdStudioPage() {
                   <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wide text-gray-500">Keywords / Trends *</label>
                   <textarea value={signalKeywords} onChange={e => setSignalKeywords(e.target.value)} rows={4}
                     placeholder="e.g. GLP-1 side effects, weight regain after ozempic, blood sugar crash, afternoon energy"
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" />
+                    className={cn('w-full rounded-lg border border-gray-300 px-3 py-2 text-sm', fieldClass)} />
                 </div>
                 <button onClick={handleSignals} disabled={signalsLoading || !signalKeywords.trim()}
                   className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-50">
@@ -644,7 +650,7 @@ export default function AdStudioPage() {
                     <input value={chatInput} onChange={e => setChatInput(e.target.value)}
                       onKeyDown={e => e.key === 'Enter' && !e.shiftKey && handleIterate()}
                       placeholder="Make the headline bigger, change CTA color..."
-                      className="flex-1 rounded-lg border border-gray-200 px-3 py-1.5 text-xs outline-none focus:border-brand-300" />
+                      className={cn('flex-1 rounded-lg border border-gray-200 px-3 py-1.5 text-xs outline-none focus:border-brand-300', fieldClass)} />
                     <button onClick={handleIterate} disabled={editing || !chatInput.trim() || !html}
                       className="rounded-lg bg-gray-900 p-1.5 text-white disabled:opacity-30">
                       <Send className="h-3.5 w-3.5" />
