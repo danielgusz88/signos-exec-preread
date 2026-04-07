@@ -3,14 +3,20 @@ import type { Context } from "@netlify/functions";
 const ANTHROPIC_API = "https://api.anthropic.com/v1/messages";
 const MODEL = "claude-sonnet-4-20250514";
 
-const LIFESTYLE_PHOTOS = [
-  "https://cdn.prod.website-files.com/63ed08484c069d0492f5b0bc/66ff04ff698cbfcce388ff57_6557d5bba8a8893dbded1969_woman-with-signos-cgm-similing-at-camera.webp",
-  "https://cdn.prod.website-files.com/63ed08484c069d0492f5b0bc/66e42ebfb05a6e530a49a9c3_woman-preparing-healthy-food.webp",
-  "https://cdn.prod.website-files.com/63ed08484c069d0492f5b0bc/6977bf4595147e56c8aa6cd9_young-asian-couple-traveler-tourists-eating-thai-s-2026-01-06-10-39-06-utc%20(1)-p-800.jpg",
-  "https://cdn.prod.website-files.com/63ed08484c069d0492f5b0bc/691a0332bd872eb104526272_multiethnic-diverse-male-friends-having-fun-togeth-2025-10-14-08-35-41-utc-min-p-800.jpg",
-  "https://cdn.prod.website-files.com/63ed08484c069d0492f5b0bc/695a945193266413762d2199_Option%206.png",
-];
-const PHOTO_LIST = LIFESTYLE_PHOTOS.map((u, i) => `  lifestyle_${i + 1}: ${u}`).join("\n");
+// Annotated photo library — LLM must pick based on headline message
+const PHOTO_LIBRARY = `
+AVAILABLE PHOTOS (pick the one that supports your headline):
+  1. Woman with CGM sensor, smiling at camera (identity, positivity, belonging)
+     https://cdn.prod.website-files.com/63ed08484c069d0492f5b0bc/66ff04ff698cbfcce388ff57_6557d5bba8a8893dbded1969_woman-with-signos-cgm-similing-at-camera.webp
+  2. Woman preparing healthy food in kitchen (nutrition, meals, cooking)
+     https://cdn.prod.website-files.com/63ed08484c069d0492f5b0bc/66e42ebfb05a6e530a49a9c3_woman-preparing-healthy-food.webp
+  3. Couple eating Thai food together (social eating, enjoyment, freedom)
+     https://cdn.prod.website-files.com/63ed08484c069d0492f5b0bc/6977bf4595147e56c8aa6cd9_young-asian-couple-traveler-tourists-eating-thai-s-2026-01-06-10-39-06-utc%20(1)-p-800.jpg
+  4. Male friends outdoors being active (active lifestyle, energy, social)
+     https://cdn.prod.website-files.com/63ed08484c069d0492f5b0bc/691a0332bd872eb104526272_multiethnic-diverse-male-friends-having-fun-togeth-2025-10-14-08-35-41-utc-min-p-800.jpg
+  5. Athletic woman exercising with weights (fitness, training, graduation, strength)
+     https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1400&q=80
+RULE: Choose the photo that DIRECTLY supports the headline. Never reuse the same URL for different concepts in a batch.`;
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -20,48 +26,24 @@ const CORS = {
 const json = (data: unknown, status = 200) =>
   new Response(JSON.stringify(data), { status, headers: { ...CORS, "Content-Type": "application/json" } });
 
-// ── Reusable phone mockup HTML block ───────────────────────────────────
-
-const PHONE_MOCKUP_HTML = `<div style="position:relative;width:PHONE_WIDTHpx;height:PHONE_HEIGHTpx;border-radius:44px;background:#f7f7f8;border:6px solid #0e0f14;box-shadow:0 18px 45px rgba(0,0,0,0.22);overflow:hidden;">
-<div style="position:absolute;top:13px;left:50%;transform:translateX(-50%);width:120px;height:30px;border-radius:18px;background:#090a0c;z-index:3;"></div>
-<div style="position:absolute;inset:0;padding:28px 26px 22px;color:#2a2e44;background:linear-gradient(180deg,#fafafa 0%,#f3f3f4 100%);font-family:Inter,Arial,sans-serif;">
-<div style="margin-top:16px;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#111318;font-weight:700;"><span>6:50</span><span style="font-size:11px;">●  ◔  ▮</span></div>
-<div style="margin-top:18px;font-size:12px;color:#5b6075;">Current glucose</div>
-<div style="margin-top:4px;display:flex;align-items:flex-end;gap:8px;color:#232844;"><span style="font-size:82px;line-height:0.9;font-weight:800;letter-spacing:-0.05em;">110</span><span style="font-size:14px;line-height:1.1;margin-bottom:10px;color:#4d546e;">mg<br>dL</span></div>
-<div style="margin-top:10px;display:flex;gap:12px;font-size:12px;color:#384057;font-weight:700;"><span style="display:inline-flex;align-items:center;gap:4px;"><span style="display:inline-block;width:4px;height:12px;border-radius:3px;background:#18b8a5;"></span>TIR 82%</span><span style="display:inline-flex;align-items:center;gap:4px;"><span style="display:inline-block;width:4px;height:12px;border-radius:3px;background:#ff5630;"></span>SPD 7</span><span style="display:inline-flex;align-items:center;gap:4px;"><span style="display:inline-block;width:4px;height:12px;border-radius:3px;background:#f4b02a;"></span>LST 5:30p</span></div>
-<div style="margin-top:20px;background:#e9e3db;border:3px solid #f6a623;border-radius:16px;padding:10px 12px;display:grid;grid-template-columns:52px 1fr 16px;align-items:center;gap:10px;">
-<div style="background:#f6a623;color:#5a3900;border-radius:10px;padding:8px 6px;text-align:center;font-size:12px;font-weight:800;">10:02</div>
-<div><div style="font-size:12px;font-weight:700;color:#29304a;">Fast rise predicted</div><div style="font-size:11px;color:#4d5875;line-height:1.25;margin-top:2px;">Move now to steady your glucose</div></div>
-<div style="font-size:22px;color:#7a5a1e;">›</div>
-</div>
-<div style="position:absolute;left:22px;right:22px;bottom:24px;top:280px;border-radius:16px;overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,0.5),rgba(240,240,243,0.8));">
-<svg viewBox="0 0 1000 620" preserveAspectRatio="none" style="width:100%;height:100%;display:block;" aria-hidden="true">
-<defs><linearGradient id="fg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff6e3c" stop-opacity="0.55"/><stop offset="28%" stop-color="#f7b448" stop-opacity="0.42"/><stop offset="62%" stop-color="#8d38ff" stop-opacity="0.28"/><stop offset="100%" stop-color="#8d38ff" stop-opacity="0"/></linearGradient><linearGradient id="sg" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#6341ff"/><stop offset="45%" stop-color="#8d2fff"/><stop offset="78%" stop-color="#ff8d2d"/><stop offset="100%" stop-color="#ff4774"/></linearGradient></defs>
-<path d="M0,500 C55,470 90,455 130,465 C175,475 210,485 250,455 C290,425 305,320 340,360 C360,385 372,560 395,535 C430,495 445,210 480,180 C505,160 520,340 545,395 C575,455 595,540 625,500 C655,455 675,330 705,350 C745,376 770,448 805,470 C850,495 900,485 945,470 C970,463 985,462 1000,462 L1000,620 L0,620 Z" fill="url(#fg)"/>
-<path d="M0,500 C55,470 90,455 130,465 C175,475 210,485 250,455 C290,425 305,320 340,360 C360,385 372,560 395,535 C430,495 445,210 480,180 C505,160 520,340 545,395 C575,455 595,540 625,500 C655,455 675,330 705,350 C745,376 770,448 805,470 C850,495 900,485 945,470 C970,463 985,462 1000,462" fill="none" stroke="url(#sg)" stroke-width="10" stroke-linecap="round"/>
-</svg>
-</div>
-</div>
-</div>`;
-
-// ── Template-based archetypes ──────────────────────────────────────────
+// ── Archetype definitions ──────────────────────────────────────────────
 
 const ARCHETYPES: Record<string, { label: string; desc: string }> = {
   signos_split: {
     label: "Photo Top + Dark Panel",
-    desc: "Photo top zone, navy copy panel bottom, phone mockup overlapping the boundary",
+    desc: "Photo top zone, navy copy panel bottom, phone overlapping boundary",
   },
   hero_overlay: {
-    label: "Full-Bleed + Headline Overlay",
-    desc: "Full lifestyle photo with headline overlaid using directional gradient for readability",
+    label: "Full-Bleed Hero",
+    desc: "Lifestyle photo covers canvas, headline overlaid with gradient veil",
   },
   editorial_light: {
-    label: "Light Editorial + Image Strip",
-    desc: "Warm cream headline zone on top, photo/product strip on bottom",
+    label: "Editorial Light",
+    desc: "Warm cream headline zone on top, single photo below",
   },
   data_poster: {
     label: "Data Poster",
-    desc: "Poster-style layout with bold stat or typography, dark background, optional proof element",
+    desc: "Dark navy background, giant stat number, no photography",
   },
 };
 
@@ -69,253 +51,317 @@ const ARCHETYPE_LIST = Object.entries(ARCHETYPES)
   .map(([k, v]) => `- ${k}: "${v.label}" — ${v.desc}`)
   .join("\n");
 
-// ── System prompt with full HTML/CSS templates ─────────────────────────
+// ── Gold-standard template (class-based CSS) ───────────────────────────
+
+function buildGoldTemplate(w: number, h: number): string {
+  const scale = w / 1200;
+  const s = (px: number) => Math.round(px * scale);
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<style>
+  :root {
+    --bg-light: #f3f5f9;
+    --bg-navy: #1f2746;
+    --bg-navy-2: #1a2140;
+    --text-dark: #1d2340;
+    --text-mid: #495273;
+    --text-light: #f6f3ee;
+    --accent: #ff3b7f;
+    --shadow: 0 24px 60px rgba(12,16,30,0.22);
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { background: #111; font-family: Inter, Arial, sans-serif; }
+  body { display: grid; place-items: center; min-height: 100vh; }
+
+  .ad { position: relative; width: ${w}px; height: ${h}px; overflow: hidden; background: var(--bg-light); }
+
+  .top {
+    position: absolute; inset: 0 0 43% 0;
+    background:
+      linear-gradient(90deg,
+        rgba(243,245,249,0.96) 0%, rgba(243,245,249,0.90) 28%,
+        rgba(243,245,249,0.62) 48%, rgba(243,245,249,0.20) 68%,
+        rgba(243,245,249,0.00) 84%),
+      url("PHOTO_URL_HERE");
+    background-size: cover; background-position: center top;
+  }
+  .bottom {
+    position: absolute; inset: 57% 0 0 0;
+    background: linear-gradient(180deg, var(--bg-navy) 0%, var(--bg-navy-2) 100%);
+  }
+
+  .headline {
+    position: absolute; top: ${s(58)}px; left: ${s(58)}px;
+    width: ${s(650)}px; z-index: 3; color: var(--text-dark);
+  }
+  .kicker {
+    font-size: ${s(18)}px; font-weight: 700; letter-spacing: 0.10em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: ${s(18)}px;
+  }
+  .headline h1 {
+    margin: 0; font-size: ${s(88)}px; line-height: 0.94;
+    letter-spacing: -0.055em; font-weight: 900; text-transform: uppercase;
+  }
+  .headline .accent { color: var(--accent); }
+  .headline p {
+    margin: ${s(18)}px 0 0; max-width: ${s(460)}px;
+    font-size: ${s(22)}px; line-height: 1.28; color: var(--text-mid); font-weight: 500;
+  }
+
+  .phone {
+    position: absolute; left: ${s(58)}px; bottom: ${s(48)}px;
+    width: ${s(300)}px; height: ${s(548)}px;
+    border-radius: ${s(34)}px;
+    background: linear-gradient(180deg, #fcfcfd 0%, #f2f3f5 100%);
+    border: ${s(5)}px solid #0d1018;
+    box-shadow: var(--shadow); overflow: hidden; z-index: 4;
+  }
+  .notch {
+    position: absolute; top: ${s(14)}px; left: 50%; transform: translateX(-50%);
+    width: ${s(114)}px; height: ${s(28)}px; border-radius: ${s(18)}px; background: #05070b; z-index: 3;
+  }
+  .screen {
+    position: absolute; inset: 0;
+    padding: ${s(26)}px ${s(22)}px ${s(20)}px; color: #28304d;
+  }
+  .status {
+    margin-top: ${s(16)}px; display: flex; justify-content: space-between;
+    align-items: center; font-size: ${s(12)}px; font-weight: 700; color: #12151f;
+  }
+  .label { margin-top: ${s(18)}px; font-size: ${s(12)}px; color: #5a617c; }
+  .reading { margin-top: ${s(6)}px; display: flex; align-items: flex-end; gap: ${s(8)}px; }
+  .reading .num { font-size: ${s(78)}px; line-height: 0.9; font-weight: 800; letter-spacing: -0.06em; }
+  .reading .unit { margin-bottom: ${s(8)}px; font-size: ${s(14)}px; line-height: 1.05; color: #4d546e; }
+  .metrics {
+    margin-top: ${s(12)}px; display: flex; gap: ${s(10)}px;
+    font-size: ${s(12)}px; font-weight: 700; color: #384057;
+  }
+  .metrics span::before {
+    content: ""; display: inline-block; width: ${s(4)}px; height: ${s(12)}px;
+    border-radius: 2px; margin-right: ${s(4)}px; vertical-align: -2px;
+  }
+  .metrics span:nth-child(1)::before { background: #18b8a5; }
+  .metrics span:nth-child(2)::before { background: #ff623b; }
+  .metrics span:nth-child(3)::before { background: #f3b02a; }
+  .alert {
+    margin-top: ${s(18)}px; padding: ${s(10)}px ${s(12)}px;
+    display: grid; grid-template-columns: ${s(54)}px 1fr ${s(14)}px;
+    gap: ${s(10)}px; align-items: center;
+    border-radius: ${s(16)}px; border: 3px solid #f6a623; background: #eae3d9;
+  }
+  .alert-time {
+    padding: ${s(8)}px 0; border-radius: ${s(10)}px; background: #f6a623;
+    color: #694300; text-align: center; font-size: ${s(12)}px; font-weight: 800;
+  }
+  .alert strong { display: block; font-size: ${s(12)}px; line-height: 1.1; }
+  .alert small { display: block; margin-top: 2px; color: #5a617c; font-size: ${s(11)}px; line-height: 1.25; }
+  .chart {
+    position: absolute; left: ${s(20)}px; right: ${s(20)}px; top: ${s(242)}px; bottom: ${s(20)}px;
+    border-radius: ${s(18)}px; overflow: hidden;
+    background: linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(241,242,244,0.98) 100%);
+  }
+  .chart svg { width: 100%; height: 100%; display: block; }
+
+  .copy {
+    position: absolute; right: ${s(78)}px; bottom: ${s(110)}px;
+    width: ${s(360)}px; z-index: 4; color: var(--text-light);
+  }
+  .copy .eyebrow {
+    margin: 0 0 ${s(12)}px; font-size: ${s(16)}px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase; color: rgba(246,243,238,0.72);
+  }
+  .copy h2 {
+    margin: 0; font-size: ${s(60)}px; line-height: 0.94;
+    letter-spacing: -0.05em; font-weight: 900; text-transform: uppercase;
+  }
+  .copy p {
+    margin: ${s(16)}px 0 0; max-width: ${s(320)}px;
+    font-size: ${s(20)}px; line-height: 1.28; color: rgba(246,243,238,0.84); font-weight: 500;
+  }
+
+  .logo {
+    position: absolute; right: ${s(58)}px; bottom: ${s(34)}px;
+    display: flex; align-items: center; gap: ${s(12)}px; z-index: 5;
+  }
+  .mark {
+    width: ${s(42)}px; height: ${s(54)}px; background: var(--accent);
+    clip-path: polygon(26% 0%,100% 0%,72% 34%,100% 34%,74% 68%,100% 68%,74% 100%,0% 100%,28% 66%,0% 66%,28% 32%,0% 32%);
+  }
+  .logo span { font-size: ${s(28)}px; letter-spacing: 0.06em; font-weight: 700; color: var(--text-light); }
+</style>
+</head>
+<body>
+  <div class="ad">
+    <div class="top"></div>
+    <div class="bottom"></div>
+
+    <section class="headline">
+      <div class="kicker">KICKER TEXT</div>
+      <h1>HEADLINE<br>WITH <span class="accent">ACCENT</span><br>PHRASE.</h1>
+      <p>One short supporting sentence under the headline.</p>
+    </section>
+
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="screen">
+        <div class="status"><span>6:50</span><span>● ◔ ▮</span></div>
+        <div class="label">Current glucose</div>
+        <div class="reading"><div class="num">110</div><div class="unit">mg<br>dL</div></div>
+        <div class="metrics"><span>TIR 82%</span><span>SPD 7</span><span>LST 5:30p</span></div>
+        <div class="alert">
+          <div class="alert-time">10:02</div>
+          <div><strong>Fast rise predicted</strong><small>Move now to steady your glucose</small></div>
+          <div style="font-size:${s(20)}px;color:#7a5a1e;">›</div>
+        </div>
+        <div class="chart">
+          <svg viewBox="0 0 1000 620" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="fillGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#ff7c3f" stop-opacity="0.38"/>
+                <stop offset="38%" stop-color="#b866ff" stop-opacity="0.24"/>
+                <stop offset="100%" stop-color="#8d38ff" stop-opacity="0"/>
+              </linearGradient>
+              <linearGradient id="strokeGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#6342ff"/>
+                <stop offset="45%" stop-color="#8b31ff"/>
+                <stop offset="78%" stop-color="#ff8b2f"/>
+                <stop offset="100%" stop-color="#ff5378"/>
+              </linearGradient>
+            </defs>
+            <path d="M0,500 C65,450 110,455 155,470 C205,485 240,445 285,325 C310,260 330,420 360,505 C392,595 430,210 470,175 C500,150 525,350 555,430 C585,510 620,520 650,445 C685,360 712,315 748,380 C790,455 850,488 905,476 C940,468 970,458 1000,455 L1000,620 L0,620 Z" fill="url(#fillGrad)"/>
+            <path d="M0,500 C65,450 110,455 155,470 C205,485 240,445 285,325 C310,260 330,420 360,505 C392,595 430,210 470,175 C500,150 525,350 555,430 C585,510 620,520 650,445 C685,360 712,315 748,380 C790,455 850,488 905,476 C940,468 970,458 1000,455" fill="none" stroke="url(#strokeGrad)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <section class="copy">
+      <div class="eyebrow">EYEBROW TEXT</div>
+      <h2>SUPPORT<br>HEADLINE.</h2>
+      <p>One short body sentence that reinforces the main idea.</p>
+    </section>
+
+    <div class="logo"><div class="mark"></div><span>SIGNOS</span></div>
+  </div>
+</body>
+</html>`;
+}
+
+// ── System prompt ──────────────────────────────────────────────────────
 
 function buildSystemPrompt(archetype: string | null, w: number, h: number): string {
-  const phoneW = Math.round(w * 0.36);
-  const phoneH = Math.round(phoneW * 1.8);
-  const phone = PHONE_MOCKUP_HTML.replace(/PHONE_WIDTH/g, String(phoneW)).replace(/PHONE_HEIGHT/g, String(phoneH));
+  const goldTemplate = buildGoldTemplate(w, h);
 
-  const templates = `
-═══════════════════════════════════════════════
-TEMPLATE A — "signos_split" (Photo Top + Dark Panel)
-═══════════════════════════════════════════════
-This is the #1 Signos ad pattern. Use it as default.
+  const archVariations = `
+ARCHETYPE VARIATIONS (modify the gold template as described):
 
-<html><head><style>*{margin:0;padding:0;box-sizing:border-box;}@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');</style></head>
-<body style="margin:0;background:#111;display:flex;justify-content:center;align-items:center;min-height:100vh;">
-<div style="position:relative;width:${w}px;height:${h}px;overflow:hidden;font-family:'Inter',Arial,sans-serif;background:#eef1f6;color:#f5f3ef;">
+signos_split (DEFAULT — Photo Top + Dark Panel):
+  Use the gold template EXACTLY as provided. This is the proven Signos pattern.
+  .top = lifestyle photo with left-to-right gradient veil
+  .bottom = solid navy panel
+  .headline = over the photo zone, left-aligned
+  .phone = bottom-left, overlapping the photo/panel boundary
+  .copy = right side of the navy panel (eyebrow + h2 + p)
+  .logo = bottom-right
 
-  <!-- PHOTO ZONE: top 58% — use a real lifestyle photo -->
-  <div style="position:absolute;top:0;left:0;right:0;height:58%;background-image:url('PHOTO_URL');background-size:cover;background-position:center top;">
-    <!-- Left-to-right gradient for headline readability over photo -->
-    <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(244,246,251,0.88) 0%,rgba(244,246,251,0.78) 28%,rgba(244,246,251,0.18) 55%,rgba(244,246,251,0) 75%);pointer-events:none;"></div>
-  </div>
+hero_overlay (Full-Bleed Hero):
+  Change .top to cover the ENTIRE canvas (inset: 0). Remove .bottom entirely.
+  Use a subtle dark veil gradient (not too dark — just enough for readability).
+  .headline stays top-left but use white/light text (color: var(--text-light)).
+  .copy moves to bottom-right, also white text.
+  .phone is OPTIONAL — include only if it strengthens the concept. If included, bottom-left.
+  The headline IS the hero. Photo IS the emotional backdrop.
 
-  <!-- HEADLINE: positioned over the photo zone, left-aligned -->
-  <div style="position:absolute;top:${Math.round(h * 0.04)}px;left:${Math.round(w * 0.057)}px;z-index:3;width:${Math.round(w * 0.58)}px;color:#1d2340;font-weight:900;font-size:${Math.round(w * 0.063)}px;line-height:0.95;letter-spacing:-0.045em;text-transform:uppercase;">
-    HEADLINE WITH<br><span style="color:#ff3b7f;">ACCENT PHRASE</span><br>CONTINUATION.
-  </div>
+editorial_light (Light Editorial):
+  Change .top to a solid warm cream background (#f3f0e8), NO photo in the top zone.
+  .headline uses dark text over cream. Font-size can be slightly smaller (72-80px).
+  .bottom becomes a single lifestyle photo covering the lower 40%.
+  .phone overlaps the text/photo boundary at bottom-left.
+  .copy is NOT needed — the headline zone carries all the text.
+  Clean, magazine-like feel. Lots of breathing room.
 
-  <!-- DARK PANEL: bottom 42% — solid navy, hard edge -->
-  <div style="position:absolute;left:0;right:0;bottom:0;height:42%;background:#1f2746;z-index:1;"></div>
+data_poster (Data Poster — NO photography):
+  Remove .top and .bottom. Set .ad background to var(--bg-navy).
+  Replace .headline h1 with a GIANT stat number (120-160px, color: var(--accent)).
+  .headline p becomes the explanation of the stat (24-28px, white).
+  Remove .phone entirely — this is a typography-led layout.
+  .copy is NOT needed. Center everything vertically.
+  .logo stays bottom-right.
+  This is the ONLY archetype that skips photography.`;
 
-  <!-- PHONE MOCKUP: overlaps the photo/panel boundary, anchored bottom-left -->
-  <div style="position:absolute;left:${Math.round(w * 0.04)}px;bottom:${Math.round(h * -0.025)}px;z-index:4;">
-    ${phone}
-  </div>
+  const selectedArch = archetype && ARCHETYPES[archetype] ? archetype : null;
+  const archInstruction = selectedArch
+    ? `\nYOU MUST USE the "${selectedArch}" variation. Follow its specific instructions above while keeping the gold template's class structure.`
+    : `\nNo archetype specified. Default to "signos_split" — use the gold template as-is.`;
 
-  <!-- SUPPORT COPY: right side of the panel -->
-  <div style="position:absolute;right:${Math.round(w * 0.057)}px;bottom:${Math.round(h * 0.058)}px;width:${Math.round(w * 0.42)}px;z-index:4;color:#f5f4ef;">
-    <div style="font-family:'Roboto Mono','SFMono-Regular',Consolas,monospace;font-size:${Math.round(w * 0.031)}px;line-height:1.15;letter-spacing:0.05em;font-weight:700;text-transform:uppercase;">
-      SUBHEAD LINE ONE<br>SUBHEAD LINE TWO.
-    </div>
-    <div style="margin-top:${Math.round(h * 0.025)}px;font-size:${Math.round(w * 0.028)}px;line-height:1.55;font-weight:400;color:rgba(245,244,239,0.97);">
-      <strong style="font-weight:800;color:#fff;">Signos AI</strong> creates a personalized foundation for lasting weight management.
-    </div>
-    <!-- LOGO -->
-    <div style="margin-top:${Math.round(h * 0.05)}px;display:flex;align-items:center;gap:18px;">
-      <div style="width:${Math.round(w * 0.068)}px;height:${Math.round(w * 0.085)}px;background:#ff3b7f;clip-path:polygon(26% 0%,100% 0%,72% 34%,100% 34%,74% 68%,100% 68%,74% 100%,0% 100%,28% 66%,0% 66%,28% 32%,0% 32%);flex:0 0 auto;"></div>
-      <span style="font-size:${Math.round(w * 0.035)}px;letter-spacing:0.04em;font-weight:500;color:#f6f3ee;">SIGNOS</span>
-    </div>
-  </div>
-</div>
-</body></html>
+  return `You are a world-class creative director producing finished Signos ads as self-contained HTML/CSS.
+
+You have ONE gold-standard HTML template below. Every ad you create MUST start from this template's CLASS-BASED structure. You customize the CONTENT (text, photo URL, colors) but PRESERVE the CSS class names, the layout zones, the spacing, and the sizing.
 
 ═══════════════════════════════════════════════
-TEMPLATE B — "hero_overlay" (Full-Bleed + Headline)
+COMPOSITION LAW (NEVER VIOLATE)
 ═══════════════════════════════════════════════
-Use for provocative belief-challenging headlines over lifestyle photos.
+One ad = ONE focal headline + ONE quiet support zone + ONE proof element + ONE logo.
 
-<html><head><style>*{margin:0;padding:0;box-sizing:border-box;}@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');</style></head>
-<body style="margin:0;background:#111;display:flex;justify-content:center;align-items:center;min-height:100vh;">
-<div style="position:relative;width:${w}px;height:${h}px;overflow:hidden;font-family:'Inter',Arial,sans-serif;background:#9aa8bb;background-image:url('PHOTO_URL');background-size:cover;background-position:center;color:#f5f3ef;">
-
-  <!-- Subtle veil for text readability — NOT too dark -->
-  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,12,18,0.08) 0%,rgba(10,12,18,0.14) 100%);"></div>
-
-  <!-- HEADLINE: top area, massive, poster-style -->
-  <div style="position:absolute;top:${Math.round(h * 0.047)}px;left:${Math.round(w * 0.055)}px;z-index:2;">
-    <div style="font-size:${Math.round(w * 0.085)}px;line-height:0.94;font-weight:900;letter-spacing:-0.04em;color:#f5f3ef;">
-      THE SCALE IS<br>
-      <span style="display:inline-block;padding:4px 14px 10px;background:#ff3b7f;color:#fff;line-height:0.9;">GASLIGHTING</span><br>
-      YOU.
-    </div>
-    <div style="margin-top:${Math.round(h * 0.022)}px;font-size:${Math.round(w * 0.022)}px;line-height:1.15;letter-spacing:0.08em;font-weight:600;">
-      YOUR BLOOD SUGAR<br>TELLS THE REAL STORY.
-    </div>
-  </div>
-
-  <!-- PHONE MOCKUP: bottom-left, overlapping -->
-  <div style="position:absolute;left:${Math.round(w * 0.055)}px;bottom:${Math.round(h * 0.115)}px;z-index:2;">
-    ${phone}
-  </div>
-
-  <!-- RIGHT COPY BLOCK: bottom-right -->
-  <div style="position:absolute;right:${Math.round(w * 0.057)}px;bottom:${Math.round(h * 0.13)}px;z-index:2;width:${Math.round(w * 0.32)}px;">
-    <div style="font-size:${Math.round(w * 0.05)}px;line-height:0.98;font-weight:900;letter-spacing:-0.03em;">GET THE DATA<br>YOUR BODY'S<br>BEEN HIDING.</div>
-    <div style="margin-top:${Math.round(h * 0.009)}px;font-size:${Math.round(w * 0.02)}px;line-height:1.2;font-weight:600;">REAL-TIME DATA FOR<br>MANAGING WEIGHT GAIN.</div>
-  </div>
-
-  <!-- LOGO: bottom-right -->
-  <div style="position:absolute;right:${Math.round(w * 0.052)}px;bottom:${Math.round(h * 0.034)}px;z-index:2;display:flex;align-items:center;gap:12px;">
-    <div style="width:${Math.round(w * 0.05)}px;height:${Math.round(w * 0.063)}px;background:#ff3b7f;clip-path:polygon(26% 0%,100% 0%,72% 34%,100% 34%,74% 68%,100% 68%,74% 100%,0% 100%,28% 66%,0% 66%,28% 32%,0% 32%);flex:0 0 auto;"></div>
-    <span style="font-size:${Math.round(w * 0.031)}px;font-weight:800;letter-spacing:0.14em;color:#f5f3ef;">SIGNOS</span>
-  </div>
-</div>
-</body></html>
+- The .headline section is the ONLY large text. h1 gets 80-100px, weight 900.
+- The .copy section is SMALLER and QUIETER. h2 max 60px. p max 22px. NEVER mono font.
+- The .phone is PROOF, not hero. It stays at 300px wide (25% of 1200). NEVER enlarge it.
+- The .logo sits quietly in one corner.
+- DO NOT create two headline-sized text blocks.
+- DO NOT add text blocks that are not part of .headline or .copy.
+- DO NOT use monospace/mono font anywhere. All text is Inter only.
+- The ad must have exactly these semantic parts: .headline, .copy, .logo, and optionally .phone.
 
 ═══════════════════════════════════════════════
-TEMPLATE C — "editorial_light" (Light Top + Image Strip)
+TEXT HIERARCHY (exact sizes for 1200px canvas)
 ═══════════════════════════════════════════════
-Airy, editorial feel. Light cream headline zone up top, photos/product below.
+.kicker:        16-18px, weight 700, uppercase, letter-spacing 0.10em, accent color
+.headline h1:   80-100px, weight 900, uppercase, letter-spacing -0.05em
+.headline p:    20-24px, weight 500, muted color
+.copy .eyebrow: 14-16px, weight 700, uppercase, muted white
+.copy h2:       50-60px, weight 900, uppercase
+.copy p:        18-22px, weight 500, muted white
 
-<html><head><style>*{margin:0;padding:0;box-sizing:border-box;}@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');</style></head>
-<body style="margin:0;background:#111;display:flex;justify-content:center;align-items:center;min-height:100vh;">
-<div style="position:relative;width:${w}px;height:${h}px;overflow:hidden;font-family:'Inter',Arial,sans-serif;background:#f3f0e8;color:#1f2430;">
-
-  <!-- TOP: Headline zone on light background -->
-  <div style="padding:${Math.round(h * 0.052)}px ${Math.round(w * 0.059)}px ${Math.round(h * 0.027)}px;">
-    <div style="max-width:${Math.round(w * 0.8)}px;font-size:${Math.round(w * 0.054)}px;line-height:1.02;font-weight:800;letter-spacing:-0.035em;">
-      Signos AI <span style="color:#ff3b7f;">scores every meal</span> you eat with an FDA-cleared CGM.
-    </div>
-    <div style="margin-top:${Math.round(h * 0.021)}px;max-width:${Math.round(w * 0.72)}px;font-size:${Math.round(w * 0.022)}px;line-height:1.28;color:rgba(31,36,48,0.84);">
-      Not a diet app. Not a tracker. A metabolic intelligence system that learns your body.
-    </div>
-  </div>
-
-  <!-- BOTTOM: Image strip with photo and product proof -->
-  <div style="position:absolute;left:0;right:0;bottom:0;height:${Math.round(h * 0.385)}px;background:#d9d1c8;overflow:hidden;">
-    <!-- Two lifestyle/food photos side by side -->
-    <div style="position:absolute;top:0;bottom:0;left:0;width:50%;background-image:url('PHOTO_URL');background-size:cover;background-position:center;"></div>
-    <div style="position:absolute;top:0;bottom:0;right:0;width:50%;background-image:url('PHOTO_URL_2');background-size:cover;background-position:center;"></div>
-    <!-- Phone mockup anchored bottom-left of strip -->
-    <div style="position:absolute;left:${Math.round(w * 0.05)}px;bottom:${Math.round(h * 0.036)}px;z-index:2;">
-      ${phone}
-    </div>
-    <!-- Logo bottom-right -->
-    <div style="position:absolute;right:${Math.round(w * 0.048)}px;bottom:${Math.round(h * 0.031)}px;z-index:2;display:flex;align-items:center;gap:12px;">
-      <div style="width:${Math.round(w * 0.05)}px;height:${Math.round(w * 0.063)}px;background:#ff3b7f;clip-path:polygon(26% 0%,100% 0%,72% 34%,100% 34%,74% 68%,100% 68%,74% 100%,0% 100%,28% 66%,0% 66%,28% 32%,0% 32%);flex:0 0 auto;"></div>
-      <span style="font-size:${Math.round(w * 0.03)}px;font-weight:800;letter-spacing:0.14em;color:#f5f3ef;">SIGNOS</span>
-    </div>
-  </div>
-</div>
-</body></html>
-
-═══════════════════════════════════════════════
-TEMPLATE D — "data_poster" (Bold Stat / Typography Poster)
-═══════════════════════════════════════════════
-The ONLY template that skips real photography. Big stat or big typography as the hero.
-
-<html><head><style>*{margin:0;padding:0;box-sizing:border-box;}@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');</style></head>
-<body style="margin:0;background:#111;display:flex;justify-content:center;align-items:center;min-height:100vh;">
-<div style="position:relative;width:${w}px;height:${h}px;overflow:hidden;font-family:'Inter',Arial,sans-serif;background:#1f2746;color:#f5f3ef;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:${Math.round(w * 0.074)}px;">
-
-  <!-- BIG STAT or BIG HEADLINE as hero -->
-  <div style="font-size:${Math.round(w * 0.14)}px;font-weight:900;letter-spacing:-0.04em;line-height:0.9;color:#ff3b7f;">73%</div>
-
-  <!-- Supporting line -->
-  <div style="margin-top:${Math.round(h * 0.025)}px;font-size:${Math.round(w * 0.03)}px;line-height:1.35;font-weight:400;max-width:${Math.round(w * 0.7)}px;color:rgba(245,243,239,0.92);">
-    of people regain weight within 1 year of stopping GLP-1.<br>
-    <span style="display:inline-block;margin-top:8px;background:#ff3b7f;color:#fff;padding:4px 16px;font-weight:700;">Signos helps you graduate</span> with a plan that sticks.
-  </div>
-
-  <!-- Thin accent bar -->
-  <div style="margin-top:${Math.round(h * 0.035)}px;width:80px;height:4px;background:linear-gradient(90deg,#18b8a5,#3B88FF);border-radius:2px;"></div>
-
-  <!-- Attribution -->
-  <div style="margin-top:${Math.round(h * 0.015)}px;font-size:${Math.round(w * 0.013)}px;color:rgba(245,243,239,0.4);">*Based on clinical studies of GLP-1 medication outcomes</div>
-
-  <!-- LOGO: bottom-right -->
-  <div style="position:absolute;right:${Math.round(w * 0.044)}px;bottom:${Math.round(h * 0.035)}px;display:flex;align-items:center;gap:12px;">
-    <div style="width:${Math.round(w * 0.05)}px;height:${Math.round(w * 0.063)}px;background:#ff3b7f;clip-path:polygon(26% 0%,100% 0%,72% 34%,100% 34%,74% 68%,100% 68%,74% 100%,0% 100%,28% 66%,0% 66%,28% 32%,0% 32%);flex:0 0 auto;"></div>
-    <span style="font-size:${Math.round(w * 0.03)}px;font-weight:800;letter-spacing:0.14em;color:#f5f3ef;">SIGNOS</span>
-  </div>
-</div>
-</body></html>`;
-
-  const selectedTemplate = archetype === 'signos_split' ? 'A' : archetype === 'hero_overlay' ? 'B' : archetype === 'editorial_light' ? 'C' : archetype === 'data_poster' ? 'D' : null;
-
-  const archSection = selectedTemplate
-    ? `\nYOU MUST USE TEMPLATE ${selectedTemplate} ("${ARCHETYPES[archetype!]?.label}") as your structural foundation. Customize the text, photo URL, and accent placement, but PRESERVE the template's layout structure, spacing, and zone composition.`
-    : `\nNo template selected. Default to Template A ("signos_split") unless the concept clearly calls for another. Choose the template that best fits the topic and angle.`;
-
-  return `You are a world-class creative director creating ads as self-contained HTML/CSS for Signos (CGM metabolic health company).
-
-You MUST use one of the four provided HTML/CSS templates as your structural foundation. DO NOT invent layouts from scratch. Customize the content but PRESERVE the template's proven structure.
-
-═══════════════════════════════════════════════
-DESIGN TOKENS (use these exact values)
-═══════════════════════════════════════════════
---navy: #1f2746
---navy-2: #232947
---ink: #1d2340
---cream: #f5f3ef
---white: #ffffff
---accent: #ff3b7f
---orange: #f6a623
---text-muted-light: rgba(245,243,239,0.88)
---text-muted-dark: rgba(31,36,48,0.82)
---light-canvas: #f3f0e8
---shadow-phone: 0 18px 45px rgba(0,0,0,0.22)
-
-Font: Inter, Arial, Helvetica, sans-serif
-Headline weight: 800-900
-Body weight: 400-500
-Headline letter-spacing: -0.035em to -0.045em
-Logo letter-spacing: 0.04em to 0.14em
-
-═══════════════════════════════════════════════
-AVAILABLE LIFESTYLE PHOTOS
-═══════════════════════════════════════════════
-${PHOTO_LIST}
-
-═══════════════════════════════════════════════
-10 HARD VISUAL CONSTRAINTS (NEVER VIOLATE)
-═══════════════════════════════════════════════
-1. NO BROKEN IMAGES: If an image fails, use a solid fallback color. Never leave empty black voids.
-2. NO EMPTY ZONES: Every major region must carry visual weight. No region >25% of canvas can be visually empty.
-3. READABLE SUPPORT COPY: Minimum 22px for 1080-wide ads, minimum 24px for 1200-wide. If copy is too long, shorten it — never shrink it below readable.
-4. NO TEXT EFFECTS: No glow, blur, bevel, neon shadow, gradient text. Flat, sharp, high-contrast type only.
-5. ACCENT RESTRAINT: Use #ff3b7f for exactly ONE key phrase in the headline (max 20-25% of headline text). Not sprayed everywhere.
-6. PHONE MOCKUP QUALITY: If included, the phone must be large enough to read, crisp, and anchored to the composition. If it would be too small, remove it entirely.
-7. STRONG EDGE ALIGNMENT: Text, device, and logo must align to an invisible grid. No random floating elements. Use generous padding (40-72px for 1080w, 56-88px for 1350/1920h).
-8. MAX 3-5 VISUAL ELEMENTS: background, headline, support copy, optional phone proof, logo. That's it. No bullet lists, checklists, icon rows, or multiple copy blocks.
-9. PREMIUM EDITORIAL FEEL: Should feel like a clean DTC ad from a top brand. Not a software deck, SaaS hero, or product page.
-10. COMPLETE WITHOUT SMALL COPY: The ad must look graphically resolved and finished even if the viewer never reads the support text.
+BANNED: monospace font at any size. Multiple text blocks above 50px. Support copy wider than 360px.
 
 ═══════════════════════════════════════════════
 MESSAGING RULES
 ═══════════════════════════════════════════════
-Headline must do ONE of: challenge a belief, create contrast (old vs new), name a frustration, provoke curiosity.
-- Headline ≤ 10 words
-- Subhead ≤ 2 short lines
-- BANNED phrases: "stay on track", "build healthy habits", "reach your goals", "take control", "transform your health", "your wellness journey", "sustainable habits", "track patterns"
-- Lead with USER pain, not product. Signos is the ANSWER, not the opening subject.
+Headline must: challenge a belief, create contrast, name a frustration, or provoke curiosity.
+- Headline ≤ 10 words. Subhead ≤ 2 short lines.
+- BANNED: "stay on track", "build healthy habits", "reach your goals", "take control", "transform your health", "sustainable habits", "track patterns"
+- Lead with USER pain. Signos is the ANSWER, not the opening subject.
 - One core idea per ad.
 
-═══════════════════════════════════════════════
-THE FOUR HTML/CSS TEMPLATES
-═══════════════════════════════════════════════
-${templates}
+${PHOTO_LIBRARY}
+${archVariations}
+${archInstruction}
 
 ═══════════════════════════════════════════════
-HOW TO USE THE TEMPLATES
+GOLD-STANDARD HTML TEMPLATE
 ═══════════════════════════════════════════════
-1. Pick the template that fits the concept
-2. Replace PHOTO_URL (and PHOTO_URL_2 for template C) with a real lifestyle photo URL from the available photos
-3. Replace headline text with your persuasive copy — keep the font-size, weight, and positioning
-4. Replace support copy — keep the font-size and positioning
-5. Adjust the accent highlight to land on YOUR key phrase
-6. You may adjust sizes proportionally for different canvas dimensions, but DO NOT change the fundamental layout structure, zone ratios, gradient directions, or spacing philosophy
-7. Include the phone mockup if it adds proof value; remove it if the concept doesn't need it
-8. The Signos logo (pink clip-path mark + "SIGNOS" text) MUST appear in the same position as the template
-${archSection}
+${goldTemplate}
+
+═══════════════════════════════════════════════
+HOW TO USE THIS TEMPLATE
+═══════════════════════════════════════════════
+1. Start from the gold template above. Keep ALL class names and the <style> block.
+2. Replace PHOTO_URL_HERE in .top with a real photo URL from the library.
+3. Replace .kicker text, .headline h1 text, .headline p text with your creative.
+4. Place your accent span on ONE key phrase (2-4 words) using class="accent".
+5. Replace .copy .eyebrow, .copy h2, .copy p with your support messaging.
+6. Keep the .phone exactly as provided (300px wide). Remove it only if the archetype says to.
+7. Keep the .logo exactly as provided.
+8. You MAY adjust CSS values proportionally for non-square canvases, but DO NOT change class names, layout structure, or add new positioned elements.
+9. DO NOT add inline styles that override the class-based layout. Work WITHIN the system.
 
 Output ONLY the complete HTML document. No markdown fences. No explanation.`;
 }
 
-// ── Claude streaming helper ────────────────────────────────────────────────
+// ── Claude helpers ─────────────────────────────────────────────────────
 
 async function streamClaude(apiKey: string, system: string, userContent: string, maxTokens = 8000): Promise<Response> {
   const resp = await fetch(ANTHROPIC_API, {
@@ -360,7 +406,7 @@ async function callClaude(apiKey: string, system: string, userContent: string, m
   return data.content?.[0]?.text || "";
 }
 
-// ── Handler ────────────────────────────────────────────────────────────────
+// ── Handler ────────────────────────────────────────────────────────────
 
 export default async (req: Request, _ctx: Context) => {
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
@@ -374,7 +420,7 @@ export default async (req: Request, _ctx: Context) => {
 
   const action = body.action as string;
 
-  // ── GENERATE (stream HTML) ─────────────────────────────────────────────
+  // ── GENERATE ──────────────────────────────────────────────────────────
   if (action === "generate") {
     const w = Number(body.width) || 1200, h = Number(body.height) || 1200;
     const archetype = (body.archetype as string) || null;
@@ -385,15 +431,15 @@ Topic/Angle: ${body.topic || body.headline || "Signos CGM for metabolic health"}
 ${body.headline ? `Headline direction: ${body.headline}` : "Generate a belief-challenging headline."}
 ${body.subhead ? `Subhead: ${body.subhead}` : ""}
 ${body.details ? `Creative notes: ${body.details}` : ""}
-${body.imageUrl ? `Use this photo: ${body.imageUrl}` : "Pick the most relevant lifestyle photo from the available list."}
+${body.imageUrl ? `Use this photo: ${body.imageUrl}` : "Pick the most relevant photo from the library based on your headline."}
 
-Start from the template structure. Replace the placeholder content with your creative. Preserve the layout, spacing, zone ratios, and gradient system exactly.
+Start from the gold template. Replace ONLY the text content and photo URL. Keep all class names, CSS structure, and layout zones intact.
 
 Output ONLY the HTML.`;
     return streamClaude(apiKey, system, prompt);
   }
 
-  // ── ITERATE (stream HTML) ──────────────────────────────────────────────
+  // ── ITERATE ───────────────────────────────────────────────────────────
   if (action === "iterate") {
     const w = Number(body.width) || 1200, h = Number(body.height) || 1200;
     const system = buildSystemPrompt(null, w, h);
@@ -403,51 +449,48 @@ ${body.currentHtml}
 
 EDIT INSTRUCTIONS: ${body.instructions}
 
-AUTO-FIX CHECKLIST (fix these even if not explicitly asked):
-1. Is the headline font-size under 64px? → increase to at least 68px
-2. Is there a #ff3b7f highlight on one key phrase? → add one
-3. Is the background empty/black/abstract? → swap to a lifestyle photo from the available list
-4. Are there bullet lists, checklists, or >3 text elements? → simplify
-5. Does the headline sound like a product page? → rewrite to challenge a belief
-6. Is there a clear two-zone composition with hard edge? → add one
-7. Are there text glow/blur/bevel effects? → remove, use flat type
-8. Is support copy below 22px? → increase to 24px
-9. Is there a giant empty region? → fill it with image, text, or color panel
-10. Is the phone mockup too small or broken? → enlarge or remove
+AUTO-FIX (apply even if not asked):
+1. More than one text block above 50px? → Remove the weaker one. Only .headline h1 and .copy h2 may be large.
+2. Phone wider than 320px? → Shrink to 300px.
+3. Monospace font anywhere? → Switch to Inter.
+4. Missing #ff3b7f accent on one headline phrase? → Add it.
+5. Support copy (.copy) wider than 380px? → Narrow to 360px.
 
-Apply edits AND fix problems. Return COMPLETE updated HTML. Output ONLY HTML.`;
+Apply edits AND fixes. Return COMPLETE updated HTML. Output ONLY HTML.`;
     return streamClaude(apiKey, system, prompt);
   }
 
-  // ── BATCH ARCHETYPES ───────────────────────────────────────────────────
+  // ── BATCH ─────────────────────────────────────────────────────────────
   if (action === "batch") {
-    const prompt = `Generate 4 ad concept variations for Signos (CGM metabolic health app), one for each template.
+    const prompt = `Generate 4 ad concept variations for Signos (CGM metabolic health), one per archetype.
 
 Topic: ${body.topic}
 Angle: ${body.angle || ""}
 Size: ${body.width || 1200}x${body.height || 1200}px
 Details: ${body.details || "none"}
 
-Templates:
+Archetypes:
 ${ARCHETYPE_LIST}
 
 Each headline must be a persuasion hook (≤10 words), NOT a product description.
 Good: "The scale is gaslighting you." / "GLP-1s stop working. Signos doesn't."
 Bad: "Track your glucose patterns" / "Build sustainable habits"
 
-Output a JSON array of 4 objects (one per template):
-[{"name": "short name", "archetype": "archetype_id", "headline": "provocative headline", "subhead": "1-2 lines", "angle_description": "why this persuades"}]
+Each concept must use a DIFFERENT photo from the library. Never reuse the same photo URL.
+
+Output JSON array of 4 objects:
+[{"name":"short name","archetype":"archetype_id","headline":"provocative headline","subhead":"1-2 lines","angle_description":"why this persuades"}]
 
 Output ONLY valid JSON.`;
 
     try {
-      const raw = await callClaude(apiKey, "You are an elite DTC performance creative director. Belief-challenging copy only. Output only valid JSON.", prompt, 2000);
+      const raw = await callClaude(apiKey, "Elite DTC creative director. Belief-challenging copy only. Output only valid JSON.", prompt, 2000);
       const cleaned = raw.replace(/```json?\n?/g, "").replace(/```/g, "").trim();
       return json({ variations: JSON.parse(cleaned) });
     } catch (e) { return json({ error: e instanceof Error ? e.message : "batch failed" }, 500); }
   }
 
-  // ── SIGNALS → ANGLES ──────────────────────────────────────────────────
+  // ── SIGNALS → ANGLES ─────────────────────────────────────────────────
   if (action === "signals") {
     const prompt = `You are a performance marketing strategist for Signos (CGM metabolic health app).
 
@@ -458,10 +501,10 @@ ${body.topic ? `Topic context: ${body.topic}` : ""}
 
 Generate 6 distinct messaging angles. Each must be SPECIFIC, BELIEF-CHALLENGING, EMOTIONALLY CHARGED.
 
-For each, suggest the best visual template: ${Object.keys(ARCHETYPES).join(", ")}
+For each, suggest the best visual archetype: ${Object.keys(ARCHETYPES).join(", ")}
 
 Output JSON array:
-[{"angle": "short name", "hook": "headline ≤10 words", "emotion": "fear|hope|curiosity|identity|control|urgency", "insight": "why this resonates", "archetypes": ["template_id_1", "template_id_2"]}]
+[{"angle":"short name","hook":"headline ≤10 words","emotion":"fear|hope|curiosity|identity|control|urgency","insight":"why this resonates","archetypes":["id_1","id_2"]}]
 
 BANNED: "stay on track", "build habits", "reach your goals", "transform your health"
 
@@ -474,7 +517,7 @@ Output ONLY valid JSON.`;
     } catch (e) { return json({ error: e instanceof Error ? e.message : "signals failed" }, 500); }
   }
 
-  // ── GOOGLE RSA GENERATOR ──────────────────────────────────────────────
+  // ── GOOGLE RSA ────────────────────────────────────────────────────────
   if (action === "google_rsa") {
     const prompt = `You are a Google Ads specialist for Signos (CGM metabolic health app).
 
@@ -502,7 +545,7 @@ Output ONLY valid JSON.`;
     } catch (e) { return json({ error: e instanceof Error ? e.message : "RSA failed" }, 500); }
   }
 
-  // ── REVIEW (8-dimension rubric) ───────────────────────────────────────
+  // ── REVIEW ────────────────────────────────────────────────────────────
   if (action === "review") {
     const platform = (body.platform as string) || "meta";
     const prevArchetypes = (body.prev_archetypes as string[]) || [];
@@ -527,8 +570,12 @@ RUBRIC (1-5):
 
 FAST FAIL if any ≤2: hook_strength, single_core_idea, visual_message, readability
 
-VISUAL CHECKS:
-- Empty black zones? Broken images? Text glow/blur effects? Headline <64px? Bullets/checklists? Missing #ff3b7f highlight? Abstract background instead of real photo? Support copy too small?
+COMPOSITION CHECKS:
+- Is there more than one text block above 50px? (fail: competing focal points)
+- Is the phone wider than 320px? (fail: device-as-hero)
+- Is monospace font used for large text? (fail: wrong hierarchy)
+- Is there a giant empty zone? (fail: unresolved composition)
+- Are there more than 4 positioned elements? (fail: too complex)
 
 Output JSON:
 {"hook_strength":{"score":0,"feedback":""},"single_core_idea":{"score":0,"feedback":""},"problem_relevance":{"score":0,"feedback":""},"reframe_quality":{"score":0,"feedback":""},"benefit_first":{"score":0,"feedback":""},"visual_message":{"score":0,"feedback":""},"readability":{"score":0,"feedback":""},"specificity":{"score":0,"feedback":""},"total":0,"max_total":40,"verdict":"Excellent|Good|Mediocre|Weak|Poor","fast_fail":false,"fast_fail_reasons":[],"design_violations":[],"top_improvements":[],"headline_rewrite":"better headline"}
@@ -538,7 +585,7 @@ Output JSON:
 Output ONLY valid JSON.`;
 
     try {
-      const raw = await callClaude(apiKey, "Brutally honest creative director. Penalize generic copy, abstract visuals, feature-led messaging. Output only valid JSON.", prompt, 3000);
+      const raw = await callClaude(apiKey, "Brutally honest creative director. Penalize generic copy, oversized phones, competing focal points, mono font. Output only valid JSON.", prompt, 3000);
       const cleaned = raw.replace(/```json?\n?/g, "").replace(/```/g, "").trim();
       return json(JSON.parse(cleaned));
     } catch (e) { return json({ error: e instanceof Error ? e.message : "review failed" }, 500); }
