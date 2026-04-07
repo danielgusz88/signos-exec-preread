@@ -58,8 +58,10 @@ function EmailHubPage() {
   const [details, setDetails] = useState('');
   const [audience, setAudience] = useState('both');
   const [creativeDirection, setCreativeDirection] = useState('');
+  const [visualTheme, setVisualTheme] = useState('');
   const [contextDocuments, setContextDocuments] = useState('');
   const [contextLinks, setContextLinks] = useState('');
+  const [contentFidelity, setContentFidelity] = useState<'general' | 'exact'>('general');
   const [uploadedFiles, setUploadedFiles] = useState<{ name: string; content: string }[]>([]);
   const [imageUrl, setImageUrl] = useState('');
   const [imagePlacement, setImagePlacement] = useState('hero section');
@@ -282,8 +284,10 @@ function EmailHubPage() {
       theme: concept,
       details,
       creativeDirection,
+      visualTheme,
       contextDocuments,
       contextLinks,
+      contentFidelity,
     };
     if (imageUrl) {
       basePayload.imageUrl = imageUrl;
@@ -649,19 +653,52 @@ body,.wrapper,.bg-pebble-lt { background-color: #21263a !important; }
 
                 {/* Creative Direction Panel */}
                 {showCreativePanel && (
-                  <div className="space-y-2 rounded-lg border border-purple-200 bg-purple-50/30 p-3">
+                  <div className="space-y-3 rounded-lg border border-purple-200 bg-purple-50/30 p-3">
                     <div className="flex items-center justify-between">
                       <label className="text-[10px] font-semibold uppercase tracking-wide text-purple-700">Creative Direction</label>
                       <button onClick={() => setShowCreativePanel(false)} className="text-gray-400 hover:text-gray-600"><X className="h-3 w-3" /></button>
                     </div>
-                    <textarea
-                      value={creativeDirection}
-                      onChange={e => setCreativeDirection(e.target.value)}
-                      placeholder="E.g., Use a warm and inviting tone, focus on food imagery, emphasize community feeling, include a sense of urgency for the offer..."
-                      rows={3}
-                      disabled={isGenerating}
-                      className="w-full rounded border border-purple-200 bg-white px-2.5 py-1.5 text-xs focus:border-purple-400 focus:outline-none resize-none disabled:opacity-60"
-                    />
+
+                    <div>
+                      <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wide text-gray-500">Visual Theme</label>
+                      <div className="flex flex-wrap gap-1.5">
+                        {[
+                          { id: '', label: 'Default' },
+                          { id: 'female-focused', label: 'Female Focused' },
+                          { id: 'male-focused', label: 'Male Focused' },
+                          { id: 'clinical', label: 'Clinical / Science' },
+                          { id: 'lifestyle', label: 'Lifestyle / Aspirational' },
+                          { id: 'food-nutrition', label: 'Food & Nutrition' },
+                          { id: 'fitness-active', label: 'Fitness / Active' },
+                          { id: 'warm-community', label: 'Warm / Community' },
+                        ].map(t => (
+                          <button
+                            key={t.id}
+                            onClick={() => setVisualTheme(t.id)}
+                            disabled={isGenerating}
+                            className={`rounded-full border px-2.5 py-1 text-[10px] font-medium transition-colors disabled:opacity-60 ${
+                              visualTheme === t.id
+                                ? 'border-purple-400 bg-purple-100 text-purple-700'
+                                : 'border-gray-200 bg-white text-gray-600 hover:border-purple-300 hover:bg-purple-50'
+                            }`}
+                          >
+                            {t.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wide text-gray-500">Additional Direction</label>
+                      <textarea
+                        value={creativeDirection}
+                        onChange={e => setCreativeDirection(e.target.value)}
+                        placeholder="E.g., Use a warm and inviting tone, focus on food imagery, emphasize community feeling, include a sense of urgency for the offer..."
+                        rows={2}
+                        disabled={isGenerating}
+                        className="w-full rounded border border-purple-200 bg-white px-2.5 py-1.5 text-xs focus:border-purple-400 focus:outline-none resize-none disabled:opacity-60"
+                      />
+                    </div>
                   </div>
                 )}
 
@@ -696,6 +733,39 @@ body,.wrapper,.bg-pebble-lt { background-color: #21263a !important; }
                         </div>
                       )}
                     </div>
+
+                    {/* Content fidelity toggle */}
+                    {uploadedFiles.length > 0 && (
+                      <div className="rounded-md border border-blue-200 bg-white p-2.5">
+                        <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-500 mb-2">How should uploaded content be used?</p>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => setContentFidelity('general')}
+                            disabled={isGenerating}
+                            className={`flex-1 rounded-lg border px-3 py-2 text-left transition-colors disabled:opacity-60 ${
+                              contentFidelity === 'general'
+                                ? 'border-blue-400 bg-blue-50 ring-1 ring-blue-400/30'
+                                : 'border-gray-200 hover:border-blue-300'
+                            }`}
+                          >
+                            <p className={`text-xs font-semibold ${contentFidelity === 'general' ? 'text-blue-700' : 'text-gray-700'}`}>General Direction</p>
+                            <p className="text-[10px] text-gray-500 mt-0.5">Use as inspiration and reference — adapt freely</p>
+                          </button>
+                          <button
+                            onClick={() => setContentFidelity('exact')}
+                            disabled={isGenerating}
+                            className={`flex-1 rounded-lg border px-3 py-2 text-left transition-colors disabled:opacity-60 ${
+                              contentFidelity === 'exact'
+                                ? 'border-blue-400 bg-blue-50 ring-1 ring-blue-400/30'
+                                : 'border-gray-200 hover:border-blue-300'
+                            }`}
+                          >
+                            <p className={`text-xs font-semibold ${contentFidelity === 'exact' ? 'text-blue-700' : 'text-gray-700'}`}>Follow Closely</p>
+                            <p className="text-[10px] text-gray-500 mt-0.5">Preserve structure, key phrases, and flow from the content</p>
+                          </button>
+                        </div>
+                      </div>
+                    )}
 
                     {/* Links */}
                     <div>
