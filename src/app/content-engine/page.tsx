@@ -417,7 +417,7 @@ function estimateCost(count: number, ct: ContentType, withOverlay: boolean): num
 // ─── Phase labels ─────────────────────────────────────────────────────────────
 
 const PHASE_CONFIG: Record<JobPhase, { label: string; color: string; icon: typeof Loader2 }> = {
-  queued: { label: 'Queued', color: 'text-zinc-400', icon: Clock },
+  queued: { label: 'Queued', color: 'text-gray-500', icon: Clock },
   generating_image: { label: 'Generating Ad (Recraft V3)', color: 'text-blue-400', icon: ImageIcon },
   composing_image: { label: 'Compositing', color: 'text-purple-400', icon: Type },
   generating_assets: { label: 'Generating Image + Voice', color: 'text-blue-400', icon: ImageIcon },
@@ -1096,15 +1096,15 @@ export default function ContentEnginePage() {
               <Sparkles className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-white">Content Engine</h1>
-              <p className="text-xs text-zinc-400">AI-powered multi-format content for Signos conversion</p>
+              <h1 className="text-xl font-bold text-gray-900">Content Engine</h1>
+              <p className="text-xs text-gray-500">AI-powered multi-format content for Signos conversion</p>
             </div>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <div className="rounded-lg border border-white/[0.06] bg-surface-2 px-3 py-1.5 text-[11px] text-zinc-400">
-            <span className="text-zinc-500">Mode:</span>{' '}
-            <span className="font-medium text-zinc-300">{currentContentTypeConfig.label}</span>
+          <div className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-[11px] text-gray-500">
+            <span className="text-gray-500">Mode:</span>{' '}
+            <span className="font-medium text-gray-700">{currentContentTypeConfig.label}</span>
           </div>
         </div>
       </div>
@@ -1121,7 +1121,7 @@ export default function ContentEnginePage() {
                 'relative rounded-xl border p-4 text-left transition-all',
                 contentType === ct.id
                   ? 'border-brand-500/40 bg-brand-500/5 ring-1 ring-brand-500/20'
-                  : 'border-white/[0.06] bg-surface-2 hover:border-white/[0.12]'
+                  : 'border-gray-200 bg-white hover:border-gray-300'
               )}
             >
               <div className="flex items-start justify-between gap-2">
@@ -1132,18 +1132,18 @@ export default function ContentEnginePage() {
                   {ct.tierLabel}
                 </span>
               </div>
-              <p className="text-sm font-semibold text-white">{ct.label}</p>
-              <p className="mt-0.5 text-[11px] text-zinc-500">{ct.description}</p>
+              <p className="text-sm font-semibold text-gray-900">{ct.label}</p>
+              <p className="mt-0.5 text-[11px] text-gray-500">{ct.description}</p>
               <div className="mt-2 flex gap-1.5">
                 {ct.outputs.map((o) => (
-                  <span key={o} className="rounded bg-white/[0.04] px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wider text-zinc-500">
+                  <span key={o} className="rounded bg-gray-100 px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wider text-gray-500">
                     {o}
                   </span>
                 ))}
               </div>
               {contentType === ct.id && (
                 <div className="absolute right-3 bottom-3">
-                  <Check className="h-4 w-4 text-brand-400" />
+                  <Check className="h-4 w-4 text-brand-500" />
                 </div>
               )}
             </button>
@@ -1154,24 +1154,24 @@ export default function ContentEnginePage() {
       {/* ── Conversion Mission Banner ── */}
       <div className="rounded-lg border border-brand-500/20 bg-gradient-to-r from-brand-500/5 to-purple-500/5 px-5 py-4">
         <div className="flex items-start gap-3">
-          <Target className="mt-0.5 h-5 w-5 flex-shrink-0 text-brand-400" />
+          <Target className="mt-0.5 h-5 w-5 flex-shrink-0 text-brand-500" />
           <div>
-            <p className="text-sm font-semibold text-brand-300">Tiered Content Engine</p>
-            <p className="mt-1 text-xs leading-relaxed text-zinc-400">
+            <p className="text-sm font-semibold text-brand-600">Tiered Content Engine</p>
+            <p className="mt-1 text-xs leading-relaxed text-gray-500">
               Three tiers of content — choose your speed-to-publish:
             </p>
             <div className="mt-2 grid grid-cols-1 gap-2 md:grid-cols-3">
               <div className="flex items-start gap-2 rounded-md border border-emerald-500/20 bg-emerald-500/[0.03] px-3 py-2">
                 <span className="mt-0.5 text-[10px] font-bold text-emerald-400">POST-READY</span>
-                <span className="text-[11px] text-zinc-400">Download and post within 60 seconds</span>
+                <span className="text-[11px] text-gray-500">Download and post within 60 seconds</span>
               </div>
               <div className="flex items-start gap-2 rounded-md border border-amber-500/20 bg-amber-500/[0.03] px-3 py-2">
                 <span className="mt-0.5 text-[10px] font-bold text-amber-400">~2 MIN</span>
-                <span className="text-[11px] text-zinc-400">Add your logo in Canva and post</span>
+                <span className="text-[11px] text-gray-500">Add your logo in Canva and post</span>
               </div>
               <div className="flex items-start gap-2 rounded-md border border-blue-500/20 bg-blue-500/[0.03] px-3 py-2">
                 <span className="mt-0.5 text-[10px] font-bold text-blue-400">CONCEPT</span>
-                <span className="text-[11px] text-zinc-400">Hand the script to a creator</span>
+                <span className="text-[11px] text-gray-500">Hand the script to a creator</span>
               </div>
             </div>
           </div>
@@ -1182,13 +1182,13 @@ export default function ContentEnginePage() {
       <Card>
         <button onClick={() => setConfigOpen(!configOpen)} className="flex w-full items-center justify-between">
           <CardHeader title="Configuration" subtitle="Set up your Signos ad generation parameters" />
-          {configOpen ? <ChevronUp className="h-4 w-4 text-zinc-500" /> : <ChevronDown className="h-4 w-4 text-zinc-500" />}
+          {configOpen ? <ChevronUp className="h-4 w-4 text-gray-500" /> : <ChevronDown className="h-4 w-4 text-gray-500" />}
         </button>
 
         {configOpen && (
           <div className="space-y-5">
             <div>
-              <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-zinc-500">Target Platforms</label>
+              <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-gray-500">Target Platforms</label>
               <div className="flex flex-wrap gap-2">
                 {PLATFORMS.map((p) => (
                   <button
@@ -1197,13 +1197,13 @@ export default function ContentEnginePage() {
                     className={cn(
                       'flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-all',
                       selectedPlatforms.includes(p.id)
-                        ? 'border-brand-500/40 bg-brand-500/10 text-brand-300'
-                        : 'border-white/[0.06] bg-surface-3 text-zinc-400 hover:border-white/[0.12] hover:text-zinc-300'
+                        ? 'border-brand-500/40 bg-brand-500/10 text-brand-600'
+                        : 'border-gray-200 bg-gray-50 text-gray-500 hover:border-gray-300 hover:text-gray-700'
                     )}
                   >
                     <span>{p.icon}</span>
                     <span className="font-medium">{p.label}</span>
-                    <span className="text-[10px] text-zinc-500">{p.aspectRatio}</span>
+                    <span className="text-[10px] text-gray-500">{p.aspectRatio}</span>
                   </button>
                 ))}
               </div>
@@ -1211,7 +1211,7 @@ export default function ContentEnginePage() {
 
             <div className={cn('grid grid-cols-1 gap-4', hasVideo ? 'lg:grid-cols-2' : '')}>
               <div>
-                <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-zinc-500">Ad Angle / Topic</label>
+                <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-gray-500">Ad Angle / Topic</label>
                 <input
                   type="text"
                   value={topic}
@@ -1219,16 +1219,16 @@ export default function ContentEnginePage() {
                   placeholder={isImageOnly
                     ? 'e.g., CGM benefits, weight loss transformation, blood sugar control'
                     : 'e.g., weight loss plateau, blood sugar spikes, CGM benefits, GLP-1 graduation'}
-                  className="w-full rounded-lg border border-white/[0.06] bg-surface-3 px-3 py-2.5 text-sm text-white placeholder:text-zinc-600 focus:border-brand-500/40 focus:outline-none focus:ring-1 focus:ring-brand-500/20"
+                  className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-brand-500/40 focus:outline-none focus:ring-1 focus:ring-brand-500/20"
                 />
               </div>
               {hasVideo && (
                 <div>
-                  <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-zinc-500">Presenter Voice</label>
+                  <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-gray-500">Presenter Voice</label>
                   <select
                     value={voiceStyle}
                     onChange={(e) => setVoiceStyle(e.target.value)}
-                    className="w-full rounded-lg border border-white/[0.06] bg-surface-3 px-3 py-2.5 text-sm text-white focus:border-brand-500/40 focus:outline-none focus:ring-1 focus:ring-brand-500/20"
+                    className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-brand-500/40 focus:outline-none focus:ring-1 focus:ring-brand-500/20"
                   >
                     {VOICE_STYLES.map((v) => (
                       <option key={v.id} value={v.id}>{v.label}</option>
@@ -1239,23 +1239,23 @@ export default function ContentEnginePage() {
             </div>
 
             <div>
-              <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-zinc-500">Creative Direction</label>
+              <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-gray-500">Creative Direction</label>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 rows={3}
                 placeholder="e.g., Focus on the &quot;your healthy food might be spiking you&quot; angle. Mention CGM sensor. Target women 30-45 who've tried diets..."
-                className="w-full rounded-lg border border-white/[0.06] bg-surface-3 px-3 py-2.5 text-sm text-white placeholder:text-zinc-600 focus:border-brand-500/40 focus:outline-none focus:ring-1 focus:ring-brand-500/20 resize-none"
+                className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-brand-500/40 focus:outline-none focus:ring-1 focus:ring-brand-500/20 resize-none"
               />
             </div>
 
             <div className="flex flex-wrap items-end gap-4">
               <div>
-                <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-zinc-500">Ads to Generate</label>
+                <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-gray-500">Ads to Generate</label>
                 <select
                   value={ideaCount}
                   onChange={(e) => setIdeaCount(Number(e.target.value))}
-                  className="rounded-lg border border-white/[0.06] bg-surface-3 px-3 py-2.5 text-sm text-white focus:border-brand-500/40 focus:outline-none"
+                  className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-brand-500/40 focus:outline-none"
                 >
                   {[1, 2, 3, 5, 8, 10].map((n) => (
                     <option key={n} value={n}>{n} {n === 1 ? 'ad' : 'ads'}</option>
@@ -1269,13 +1269,13 @@ export default function ContentEnginePage() {
                   className={cn(
                     'flex items-center gap-2 rounded-lg border px-3 py-2.5 text-sm transition-all',
                     enableTextOverlay
-                      ? 'border-brand-500/40 bg-brand-500/10 text-brand-300'
-                      : 'border-white/[0.06] bg-surface-3 text-zinc-400'
+                      ? 'border-brand-500/40 bg-brand-500/10 text-brand-600'
+                      : 'border-gray-200 bg-gray-50 text-gray-500'
                   )}
                 >
                   <Type className="h-4 w-4" />
                   <span className="font-medium">Text Overlays</span>
-                  <span className={cn('text-[10px]', enableTextOverlay ? 'text-brand-400' : 'text-zinc-500')}>
+                  <span className={cn('text-[10px]', enableTextOverlay ? 'text-brand-500' : 'text-gray-500')}>
                     {enableTextOverlay ? 'ON' : 'OFF'}
                   </span>
                 </button>
@@ -1287,7 +1287,7 @@ export default function ContentEnginePage() {
                 className={cn(
                   'flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold transition-all',
                   ideating || !topic.trim() || selectedPlatforms.length === 0
-                    ? 'bg-zinc-700 text-zinc-500 cursor-not-allowed'
+                    ? 'bg-zinc-700 text-gray-500 cursor-not-allowed'
                     : 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-500 hover:to-pink-500 shadow-lg shadow-purple-500/20'
                 )}
               >
@@ -1296,14 +1296,14 @@ export default function ContentEnginePage() {
               </button>
             </div>
 
-            <div className="rounded-lg border border-white/[0.04] bg-surface-3/30 px-4 py-3 text-xs text-zinc-500">
-              <span className="font-medium text-zinc-400">Pipeline ({currentContentTypeConfig.label}):</span>{' '}
+            <div className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-xs text-gray-500">
+              <span className="font-medium text-gray-500">Pipeline ({currentContentTypeConfig.label}):</span>{' '}
               {hasVideo ? (
                 <>AI writes conversion script → generates presenter image → creates TTS narration → Kling Avatar v2 generates 30s talking-head video
                 {enableTextOverlay && <span> → Shotstack adds text overlays</span>}
-                <span> → outputs <span className="text-zinc-300">image ad + video ad</span> → AI reviews quality</span></>
+                <span> → outputs <span className="text-gray-700">image ad + video ad</span> → AI reviews quality</span></>
               ) : (
-                <>AI writes ad concept → <span className="text-zinc-300">Recraft V3 generates finished ad with text</span> (single step) → AI reviews quality</>
+                <>AI writes ad concept → <span className="text-gray-700">Recraft V3 generates finished ad with text</span> (single step) → AI reviews quality</>
               )}
             </div>
 
@@ -1324,16 +1324,16 @@ export default function ContentEnginePage() {
               title={`Ad Concepts (${approvedCount}/${ideas.length} approved)`}
               subtitle="Review conversion scripts before generation"
             />
-            {ideasOpen ? <ChevronUp className="h-4 w-4 text-zinc-500" /> : <ChevronDown className="h-4 w-4 text-zinc-500" />}
+            {ideasOpen ? <ChevronUp className="h-4 w-4 text-gray-500" /> : <ChevronDown className="h-4 w-4 text-gray-500" />}
           </button>
 
           {ideasOpen && (
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <button onClick={() => setIdeas((prev) => prev.map((i) => ({ ...i, approved: true })))} className="rounded-md border border-white/[0.06] bg-surface-3 px-3 py-1.5 text-xs text-zinc-300 hover:bg-surface-4 transition-colors">Approve All</button>
-                <button onClick={() => setIdeas((prev) => prev.map((i) => ({ ...i, approved: false })))} className="rounded-md border border-white/[0.06] bg-surface-3 px-3 py-1.5 text-xs text-zinc-300 hover:bg-surface-4 transition-colors">Reject All</button>
-                <div className="ml-auto text-xs text-zinc-500">
-                  Est. cost: <span className="font-medium text-zinc-300">${estimatedTotal.toFixed(2)}</span>
+                <button onClick={() => setIdeas((prev) => prev.map((i) => ({ ...i, approved: true })))} className="rounded-md border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs text-gray-700 hover:bg-gray-200 transition-colors">Approve All</button>
+                <button onClick={() => setIdeas((prev) => prev.map((i) => ({ ...i, approved: false })))} className="rounded-md border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs text-gray-700 hover:bg-gray-200 transition-colors">Reject All</button>
+                <div className="ml-auto text-xs text-gray-500">
+                  Est. cost: <span className="font-medium text-gray-700">${estimatedTotal.toFixed(2)}</span>
                   {' '}for {approvedCount} {hasVideo ? `${approvedCount === 1 ? 'concept' : 'concepts'} (image + 30s video each)` : `image ${approvedCount === 1 ? 'ad' : 'ads'}`}
                 </div>
               </div>
@@ -1351,11 +1351,11 @@ export default function ContentEnginePage() {
                 ))}
               </div>
 
-              <div className="flex items-center justify-between border-t border-white/[0.04] pt-4">
-                <div className="text-sm text-zinc-400">
+              <div className="flex items-center justify-between border-t border-gray-200 pt-4">
+                <div className="text-sm text-gray-500">
                   <DollarSign className="mr-1 inline h-3.5 w-3.5" />
-                  Estimated cost: <span className="font-semibold text-white">${estimatedTotal.toFixed(2)}</span>
-                  <span className="mx-2 text-zinc-600">|</span>
+                  Estimated cost: <span className="font-semibold text-gray-900">${estimatedTotal.toFixed(2)}</span>
+                  <span className="mx-2 text-gray-400">|</span>
                   <Timer className="mr-1 inline h-3.5 w-3.5" />
                   ~{Math.ceil(approvedCount * (isImageOnly ? 1.5 : 3))} min generation time
                 </div>
@@ -1365,7 +1365,7 @@ export default function ContentEnginePage() {
                   className={cn(
                     'flex items-center gap-2 rounded-lg px-6 py-2.5 text-sm font-semibold transition-all',
                     generating || approvedCount === 0
-                      ? 'bg-zinc-700 text-zinc-500 cursor-not-allowed'
+                      ? 'bg-zinc-700 text-gray-500 cursor-not-allowed'
                       : 'bg-gradient-to-r from-emerald-600 to-cyan-600 text-white hover:from-emerald-500 hover:to-cyan-500 shadow-lg shadow-emerald-500/20'
                   )}
                 >
@@ -1386,12 +1386,12 @@ export default function ContentEnginePage() {
               title={`Generation Pipeline (${completedJobs}/${jobs.length} complete${errorJobs > 0 ? `, ${errorJobs} failed` : ''})`}
               subtitle={`${currentContentTypeConfig.label} pipeline`}
             />
-            {generationOpen ? <ChevronUp className="h-4 w-4 text-zinc-500" /> : <ChevronDown className="h-4 w-4 text-zinc-500" />}
+            {generationOpen ? <ChevronUp className="h-4 w-4 text-gray-500" /> : <ChevronDown className="h-4 w-4 text-gray-500" />}
           </button>
 
           {generationOpen && (
             <div className="space-y-3">
-              <div className="mb-4 flex items-center gap-4 rounded-lg border border-white/[0.04] bg-surface-3/50 px-4 py-3 overflow-x-auto">
+              <div className="mb-4 flex items-center gap-4 rounded-lg border border-gray-200 bg-gray-100 px-4 py-3 overflow-x-auto">
                 <PipelineStep label={isImageOnly ? 'Recraft V3' : 'Image'} icon={ImageIcon} completedCount={imagesDone} totalCount={jobs.length} />
                 {!isImageOnly && (
                   <>
@@ -1411,8 +1411,8 @@ export default function ContentEnginePage() {
                 <JobRow key={job.id} job={job} enableTextOverlay={enableTextOverlay} onFeedback={handleFeedbackSubmit} feedbackSubmitted={feedbackSubmitted.has(job.id)} />
               ))}
 
-              <div className="border-t border-white/[0.04] pt-3 text-right text-xs text-zinc-400">
-                Total cost so far: <span className="font-semibold text-white">${jobs.reduce((s, j) => s + j.cost, 0).toFixed(2)}</span>
+              <div className="border-t border-gray-200 pt-3 text-right text-xs text-gray-500">
+                Total cost so far: <span className="font-semibold text-gray-900">${jobs.reduce((s, j) => s + j.cost, 0).toFixed(2)}</span>
               </div>
             </div>
           )}
@@ -1424,13 +1424,13 @@ export default function ContentEnginePage() {
         <Card>
           <button onClick={() => setReviewsOpen(!reviewsOpen)} className="flex w-full items-center justify-between">
             <CardHeader title={`AI Review Results (${reviewedJobs.length} reviewed)`} subtitle="Quality scores, platform fit, and conversion potential" />
-            {reviewsOpen ? <ChevronUp className="h-4 w-4 text-zinc-500" /> : <ChevronDown className="h-4 w-4 text-zinc-500" />}
+            {reviewsOpen ? <ChevronUp className="h-4 w-4 text-gray-500" /> : <ChevronDown className="h-4 w-4 text-gray-500" />}
           </button>
 
           {reviewsOpen && (
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
-                <ReviewStatCard label="Avg Score" value={(reviewedJobs.reduce((s, j) => s + (j.review?.overall ?? 0), 0) / reviewedJobs.length).toFixed(1)} suffix="/10" color="text-brand-400" />
+                <ReviewStatCard label="Avg Score" value={(reviewedJobs.reduce((s, j) => s + (j.review?.overall ?? 0), 0) / reviewedJobs.length).toFixed(1)} suffix="/10" color="text-brand-500" />
                 <ReviewStatCard label="Publish" value={String(reviewedJobs.filter((j) => j.review?.verdict === 'publish').length)} suffix={`/${reviewedJobs.length}`} color="text-emerald-400" />
                 <ReviewStatCard label="Edit & Redo" value={String(reviewedJobs.filter((j) => j.review?.verdict === 'edit_and_regenerate').length)} suffix={`/${reviewedJobs.length}`} color="text-amber-400" />
                 <ReviewStatCard label="Reject" value={String(reviewedJobs.filter((j) => j.review?.verdict === 'reject').length)} suffix={`/${reviewedJobs.length}`} color="text-red-400" />
@@ -1438,9 +1438,9 @@ export default function ContentEnginePage() {
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-medium uppercase tracking-wider text-zinc-500">Sort by:</span>
+                <span className="text-[10px] font-medium uppercase tracking-wider text-gray-500">Sort by:</span>
                 {([['overall', 'Overall'], ['realism', 'Realism'], ['hookStrength', 'Hook'], ['predictedEngagement', 'Engagement'], ['brandSafety', 'Brand Safety']] as const).map(([key, label]) => (
-                  <button key={key} onClick={() => setReviewSortBy(key)} className={cn('rounded-md px-2 py-1 text-[10px] font-semibold transition-all', reviewSortBy === key ? 'bg-brand-500/15 text-brand-400 border border-brand-500/30' : 'bg-surface-3 text-zinc-500 border border-white/[0.04] hover:text-zinc-300')}>
+                  <button key={key} onClick={() => setReviewSortBy(key)} className={cn('rounded-md px-2 py-1 text-[10px] font-semibold transition-all', reviewSortBy === key ? 'bg-brand-500/15 text-brand-500 border border-brand-500/30' : 'bg-gray-50 text-gray-500 border border-gray-200 hover:text-gray-700')}>
                     {label}
                   </button>
                 ))}
@@ -1471,21 +1471,21 @@ export default function ContentEnginePage() {
           <CardHeader title="Generation History" subtitle="Past ad generation runs" />
           <div className="space-y-2">
             {history.map((entry) => (
-              <div key={entry.id} className="rounded-lg border border-white/[0.04] bg-surface-3/50">
+              <div key={entry.id} className="rounded-lg border border-gray-200 bg-gray-100">
                 <button onClick={() => setExpandedHistory(expandedHistory === entry.id ? null : entry.id)} className="flex w-full items-center justify-between px-4 py-3 text-left">
                   <div className="flex items-center gap-4">
-                    <div className="text-xs text-zinc-500">{entry.timestamp.toLocaleString()}</div>
-                    <div className="text-sm font-medium text-zinc-300 truncate max-w-xs">{entry.topic}</div>
+                    <div className="text-xs text-gray-500">{entry.timestamp.toLocaleString()}</div>
+                    <div className="text-sm font-medium text-gray-700 truncate max-w-xs">{entry.topic}</div>
                   </div>
                   <div className="flex items-center gap-4">
-                    <span className="text-[10px] rounded bg-white/[0.04] px-1.5 py-0.5 text-zinc-500 uppercase">{entry.contentType}</span>
+                    <span className="text-[10px] rounded bg-gray-100 px-1.5 py-0.5 text-gray-500 uppercase">{entry.contentType}</span>
                     <span className="text-xs text-emerald-400">{entry.completedItems}/{entry.totalItems} ads</span>
-                    <span className="text-xs text-zinc-500">${entry.totalCost.toFixed(2)}</span>
-                    {expandedHistory === entry.id ? <ChevronUp className="h-3.5 w-3.5 text-zinc-500" /> : <ChevronDown className="h-3.5 w-3.5 text-zinc-500" />}
+                    <span className="text-xs text-gray-500">${entry.totalCost.toFixed(2)}</span>
+                    {expandedHistory === entry.id ? <ChevronUp className="h-3.5 w-3.5 text-gray-500" /> : <ChevronDown className="h-3.5 w-3.5 text-gray-500" />}
                   </div>
                 </button>
                 {expandedHistory === entry.id && (
-                  <div className="border-t border-white/[0.04] px-4 py-3 space-y-2">
+                  <div className="border-t border-gray-200 px-4 py-3 space-y-2">
                     {entry.jobs.map((job) => <JobRow key={job.id} job={job} enableTextOverlay={false} />)}
                   </div>
                 )}
@@ -1501,17 +1501,17 @@ export default function ContentEnginePage() {
           <button onClick={() => setDebugOpen(!debugOpen)} className="flex w-full items-center justify-between">
             <CardHeader title={`Debug Log (${debugLogs.length} entries)`} subtitle="Real-time pipeline debugging" />
             <div className="flex items-center gap-2">
-              <button onClick={(e) => { e.stopPropagation(); setDebugLogs([]); }} className="rounded-md border border-white/[0.06] bg-surface-3 px-2 py-1 text-[10px] text-zinc-400 hover:text-white">Clear</button>
-              {debugOpen ? <ChevronUp className="h-4 w-4 text-zinc-500" /> : <ChevronDown className="h-4 w-4 text-zinc-500" />}
+              <button onClick={(e) => { e.stopPropagation(); setDebugLogs([]); }} className="rounded-md border border-gray-200 bg-gray-50 px-2 py-1 text-[10px] text-gray-500 hover:text-gray-900">Clear</button>
+              {debugOpen ? <ChevronUp className="h-4 w-4 text-gray-500" /> : <ChevronDown className="h-4 w-4 text-gray-500" />}
             </div>
           </button>
           {debugOpen && (
-            <div className="max-h-96 overflow-y-auto rounded-lg border border-white/[0.04] bg-black/30 p-3 font-mono text-[11px]">
+            <div className="max-h-96 overflow-y-auto rounded-lg border border-gray-200 bg-black/30 p-3 font-mono text-[11px]">
               {debugLogs.map((log, i) => (
                 <div key={i} className="border-b border-white/[0.03] py-1.5">
-                  <span className="text-zinc-600">{log.ts}</span>{' '}
-                  <span className={log.msg.includes('ERROR') || log.msg.includes('FAILED') || log.msg.includes('BUG') ? 'text-red-400 font-bold' : log.msg.includes('COMPLETED') || log.msg.includes('DONE') ? 'text-emerald-400' : 'text-zinc-300'}>{log.msg}</span>
-                  {log.data && <pre className="mt-0.5 ml-4 text-[10px] text-zinc-500 whitespace-pre-wrap break-all">{log.data}</pre>}
+                  <span className="text-gray-400">{log.ts}</span>{' '}
+                  <span className={log.msg.includes('ERROR') || log.msg.includes('FAILED') || log.msg.includes('BUG') ? 'text-red-400 font-bold' : log.msg.includes('COMPLETED') || log.msg.includes('DONE') ? 'text-emerald-400' : 'text-gray-700'}>{log.msg}</span>
+                  {log.data && <pre className="mt-0.5 ml-4 text-[10px] text-gray-500 whitespace-pre-wrap break-all">{log.data}</pre>}
                 </div>
               ))}
             </div>
@@ -1523,13 +1523,13 @@ export default function ContentEnginePage() {
       <Card>
         <CardHeader title="Feedback & Continuous Learning" subtitle={`${feedbackCount} ratings collected — improving future generations`} />
         <div className="space-y-4">
-          <div className="flex items-center gap-4 rounded-lg border border-white/[0.04] bg-surface-3/50 px-4 py-3">
-            <MessageCircle className="h-5 w-5 flex-shrink-0 text-brand-400" />
+          <div className="flex items-center gap-4 rounded-lg border border-gray-200 bg-gray-100 px-4 py-3">
+            <MessageCircle className="h-5 w-5 flex-shrink-0 text-brand-500" />
             <div className="flex-1">
-              <p className="text-xs text-zinc-300">
+              <p className="text-xs text-gray-700">
                 Rate each generated ad to teach the system your preferences. Feedback is stored in Netlify and injected into future prompts.
               </p>
-              <p className="mt-1 text-[10px] text-zinc-500">
+              <p className="mt-1 text-[10px] text-gray-500">
                 {feedbackCount === 0 && 'No feedback yet — rate your first ad to start the learning loop.'}
                 {feedbackCount > 0 && feedbackCount < 5 && `${feedbackCount} ratings collected. Add more for better results.`}
                 {feedbackCount >= 5 && feedbackCount < 15 && `${feedbackCount} ratings collected. Click "Update Style Guide" to synthesize your preferences.`}
@@ -1541,7 +1541,7 @@ export default function ContentEnginePage() {
               disabled={synthesizing || feedbackCount < 3}
               className={cn('flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold transition-all',
                 synthesizing || feedbackCount < 3
-                  ? 'bg-zinc-700 text-zinc-500 cursor-not-allowed'
+                  ? 'bg-zinc-700 text-gray-500 cursor-not-allowed'
                   : 'bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-500 hover:to-purple-500 shadow-lg shadow-violet-500/20'
               )}
             >
@@ -1556,15 +1556,15 @@ export default function ContentEnginePage() {
                 <Star className="h-4 w-4 text-violet-400" />
                 <span className="text-xs font-bold uppercase tracking-wider text-violet-400">Active Style Guide</span>
               </div>
-              <pre className="text-xs leading-relaxed text-zinc-300 whitespace-pre-wrap">{styleGuide}</pre>
+              <pre className="text-xs leading-relaxed text-gray-700 whitespace-pre-wrap">{styleGuide}</pre>
             </div>
           )}
         </div>
       </Card>
 
       {/* ── API Key Status ── */}
-      <div className="rounded-lg border border-white/[0.04] bg-surface-2 p-4">
-        <p className="text-xs font-medium text-zinc-500 mb-2">Required Environment Variables</p>
+      <div className="rounded-lg border border-gray-200 bg-white p-4">
+        <p className="text-xs font-medium text-gray-500 mb-2">Required Environment Variables</p>
         <div className="grid grid-cols-1 gap-2 md:grid-cols-5">
           <EnvVarStatus name="ANTHROPIC_API_KEY" description="Claude for ad scripts + review" />
           <EnvVarStatus name="RECRAFT_API_KEY" description="Recraft V3 for finished image ads" />
@@ -1598,7 +1598,7 @@ function IdeaCard({ idea, isEditing, onToggleApproval, onEdit, onUpdateField }: 
   };
 
   return (
-    <div className={cn('rounded-lg border p-4 transition-all', idea.approved ? 'border-emerald-500/20 bg-emerald-500/[0.02]' : 'border-white/[0.04] bg-surface-3/30 opacity-60')}>
+    <div className={cn('rounded-lg border p-4 transition-all', idea.approved ? 'border-emerald-500/20 bg-emerald-500/[0.02]' : 'border-gray-200 bg-gray-50 opacity-60')}>
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-2 flex-wrap">
@@ -1624,9 +1624,9 @@ function IdeaCard({ idea, isEditing, onToggleApproval, onEdit, onUpdateField }: 
               idea.targetEmotion === 'relief' && 'bg-cyan-500/10 text-cyan-400',
               !['curiosity', 'fear', 'hope', 'shock', 'frustration', 'relief'].includes(idea.targetEmotion) && 'bg-purple-500/10 text-purple-400',
             )}>{idea.targetEmotion}</span>
-            <span className="text-[10px] text-zinc-500">{isVideo ? '30s talking head + image' : 'image ad'}</span>
+            <span className="text-[10px] text-gray-500">{isVideo ? '30s talking head + image' : 'image ad'}</span>
             {idea.presenterDescription && (
-              <span className="flex items-center gap-1 text-[10px] text-zinc-500">
+              <span className="flex items-center gap-1 text-[10px] text-gray-500">
                 <User className="h-2.5 w-2.5" /> {idea.presenterDescription}
               </span>
             )}
@@ -1634,26 +1634,26 @@ function IdeaCard({ idea, isEditing, onToggleApproval, onEdit, onUpdateField }: 
 
           {isEditing ? (
             <input type="text" value={idea.hook} onChange={(e) => onUpdateField('hook', e.target.value)}
-              className="mb-2 w-full rounded border border-white/[0.1] bg-surface-3 px-2 py-1 text-sm font-bold text-white focus:border-brand-500/40 focus:outline-none" />
+              className="mb-2 w-full rounded border border-gray-300 bg-gray-50 px-2 py-1 text-sm font-bold text-gray-900 focus:border-brand-500/40 focus:outline-none" />
           ) : (
-            <h4 className="mb-1 text-sm font-bold text-white leading-tight">&ldquo;{idea.hook}&rdquo;</h4>
+            <h4 className="mb-1 text-sm font-bold text-gray-900 leading-tight">&ldquo;{idea.hook}&rdquo;</h4>
           )}
-          <p className="mb-2 text-xs text-zinc-400">{idea.angle}</p>
+          <p className="mb-2 text-xs text-gray-500">{idea.angle}</p>
 
           {!isVideo && idea.headline && (
-            <div className="mb-2 rounded-md bg-surface-3/50 px-3 py-2 border border-white/[0.04]">
-              <p className="text-xs font-bold text-white">{idea.headline}</p>
-              {idea.subheadline && <p className="text-[11px] text-zinc-400 mt-0.5">{idea.subheadline}</p>}
+            <div className="mb-2 rounded-md bg-gray-100 px-3 py-2 border border-gray-200">
+              <p className="text-xs font-bold text-gray-900">{idea.headline}</p>
+              {idea.subheadline && <p className="text-[11px] text-gray-500 mt-0.5">{idea.subheadline}</p>}
             </div>
           )}
 
           {isVideo && idea.fullScript && (
-            <div className="mb-2 rounded-md bg-surface-3/50 px-3 py-2.5 border border-blue-500/20">
+            <div className="mb-2 rounded-md bg-gray-100 px-3 py-2.5 border border-blue-500/20">
               <div className="flex items-center justify-between mb-1.5">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-blue-400">Script (hand to creator)</span>
                 <button
                   onClick={handleCopyScript}
-                  className="flex items-center gap-1 rounded-md border border-white/[0.06] bg-surface-3 px-2 py-0.5 text-[10px] text-zinc-400 hover:text-white transition-colors"
+                  className="flex items-center gap-1 rounded-md border border-gray-200 bg-gray-50 px-2 py-0.5 text-[10px] text-gray-500 hover:text-gray-900 transition-colors"
                 >
                   <Copy className="h-3 w-3" />
                   {scriptCopied ? 'Copied!' : 'Copy'}
@@ -1664,45 +1664,45 @@ function IdeaCard({ idea, isEditing, onToggleApproval, onEdit, onUpdateField }: 
                   value={idea.fullScript}
                   onChange={(e) => onUpdateField('fullScript', e.target.value)}
                   rows={6}
-                  className="w-full rounded border border-white/[0.1] bg-surface-3 px-2 py-1 text-xs text-white focus:border-brand-500/40 focus:outline-none resize-none"
+                  className="w-full rounded border border-gray-300 bg-gray-50 px-2 py-1 text-xs text-gray-900 focus:border-brand-500/40 focus:outline-none resize-none"
                 />
               ) : (
-                <p className="text-xs leading-relaxed text-zinc-300 whitespace-pre-wrap">{idea.fullScript}</p>
+                <p className="text-xs leading-relaxed text-gray-700 whitespace-pre-wrap">{idea.fullScript}</p>
               )}
             </div>
           )}
 
           {!isVideo && idea.fullScript && (
             <details className="group mb-2">
-              <summary className="cursor-pointer text-[11px] font-medium text-zinc-500 hover:text-zinc-300 transition-colors">
+              <summary className="cursor-pointer text-[11px] font-medium text-gray-500 hover:text-gray-700 transition-colors">
                 <FileText className="mr-1 inline h-3 w-3" /> View Ad Copy
               </summary>
-              <div className="mt-2 rounded-md bg-surface-3/50 p-3 border border-white/[0.04]">
+              <div className="mt-2 rounded-md bg-gray-100 p-3 border border-gray-200">
                 {isEditing ? (
                   <textarea
                     value={idea.fullScript}
                     onChange={(e) => onUpdateField('fullScript', e.target.value)}
                     rows={6}
-                    className="w-full rounded border border-white/[0.1] bg-surface-3 px-2 py-1 text-xs text-white focus:border-brand-500/40 focus:outline-none resize-none"
+                    className="w-full rounded border border-gray-300 bg-gray-50 px-2 py-1 text-xs text-gray-900 focus:border-brand-500/40 focus:outline-none resize-none"
                   />
                 ) : (
-                  <p className="text-xs leading-relaxed text-zinc-300 whitespace-pre-wrap">{idea.fullScript}</p>
+                  <p className="text-xs leading-relaxed text-gray-700 whitespace-pre-wrap">{idea.fullScript}</p>
                 )}
               </div>
             </details>
           )}
 
-          <div className="flex items-center gap-4 text-[10px] text-zinc-500 flex-wrap">
+          <div className="flex items-center gap-4 text-[10px] text-gray-500 flex-wrap">
             {idea.hookText && <span>Hook: <span className="text-red-400 font-medium">{idea.hookText}</span></span>}
             {idea.ctaText && <span>CTA: <span className="text-emerald-400 font-medium">{idea.ctaText}</span></span>}
           </div>
         </div>
 
         <div className="flex flex-col gap-2">
-          <button onClick={onToggleApproval} className={cn('flex h-8 w-8 items-center justify-center rounded-lg border transition-all', idea.approved ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20' : 'border-white/[0.06] bg-surface-3 text-zinc-500 hover:text-zinc-300')}>
+          <button onClick={onToggleApproval} className={cn('flex h-8 w-8 items-center justify-center rounded-lg border transition-all', idea.approved ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20' : 'border-gray-200 bg-gray-50 text-gray-500 hover:text-gray-700')}>
             {idea.approved ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
           </button>
-          <button onClick={onEdit} className={cn('flex h-8 w-8 items-center justify-center rounded-lg border transition-all', isEditing ? 'border-brand-500/30 bg-brand-500/10 text-brand-400' : 'border-white/[0.06] bg-surface-3 text-zinc-500 hover:text-zinc-300')}>
+          <button onClick={onEdit} className={cn('flex h-8 w-8 items-center justify-center rounded-lg border transition-all', isEditing ? 'border-brand-500/30 bg-brand-500/10 text-brand-500' : 'border-gray-200 bg-gray-50 text-gray-500 hover:text-gray-700')}>
             <Pencil className="h-3.5 w-3.5" />
           </button>
         </div>
@@ -1733,9 +1733,9 @@ function JobRow({ job, enableTextOverlay, onFeedback, feedbackSubmitted }: {
   };
 
   return (
-    <div className="rounded-lg border border-white/[0.04] bg-surface-3/30 px-4 py-3">
+    <div className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
       <div className="flex items-center gap-4">
-        <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg border border-white/[0.06] bg-surface-4 overflow-hidden">
+        <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-gray-100 overflow-hidden">
           {job.imageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={job.imageUrl} alt="" className="h-full w-full object-cover" />
@@ -1770,7 +1770,7 @@ function JobRow({ job, enableTextOverlay, onFeedback, feedbackSubmitted }: {
         </div>
 
         <div className="text-right">
-          <p className="text-xs text-zinc-400">${job.cost.toFixed(2)}</p>
+          <p className="text-xs text-gray-500">${job.cost.toFixed(2)}</p>
         </div>
 
         {job.review && (
@@ -1782,28 +1782,28 @@ function JobRow({ job, enableTextOverlay, onFeedback, feedbackSubmitted }: {
 
       {/* Script section for video types */}
       {isTerminal && jobHasVideo && job.idea.fullScript && (
-        <div className="mt-3 rounded-md bg-surface-3/50 px-3 py-2.5 border border-blue-500/20">
+        <div className="mt-3 rounded-md bg-gray-100 px-3 py-2.5 border border-blue-500/20">
           <div className="flex items-center justify-between mb-1.5">
             <span className="text-[10px] font-bold uppercase tracking-wider text-blue-400">Script for Creator</span>
             <button
               onClick={handleCopyScript}
-              className="flex items-center gap-1 rounded-md border border-white/[0.06] bg-surface-3 px-2 py-0.5 text-[10px] text-zinc-400 hover:text-white transition-colors"
+              className="flex items-center gap-1 rounded-md border border-gray-200 bg-gray-50 px-2 py-0.5 text-[10px] text-gray-500 hover:text-gray-900 transition-colors"
             >
               <Copy className="h-3 w-3" />
               {scriptCopied ? 'Copied!' : 'Copy Script'}
             </button>
           </div>
-          <p className="text-xs leading-relaxed text-zinc-300 whitespace-pre-wrap">{job.idea.fullScript}</p>
+          <p className="text-xs leading-relaxed text-gray-700 whitespace-pre-wrap">{job.idea.fullScript}</p>
         </div>
       )}
 
       {/* Output previews — final image ad and/or video */}
       {isTerminal && (job.finalImageUrl || job.imageUrl || job.finalVideoUrl || job.avatarVideoUrl) && (
-        <div className={cn('mt-3 grid gap-3 border-t border-white/[0.04] pt-3', jobHasVideo ? 'grid-cols-2' : 'grid-cols-1')}>
+        <div className={cn('mt-3 grid gap-3 border-t border-gray-200 pt-3', jobHasVideo ? 'grid-cols-2' : 'grid-cols-1')}>
           {(job.finalImageUrl || job.imageUrl) && (
-            <div className="rounded-lg border border-white/[0.06] bg-surface-4 overflow-hidden">
-              <div className="flex items-center justify-between px-3 py-1.5 border-b border-white/[0.04]">
-                <span className="text-[10px] font-medium uppercase tracking-wider text-zinc-500"><ImageIcon className="mr-1 inline h-3 w-3" />{job.finalImageUrl && job.finalImageUrl !== job.imageUrl ? 'Final Ad' : 'Image'}</span>
+            <div className="rounded-lg border border-gray-200 bg-gray-100 overflow-hidden">
+              <div className="flex items-center justify-between px-3 py-1.5 border-b border-gray-200">
+                <span className="text-[10px] font-medium uppercase tracking-wider text-gray-500"><ImageIcon className="mr-1 inline h-3 w-3" />{job.finalImageUrl && job.finalImageUrl !== job.imageUrl ? 'Final Ad' : 'Image'}</span>
                 <a
                   href={job.finalImageUrl || job.imageUrl}
                   download
@@ -1820,9 +1820,9 @@ function JobRow({ job, enableTextOverlay, onFeedback, feedbackSubmitted }: {
             </div>
           )}
           {jobHasVideo && (job.finalVideoUrl || job.avatarVideoUrl) && (
-            <div className="rounded-lg border border-white/[0.06] bg-surface-4 overflow-hidden">
-              <div className="flex items-center justify-between px-3 py-1.5 border-b border-white/[0.04]">
-                <span className="text-[10px] font-medium uppercase tracking-wider text-zinc-500"><Video className="mr-1 inline h-3 w-3" />Video Ad (30s)</span>
+            <div className="rounded-lg border border-gray-200 bg-gray-100 overflow-hidden">
+              <div className="flex items-center justify-between px-3 py-1.5 border-b border-gray-200">
+                <span className="text-[10px] font-medium uppercase tracking-wider text-gray-500"><Video className="mr-1 inline h-3 w-3" />Video Ad (30s)</span>
                 <a
                   href={job.finalVideoUrl || job.avatarVideoUrl}
                   download
@@ -1873,7 +1873,7 @@ function FeedbackWidget({ job, onSubmit, alreadySubmitted }: {
     return (
       <button
         onClick={() => setExpanded(true)}
-        className="mt-3 flex items-center gap-2 rounded-lg border border-white/[0.06] bg-surface-3/50 px-3 py-2 text-xs text-zinc-400 hover:text-zinc-200 hover:border-white/[0.12] transition-all w-full"
+        className="mt-3 flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-100 px-3 py-2 text-xs text-gray-500 hover:text-zinc-200 hover:border-gray-300 transition-all w-full"
       >
         <MessageCircle className="h-3.5 w-3.5" />
         Rate this ad to improve future generations
@@ -1899,8 +1899,8 @@ function FeedbackWidget({ job, onSubmit, alreadySubmitted }: {
   return (
     <div className="mt-3 rounded-lg border border-brand-500/20 bg-brand-500/[0.02] p-3 space-y-3">
       <div className="flex items-center justify-between">
-        <span className="text-[10px] font-bold uppercase tracking-wider text-brand-400">Rate This Ad</span>
-        <button onClick={() => setExpanded(false)} className="text-zinc-500 hover:text-zinc-300"><X className="h-3.5 w-3.5" /></button>
+        <span className="text-[10px] font-bold uppercase tracking-wider text-brand-500">Rate This Ad</span>
+        <button onClick={() => setExpanded(false)} className="text-gray-500 hover:text-gray-700"><X className="h-3.5 w-3.5" /></button>
       </div>
 
       {/* Star Rating */}
@@ -1912,13 +1912,13 @@ function FeedbackWidget({ job, onSubmit, alreadySubmitted }: {
             className={cn('flex h-8 w-8 items-center justify-center rounded-lg border transition-all',
               s <= rating
                 ? 'border-amber-500/40 bg-amber-500/15 text-amber-400'
-                : 'border-white/[0.06] bg-surface-3 text-zinc-600 hover:text-zinc-400'
+                : 'border-gray-200 bg-gray-50 text-gray-400 hover:text-gray-500'
             )}
           >
             <Star className={cn('h-4 w-4', s <= rating && 'fill-current')} />
           </button>
         ))}
-        <span className="ml-2 text-xs text-zinc-500">
+        <span className="ml-2 text-xs text-gray-500">
           {rating === 0 && 'Select rating'}
           {rating === 1 && 'Poor — would never use'}
           {rating === 2 && 'Below average'}
@@ -1931,7 +1931,7 @@ function FeedbackWidget({ job, onSubmit, alreadySubmitted }: {
       {/* Structured Tags */}
       {rating > 0 && (
         <div className="space-y-2">
-          <p className="text-[10px] font-medium uppercase tracking-wider text-zinc-500">
+          <p className="text-[10px] font-medium uppercase tracking-wider text-gray-500">
             {rating <= 2 ? 'What needs improvement?' : rating >= 4 ? 'What worked well?' : 'Select all that apply'}
           </p>
           <div className="flex flex-wrap gap-1.5">
@@ -1946,7 +1946,7 @@ function FeedbackWidget({ job, onSubmit, alreadySubmitted }: {
                     ? tag.positive
                       ? 'border-emerald-500/40 bg-emerald-500/15 text-emerald-400'
                       : 'border-red-500/40 bg-red-500/15 text-red-400'
-                    : 'border-white/[0.06] bg-surface-3 text-zinc-500 hover:text-zinc-300'
+                    : 'border-gray-200 bg-gray-50 text-gray-500 hover:text-gray-700'
                 )}
               >
                 {tag.label}
@@ -1964,7 +1964,7 @@ function FeedbackWidget({ job, onSubmit, alreadySubmitted }: {
             onChange={(e) => setNotes(e.target.value)}
             rows={2}
             placeholder="Any specific feedback? e.g., 'Make text bigger', 'Love the warm tones', 'CTA should say something different'..."
-            className="w-full rounded-lg border border-white/[0.06] bg-surface-3 px-3 py-2 text-xs text-white placeholder:text-zinc-600 focus:border-brand-500/40 focus:outline-none resize-none"
+            className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-xs text-gray-900 placeholder:text-gray-400 focus:border-brand-500/40 focus:outline-none resize-none"
           />
         </div>
       )}
@@ -1972,12 +1972,12 @@ function FeedbackWidget({ job, onSubmit, alreadySubmitted }: {
       {/* Submit */}
       {rating > 0 && (
         <div className="flex items-center justify-between">
-          <span className="text-[10px] text-zinc-500">{selectedTags.length} tags selected{notes ? ' + notes' : ''}</span>
+          <span className="text-[10px] text-gray-500">{selectedTags.length} tags selected{notes ? ' + notes' : ''}</span>
           <button
             onClick={handleSubmit}
             disabled={submitting}
             className={cn('flex items-center gap-1.5 rounded-lg px-4 py-1.5 text-xs font-semibold transition-all',
-              submitting ? 'bg-zinc-700 text-zinc-500' : 'bg-gradient-to-r from-brand-600 to-purple-600 text-white hover:from-brand-500 hover:to-purple-500'
+              submitting ? 'bg-zinc-700 text-gray-500' : 'bg-gradient-to-r from-brand-600 to-purple-600 text-white hover:from-brand-500 hover:to-purple-500'
             )}
           >
             {submitting ? <Loader2 className="h-3 w-3 animate-spin" /> : <Send className="h-3 w-3" />}
@@ -1994,7 +1994,7 @@ function PhaseIndicator({ done, active, label }: { done: boolean; active: boolea
     <div className={cn('flex h-6 min-w-[2.5rem] items-center justify-center rounded px-1 text-[8px] font-bold',
       done && 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20',
       active && 'bg-blue-500/10 text-blue-400 border border-blue-500/20 animate-pulse',
-      !done && !active && 'bg-surface-4 text-zinc-600 border border-white/[0.04]'
+      !done && !active && 'bg-gray-100 text-gray-400 border border-gray-200'
     )}>{label}</div>
   );
 }
@@ -2003,10 +2003,10 @@ function PipelineStep({ label, icon: Icon, completedCount, totalCount }: { label
   const pct = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
   return (
     <div className="flex items-center gap-2">
-      <Icon className={cn('h-4 w-4', pct === 100 ? 'text-emerald-400' : 'text-zinc-500')} />
+      <Icon className={cn('h-4 w-4', pct === 100 ? 'text-emerald-400' : 'text-gray-500')} />
       <div>
-        <p className="text-xs font-medium text-zinc-300">{label}</p>
-        <p className="text-[10px] text-zinc-500">{completedCount}/{totalCount}</p>
+        <p className="text-xs font-medium text-gray-700">{label}</p>
+        <p className="text-[10px] text-gray-500">{completedCount}/{totalCount}</p>
       </div>
     </div>
   );
@@ -2014,7 +2014,7 @@ function PipelineStep({ label, icon: Icon, completedCount, totalCount }: { label
 
 function PipelineArrow() {
   return (
-    <div className="text-zinc-600">
+    <div className="text-gray-400">
       <svg width="20" height="12" viewBox="0 0 20 12" fill="none"><path d="M0 6H16M16 6L11 1M16 6L11 11" stroke="currentColor" strokeWidth="1.5" /></svg>
     </div>
   );
@@ -2022,11 +2022,11 @@ function PipelineArrow() {
 
 function EnvVarStatus({ name, description }: { name: string; description: string }) {
   return (
-    <div className="flex items-center gap-3 rounded-md border border-white/[0.04] bg-surface-3/50 px-3 py-2">
+    <div className="flex items-center gap-3 rounded-md border border-gray-200 bg-gray-100 px-3 py-2">
       <div className="h-2 w-2 rounded-full bg-zinc-600" />
       <div>
-        <p className="text-xs font-mono text-zinc-300">{name}</p>
-        <p className="text-[10px] text-zinc-500">{description}</p>
+        <p className="text-xs font-mono text-gray-700">{name}</p>
+        <p className="text-[10px] text-gray-500">{description}</p>
       </div>
     </div>
   );
@@ -2038,9 +2038,9 @@ function EnvVarStatus({ name, description }: { name: string; description: string
 
 function ReviewStatCard({ label, value, suffix, color }: { label: string; value: string; suffix: string; color: string }) {
   return (
-    <div className="rounded-lg border border-white/[0.04] bg-surface-3/50 px-3 py-2.5 text-center">
-      <p className="text-[10px] font-medium uppercase tracking-wider text-zinc-500">{label}</p>
-      <p className={cn('mt-0.5 text-lg font-bold', color)}>{value}<span className="text-xs font-normal text-zinc-500">{suffix}</span></p>
+    <div className="rounded-lg border border-gray-200 bg-gray-100 px-3 py-2.5 text-center">
+      <p className="text-[10px] font-medium uppercase tracking-wider text-gray-500">{label}</p>
+      <p className={cn('mt-0.5 text-lg font-bold', color)}>{value}<span className="text-xs font-normal text-gray-500">{suffix}</span></p>
     </div>
   );
 }
@@ -2051,16 +2051,16 @@ function ScoreBar({ label, score, icon: Icon }: { label: string; score: number; 
   const textColor = score >= 8 ? 'text-emerald-400' : score >= 6 ? 'text-blue-400' : score >= 4 ? 'text-amber-400' : 'text-red-400';
   return (
     <div className="flex items-center gap-3">
-      <Icon className="h-3.5 w-3.5 flex-shrink-0 text-zinc-500" />
-      <div className="w-24 flex-shrink-0 text-xs text-zinc-400">{label}</div>
-      <div className="flex-1"><div className="h-2 rounded-full bg-surface-4"><div className={cn('h-2 rounded-full transition-all', color)} style={{ width: `${pct}%` }} /></div></div>
+      <Icon className="h-3.5 w-3.5 flex-shrink-0 text-gray-500" />
+      <div className="w-24 flex-shrink-0 text-xs text-gray-500">{label}</div>
+      <div className="flex-1"><div className="h-2 rounded-full bg-gray-100"><div className={cn('h-2 rounded-full transition-all', color)} style={{ width: `${pct}%` }} /></div></div>
       <span className={cn('w-8 text-right text-xs font-bold', textColor)}>{score.toFixed(1)}</span>
     </div>
   );
 }
 
 function VerdictBadge({ verdict }: { verdict: string }) {
-  const config = { publish: { label: 'Publish', color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20', icon: ThumbsUp }, edit_and_regenerate: { label: 'Edit & Redo', color: 'bg-amber-500/10 text-amber-400 border-amber-500/20', icon: Pencil }, reject: { label: 'Reject', color: 'bg-red-500/10 text-red-400 border-red-500/20', icon: ThumbsDown } }[verdict] || { label: verdict, color: 'bg-zinc-500/10 text-zinc-400 border-zinc-500/20', icon: AlertCircle };
+  const config = { publish: { label: 'Publish', color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20', icon: ThumbsUp }, edit_and_regenerate: { label: 'Edit & Redo', color: 'bg-amber-500/10 text-amber-400 border-amber-500/20', icon: Pencil }, reject: { label: 'Reject', color: 'bg-red-500/10 text-red-400 border-red-500/20', icon: ThumbsDown } }[verdict] || { label: verdict, color: 'bg-zinc-500/10 text-gray-500 border-zinc-500/20', icon: AlertCircle };
   const Icon = config.icon;
   return <span className={cn('inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-xs font-semibold', config.color)}><Icon className="h-3 w-3" />{config.label}</span>;
 }
@@ -2141,7 +2141,7 @@ function FigmaAgentPanel({ job }: { job: ContentJob }) {
     stopped: 'text-amber-400 border-amber-500/30 bg-amber-500/10',
     failed: 'text-red-400 border-red-500/30 bg-red-500/10',
     error: 'text-red-400 border-red-500/30 bg-red-500/10',
-  }[agentStatus || ''] || 'text-zinc-400 border-white/[0.06] bg-surface-3';
+  }[agentStatus || ''] || 'text-gray-500 border-gray-200 bg-gray-50';
 
   if (agentId) {
     return (
@@ -2154,8 +2154,8 @@ function FigmaAgentPanel({ job }: { job: ContentJob }) {
           </span>
         </div>
 
-        <div className="flex items-center gap-3 text-xs text-zinc-400">
-          <span className="font-mono text-[10px] text-zinc-500">{agentId}</span>
+        <div className="flex items-center gap-3 text-xs text-gray-500">
+          <span className="font-mono text-[10px] text-gray-500">{agentId}</span>
           <a
             href={`https://cursor.com/agents`}
             target="_blank"
@@ -2168,7 +2168,7 @@ function FigmaAgentPanel({ job }: { job: ContentJob }) {
         </div>
 
         {polling && (
-          <div className="flex items-center gap-2 text-[10px] text-zinc-500">
+          <div className="flex items-center gap-2 text-[10px] text-gray-500">
             <Loader2 className="h-3 w-3 animate-spin" />
             Agent is working in Figma... polling every 15s
           </div>
@@ -2188,14 +2188,14 @@ function FigmaAgentPanel({ job }: { job: ContentJob }) {
             value={followup}
             onChange={(e) => setFollowup(e.target.value)}
             placeholder="Send a follow-up instruction to the agent..."
-            className="flex-1 rounded-lg border border-white/[0.06] bg-surface-3 px-3 py-1.5 text-xs text-white placeholder:text-zinc-600 focus:border-indigo-500/40 focus:outline-none"
+            className="flex-1 rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs text-gray-900 placeholder:text-gray-400 focus:border-indigo-500/40 focus:outline-none"
             onKeyDown={(e) => e.key === 'Enter' && handleFollowup()}
           />
           <button
             onClick={handleFollowup}
             disabled={sendingFollowup || !followup.trim()}
             className={cn('flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all',
-              sendingFollowup ? 'bg-zinc-700 text-zinc-500' : 'bg-indigo-600 text-white hover:bg-indigo-500'
+              sendingFollowup ? 'bg-zinc-700 text-gray-500' : 'bg-indigo-600 text-white hover:bg-indigo-500'
             )}
           >
             {sendingFollowup ? <Loader2 className="h-3 w-3 animate-spin" /> : <Send className="h-3 w-3" />}
@@ -2214,7 +2214,7 @@ function FigmaAgentPanel({ job }: { job: ContentJob }) {
           <span className="text-xs font-bold uppercase tracking-wider text-indigo-400">Figma Design Agent</span>
         </div>
       </div>
-      <p className="text-xs text-zinc-400">
+      <p className="text-xs text-gray-500">
         Launch a Cursor Cloud Agent to open Figma and create a polished ad with perfect typography using the AI-generated background image.
       </p>
       {error && (
@@ -2228,7 +2228,7 @@ function FigmaAgentPanel({ job }: { job: ContentJob }) {
         disabled={launching}
         className={cn('flex items-center gap-2 rounded-lg px-5 py-2 text-xs font-bold transition-all w-full justify-center',
           launching
-            ? 'bg-zinc-700 text-zinc-500'
+            ? 'bg-zinc-700 text-gray-500'
             : 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white hover:from-indigo-500 hover:to-violet-500 shadow-lg shadow-indigo-500/20'
         )}
       >
@@ -2300,7 +2300,7 @@ function ReviewFeedbackPanel({ job, onIterate, onFeedbackOnly, feedbackDone, has
         {!hasChildIteration && (
           <button
             onClick={resetForm}
-            className="flex items-center gap-1.5 text-[10px] text-zinc-500 hover:text-zinc-300 transition-colors"
+            className="flex items-center gap-1.5 text-[10px] text-gray-500 hover:text-gray-700 transition-colors"
           >
             <RefreshCw className="h-3 w-3" />
             Iterate again with different feedback
@@ -2315,7 +2315,7 @@ function ReviewFeedbackPanel({ job, onIterate, onFeedbackOnly, feedbackDone, has
       <div className="flex items-center gap-2">
         <MessageCircle className="h-4 w-4 text-amber-400" />
         <span className="text-xs font-bold uppercase tracking-wider text-amber-400">Your Feedback</span>
-        <span className="ml-auto text-[10px] text-zinc-500">Rate → Add notes → Iterate or Save</span>
+        <span className="ml-auto text-[10px] text-gray-500">Rate → Add notes → Iterate or Save</span>
       </div>
 
       {/* Star Rating */}
@@ -2327,13 +2327,13 @@ function ReviewFeedbackPanel({ job, onIterate, onFeedbackOnly, feedbackDone, has
             className={cn('flex h-9 w-9 items-center justify-center rounded-lg border transition-all',
               s <= rating
                 ? 'border-amber-500/40 bg-amber-500/15 text-amber-400'
-                : 'border-white/[0.06] bg-surface-3 text-zinc-600 hover:text-zinc-400'
+                : 'border-gray-200 bg-gray-50 text-gray-400 hover:text-gray-500'
             )}
           >
             <Star className={cn('h-4.5 w-4.5', s <= rating && 'fill-current')} />
           </button>
         ))}
-        <span className="ml-3 text-xs text-zinc-400">
+        <span className="ml-3 text-xs text-gray-500">
           {rating === 0 && 'Select a rating'}
           {rating === 1 && 'Poor — would never use'}
           {rating === 2 && 'Below average — major issues'}
@@ -2346,7 +2346,7 @@ function ReviewFeedbackPanel({ job, onIterate, onFeedbackOnly, feedbackDone, has
       {/* Structured Tags */}
       {rating > 0 && (
         <div className="space-y-2">
-          <p className="text-[10px] font-medium uppercase tracking-wider text-zinc-500">
+          <p className="text-[10px] font-medium uppercase tracking-wider text-gray-500">
             {rating <= 2 ? 'What needs improvement?' : rating >= 4 ? 'What worked well?' : 'Select all that apply'}
           </p>
           <div className="flex flex-wrap gap-1.5">
@@ -2361,7 +2361,7 @@ function ReviewFeedbackPanel({ job, onIterate, onFeedbackOnly, feedbackDone, has
                     ? tag.positive
                       ? 'border-emerald-500/40 bg-emerald-500/15 text-emerald-400'
                       : 'border-red-500/40 bg-red-500/15 text-red-400'
-                    : 'border-white/[0.06] bg-surface-3 text-zinc-500 hover:text-zinc-300'
+                    : 'border-gray-200 bg-gray-50 text-gray-500 hover:text-gray-700'
                 )}
               >
                 {tag.label}
@@ -2378,7 +2378,7 @@ function ReviewFeedbackPanel({ job, onIterate, onFeedbackOnly, feedbackDone, has
           onChange={(e) => setNotes(e.target.value)}
           rows={2}
           placeholder="Specific feedback: 'Make the headline bigger', 'Use warmer tones', 'CTA should say Get Started', 'Background is too busy'..."
-          className="w-full rounded-lg border border-white/[0.08] bg-surface-3 px-3 py-2 text-xs text-white placeholder:text-zinc-600 focus:border-amber-500/40 focus:outline-none resize-none"
+          className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-xs text-gray-900 placeholder:text-gray-400 focus:border-amber-500/40 focus:outline-none resize-none"
         />
       )}
 
@@ -2391,7 +2391,7 @@ function ReviewFeedbackPanel({ job, onIterate, onFeedbackOnly, feedbackDone, has
               disabled={iterating || savingOnly}
               className={cn('flex items-center gap-2 rounded-lg px-5 py-2 text-xs font-bold transition-all',
                 iterating
-                  ? 'bg-zinc-700 text-zinc-500'
+                  ? 'bg-zinc-700 text-gray-500'
                   : 'bg-gradient-to-r from-amber-600 to-orange-600 text-white hover:from-amber-500 hover:to-orange-500 shadow-lg shadow-amber-500/20'
               )}
             >
@@ -2405,15 +2405,15 @@ function ReviewFeedbackPanel({ job, onIterate, onFeedbackOnly, feedbackDone, has
               disabled={iterating || savingOnly}
               className={cn('flex items-center gap-2 rounded-lg border px-4 py-2 text-xs font-semibold transition-all',
                 savingOnly
-                  ? 'border-zinc-700 text-zinc-500'
-                  : 'border-white/[0.08] bg-surface-3 text-zinc-300 hover:text-white hover:border-white/[0.15]'
+                  ? 'border-zinc-700 text-gray-500'
+                  : 'border-gray-200 bg-gray-50 text-gray-700 hover:text-gray-900 hover:border-gray-300'
               )}
             >
               {savingOnly ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
               {savingOnly ? 'Saving...' : 'Save Feedback Only'}
             </button>
           )}
-          <span className="ml-auto text-[10px] text-zinc-600">
+          <span className="ml-auto text-[10px] text-gray-400">
             {selectedTags.length} tags{notes ? ' + notes' : ''}
           </span>
         </div>
@@ -2438,14 +2438,14 @@ function ReviewCard({ job, expanded, onToggle, onIterate, onFeedbackOnly, feedba
   const version = job.iterationNumber || 1;
 
   return (
-    <div className={cn('rounded-lg border overflow-hidden', version > 1 ? 'border-amber-500/15 bg-surface-3/30' : 'border-white/[0.04] bg-surface-3/30')}>
+    <div className={cn('rounded-lg border overflow-hidden', version > 1 ? 'border-amber-500/15 bg-gray-50' : 'border-gray-200 bg-gray-50')}>
       <button onClick={onToggle} className="flex w-full items-center gap-4 px-4 py-3 text-left hover:bg-white/[0.01] transition-colors">
-        <div className="relative flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-lg border border-white/[0.06] bg-surface-4 overflow-hidden">
+        <div className="relative flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-gray-100 overflow-hidden">
           {job.imageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={job.imageUrl} alt="" className="h-full w-full object-cover" />
           ) : (
-            <ImageIcon className="h-5 w-5 text-zinc-600" />
+            <ImageIcon className="h-5 w-5 text-gray-400" />
           )}
           {version > 1 && (
             <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-amber-500 text-[8px] font-black text-black">V{version}</span>
@@ -2460,18 +2460,18 @@ function ReviewCard({ job, expanded, onToggle, onIterate, onFeedbackOnly, feedba
               </span>
             )}
           </div>
-          <p className="mt-0.5 text-xs text-zinc-500 truncate">
+          <p className="mt-0.5 text-xs text-gray-500 truncate">
             {job.iterationReasoning || review.summary}
           </p>
         </div>
         <div className="flex flex-shrink-0 flex-col items-center">
           <div className={cn('flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-bold', review.overall >= 8 ? 'border-emerald-500/40 text-emerald-400' : review.overall >= 6 ? 'border-blue-500/40 text-blue-400' : review.overall >= 4 ? 'border-amber-500/40 text-amber-400' : 'border-red-500/40 text-red-400')}>{review.overall.toFixed(1)}</div>
-          <span className="mt-0.5 text-[9px] text-zinc-500">overall</span>
+          <span className="mt-0.5 text-[9px] text-gray-500">overall</span>
         </div>
         <VerdictBadge verdict={review.verdict} />
         <div className="hidden md:flex flex-col items-center">
-          <span className="text-xs font-medium text-zinc-300">{bestPlatform[0]}</span>
-          <span className="text-[9px] text-zinc-500">best fit ({bestPlatform[1].toFixed(1)})</span>
+          <span className="text-xs font-medium text-gray-700">{bestPlatform[0]}</span>
+          <span className="text-[9px] text-gray-500">best fit ({bestPlatform[1].toFixed(1)})</span>
         </div>
         {(job.finalImageUrl || job.imageUrl) && (
           <a
@@ -2497,13 +2497,13 @@ function ReviewCard({ job, expanded, onToggle, onIterate, onFeedbackOnly, feedba
             <Video className="h-3.5 w-3.5" />
           </a>
         )}
-        {expanded ? <ChevronUp className="h-4 w-4 text-zinc-500" /> : <ChevronDown className="h-4 w-4 text-zinc-500" />}
+        {expanded ? <ChevronUp className="h-4 w-4 text-gray-500" /> : <ChevronDown className="h-4 w-4 text-gray-500" />}
       </button>
 
       {expanded && (
-        <div className="border-t border-white/[0.04] px-4 py-4 space-y-5">
+        <div className="border-t border-gray-200 px-4 py-4 space-y-5">
           <div>
-            <p className="mb-3 text-[10px] font-medium uppercase tracking-wider text-zinc-500">Quality Scores</p>
+            <p className="mb-3 text-[10px] font-medium uppercase tracking-wider text-gray-500">Quality Scores</p>
             <div className="space-y-2.5">
               <ScoreBar label="Realism" score={review.realism} icon={Eye} />
               <ScoreBar label="Hook Strength" score={review.hookStrength} icon={Zap} />
@@ -2514,13 +2514,13 @@ function ReviewCard({ job, expanded, onToggle, onIterate, onFeedbackOnly, feedba
             </div>
           </div>
           <div>
-            <p className="mb-2 text-[10px] font-medium uppercase tracking-wider text-zinc-500">Platform Fit</p>
+            <p className="mb-2 text-[10px] font-medium uppercase tracking-wider text-gray-500">Platform Fit</p>
             <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
               {Object.entries(review.platformScores).map(([platform, score]) => (
-                <div key={platform} className={cn('rounded-lg border px-3 py-2 text-center', score >= 8 ? 'border-emerald-500/20 bg-emerald-500/[0.03]' : score >= 6 ? 'border-blue-500/20 bg-blue-500/[0.03]' : 'border-white/[0.04] bg-surface-3/30')}>
-                  <p className="text-xs font-medium text-zinc-300">{platform}</p>
+                <div key={platform} className={cn('rounded-lg border px-3 py-2 text-center', score >= 8 ? 'border-emerald-500/20 bg-emerald-500/[0.03]' : score >= 6 ? 'border-blue-500/20 bg-blue-500/[0.03]' : 'border-gray-200 bg-gray-50')}>
+                  <p className="text-xs font-medium text-gray-700">{platform}</p>
                   <p className={cn('text-lg font-bold', score >= 8 ? 'text-emerald-400' : score >= 6 ? 'text-blue-400' : score >= 4 ? 'text-amber-400' : 'text-red-400')}>{score.toFixed(1)}</p>
-                  {review.platformNotes[platform] && <p className="mt-1 text-[10px] leading-tight text-zinc-500">{review.platformNotes[platform]}</p>}
+                  {review.platformNotes[platform] && <p className="mt-1 text-[10px] leading-tight text-gray-500">{review.platformNotes[platform]}</p>}
                 </div>
               ))}
             </div>
@@ -2528,15 +2528,15 @@ function ReviewCard({ job, expanded, onToggle, onIterate, onFeedbackOnly, feedba
           <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
             <div>
               <p className="mb-2 text-[10px] font-medium uppercase tracking-wider text-emerald-500">Strengths</p>
-              <ul className="space-y-1">{review.strengths.map((s, i) => <li key={i} className="flex items-start gap-1.5 text-xs text-zinc-400"><ThumbsUp className="mt-0.5 h-3 w-3 flex-shrink-0 text-emerald-500/50" />{s}</li>)}</ul>
+              <ul className="space-y-1">{review.strengths.map((s, i) => <li key={i} className="flex items-start gap-1.5 text-xs text-gray-500"><ThumbsUp className="mt-0.5 h-3 w-3 flex-shrink-0 text-emerald-500/50" />{s}</li>)}</ul>
             </div>
             <div>
               <p className="mb-2 text-[10px] font-medium uppercase tracking-wider text-red-500">Weaknesses</p>
-              <ul className="space-y-1">{review.weaknesses.map((w, i) => <li key={i} className="flex items-start gap-1.5 text-xs text-zinc-400"><ThumbsDown className="mt-0.5 h-3 w-3 flex-shrink-0 text-red-500/50" />{w}</li>)}</ul>
+              <ul className="space-y-1">{review.weaknesses.map((w, i) => <li key={i} className="flex items-start gap-1.5 text-xs text-gray-500"><ThumbsDown className="mt-0.5 h-3 w-3 flex-shrink-0 text-red-500/50" />{w}</li>)}</ul>
             </div>
             <div>
               <p className="mb-2 text-[10px] font-medium uppercase tracking-wider text-blue-500">Improvements</p>
-              <ul className="space-y-1">{review.improvements.map((imp, i) => <li key={i} className="flex items-start gap-1.5 text-xs text-zinc-400"><ArrowUpRight className="mt-0.5 h-3 w-3 flex-shrink-0 text-blue-500/50" />{imp}</li>)}</ul>
+              <ul className="space-y-1">{review.improvements.map((imp, i) => <li key={i} className="flex items-start gap-1.5 text-xs text-gray-500"><ArrowUpRight className="mt-0.5 h-3 w-3 flex-shrink-0 text-blue-500/50" />{imp}</li>)}</ul>
             </div>
           </div>
 
@@ -2558,7 +2558,7 @@ function ReviewCard({ job, expanded, onToggle, onIterate, onFeedbackOnly, feedba
           {job.iterationReasoning && (
             <div className="rounded-lg border border-violet-500/15 bg-violet-500/[0.03] px-4 py-2.5">
               <p className="text-[10px] font-medium uppercase tracking-wider text-violet-400 mb-1">Iteration Reasoning</p>
-              <p className="text-xs text-zinc-400">{job.iterationReasoning}</p>
+              <p className="text-xs text-gray-500">{job.iterationReasoning}</p>
             </div>
           )}
         </div>

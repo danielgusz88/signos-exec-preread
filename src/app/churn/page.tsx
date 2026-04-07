@@ -85,14 +85,14 @@ export default function ChurnPage() {
     <div className="p-6 pb-20">
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-1">
-          <h1 className="text-2xl font-bold text-white">Churn Waterfall</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Churn Waterfall</h1>
           {isConnected && (
             <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-bold text-emerald-400 border border-emerald-500/20">
               MODE LIVE — {formatNumber(kpis?.totalLifetimeUsers || 0)} users tracked
             </span>
           )}
         </div>
-        <p className="text-sm text-zinc-400">
+        <p className="text-sm text-gray-500">
           Where customers drop off and why — subscription churn analysis from Mode Analytics.
         </p>
       </div>
@@ -101,7 +101,7 @@ export default function ChurnPage() {
       {loading && (
         <div className="flex items-center justify-center py-20">
           <Loader2 className="h-6 w-6 text-brand-400 animate-spin" />
-          <span className="ml-3 text-sm text-zinc-400">Loading churn data from Mode...</span>
+          <span className="ml-3 text-sm text-gray-500">Loading churn data from Mode...</span>
         </div>
       )}
 
@@ -129,7 +129,7 @@ export default function ChurnPage() {
           <div className="flex justify-end mb-4">
             <button
               onClick={fetchData}
-              className="inline-flex items-center gap-2 rounded-lg bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-zinc-400 hover:bg-white/[0.08] transition-colors"
+              className="inline-flex items-center gap-2 rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-500 hover:bg-gray-200 transition-colors"
             >
               <RefreshCw className="h-3 w-3" />
               Refresh
@@ -171,9 +171,9 @@ export default function ChurnPage() {
             <div className="h-[300px] flex flex-col">
               <div className="flex-1 flex items-center gap-1 px-2 relative">
                 {/* Zero line */}
-                <div className="absolute left-0 right-0 top-1/2 border-t border-white/[0.08]" />
+                <div className="absolute left-0 right-0 top-1/2 border-t border-gray-200" />
                 <div className="absolute left-0 top-1/2 -translate-y-1/2">
-                  <span className="text-[8px] text-zinc-600">0</span>
+                  <span className="text-[8px] text-gray-400">0</span>
                 </div>
 
                 {netGrowthRecent.map((m) => {
@@ -185,8 +185,8 @@ export default function ChurnPage() {
                     <div key={m.month} className="flex-1 flex flex-col items-center group relative h-full justify-center">
                       {/* Tooltip */}
                       <div className="absolute bottom-full mb-2 hidden group-hover:block z-10">
-                        <div className="rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-xs whitespace-nowrap shadow-xl">
-                          <p className="font-semibold text-white">{m.month}</p>
+                        <div className="rounded-lg bg-white border border-gray-200 px-3 py-2 text-xs whitespace-nowrap shadow-xl">
+                          <p className="font-semibold text-gray-900">{m.month}</p>
                           <p className="text-emerald-400">New: +{formatNumber(m.newSubs)}</p>
                           <p className="text-red-400">Lost: -{formatNumber(m.lostSubs)}</p>
                           <p className={cn('font-bold', isPositive ? 'text-emerald-400' : 'text-red-400')}>
@@ -218,7 +218,7 @@ export default function ChurnPage() {
               <div className="flex gap-1 px-2 mt-1">
                 {netGrowthRecent.map((m) => (
                   <div key={m.month} className="flex-1 text-center">
-                    <span className="text-[8px] text-zinc-600">{m.month.slice(2)}</span>
+                    <span className="text-[8px] text-gray-400">{m.month.slice(2)}</span>
                   </div>
                 ))}
               </div>
@@ -234,14 +234,14 @@ export default function ChurnPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-white/[0.06]">
-                    <th className="py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Month</th>
-                    <th className="py-3 text-right text-xs font-medium text-zinc-500 uppercase tracking-wider">New Subs</th>
-                    <th className="py-3 text-right text-xs font-medium text-zinc-500 uppercase tracking-wider">Lost Subs</th>
-                    <th className="py-3 text-right text-xs font-medium text-zinc-500 uppercase tracking-wider">Net</th>
-                    <th className="py-3 text-right text-xs font-medium text-zinc-500 uppercase tracking-wider">Active End</th>
-                    <th className="py-3 text-right text-xs font-medium text-zinc-500 uppercase tracking-wider">Churn %</th>
-                    <th className="py-3 text-center text-xs font-medium text-zinc-500 uppercase tracking-wider w-32">Trend</th>
+                  <tr className="border-b border-gray-200">
+                    <th className="py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Month</th>
+                    <th className="py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">New Subs</th>
+                    <th className="py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Lost Subs</th>
+                    <th className="py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Net</th>
+                    <th className="py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Active End</th>
+                    <th className="py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Churn %</th>
+                    <th className="py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-32">Trend</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -250,14 +250,14 @@ export default function ChurnPage() {
                     const maxChurn = 20;
                     const churnBarWidth = Math.min((m.churnRate / maxChurn) * 100, 100);
                     return (
-                      <tr key={m.month} className="border-b border-white/[0.03] hover:bg-white/[0.02]">
-                        <td className="py-2.5 text-xs font-medium text-zinc-300">{m.month}</td>
+                      <tr key={m.month} className="border-b border-gray-200 hover:bg-gray-50">
+                        <td className="py-2.5 text-xs font-medium text-gray-700">{m.month}</td>
                         <td className="py-2.5 text-right text-xs text-emerald-400 font-medium">+{formatNumber(m.newSubs)}</td>
                         <td className="py-2.5 text-right text-xs text-red-400 font-medium">-{formatNumber(m.lostSubs)}</td>
                         <td className={cn('py-2.5 text-right text-xs font-bold', net >= 0 ? 'text-emerald-400' : 'text-red-400')}>
                           {net >= 0 ? '+' : ''}{formatNumber(net)}
                         </td>
-                        <td className="py-2.5 text-right text-xs text-zinc-300 font-semibold">{formatNumber(m.activeEnd)}</td>
+                        <td className="py-2.5 text-right text-xs text-gray-700 font-semibold">{formatNumber(m.activeEnd)}</td>
                         <td className={cn(
                           'py-2.5 text-right text-xs font-semibold',
                           m.churnRate <= 5 ? 'text-emerald-400' : m.churnRate <= 10 ? 'text-amber-400' : 'text-red-400'
@@ -265,7 +265,7 @@ export default function ChurnPage() {
                           {formatPercent(m.churnRate)}
                         </td>
                         <td className="py-2.5">
-                          <div className="h-1.5 rounded-full bg-zinc-800 overflow-hidden">
+                          <div className="h-1.5 rounded-full bg-gray-100 overflow-hidden">
                             <div
                               className={cn(
                                 'h-full rounded-full transition-all',
@@ -292,8 +292,8 @@ export default function ChurnPage() {
                   <AlertTriangle className="h-4 w-4 text-red-400" />
                   <h3 className="text-sm font-semibold text-red-400">Highest Churn (12mo)</h3>
                 </div>
-                <p className="text-2xl font-bold text-white">{formatPercent(worstMonth.churnRate)}</p>
-                <p className="text-xs text-zinc-400 mt-1">
+                <p className="text-2xl font-bold text-gray-900">{formatPercent(worstMonth.churnRate)}</p>
+                <p className="text-xs text-gray-500 mt-1">
                   {worstMonth.month} — Lost {formatNumber(worstMonth.lostSubs)} of {formatNumber(worstMonth.activeStart)} active subs
                 </p>
               </Card>
@@ -306,8 +306,8 @@ export default function ChurnPage() {
                   <TrendingDown className="h-4 w-4 text-emerald-400" />
                   <h3 className="text-sm font-semibold text-emerald-400">Lowest Churn (12mo)</h3>
                 </div>
-                <p className="text-2xl font-bold text-white">{formatPercent(bestMonth.churnRate)}</p>
-                <p className="text-xs text-zinc-400 mt-1">
+                <p className="text-2xl font-bold text-gray-900">{formatPercent(bestMonth.churnRate)}</p>
+                <p className="text-xs text-gray-500 mt-1">
                   {bestMonth.month} — Lost {formatNumber(bestMonth.lostSubs)} of {formatNumber(bestMonth.activeStart)} active subs
                 </p>
               </Card>
@@ -319,7 +319,7 @@ export default function ChurnPage() {
                 <Lightbulb className="h-4 w-4 text-brand-400" />
                 <h3 className="text-sm font-semibold text-brand-400">Churn Intervention</h3>
               </div>
-              <p className="text-xs text-zinc-400">
+              <p className="text-xs text-gray-500">
                 {kpis.avgChurn3Month > 10
                   ? `With ${formatPercent(kpis.avgChurn3Month)} avg monthly churn, reducing churn by just 2% would retain ~${formatNumber(Math.round(kpis.activeSubscribers * 0.02))} additional subscribers per month, adding significant LTV.`
                   : kpis.avgChurn3Month > 5

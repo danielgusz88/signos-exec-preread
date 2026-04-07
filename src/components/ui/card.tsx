@@ -14,8 +14,8 @@ export function Card({ children, className, hover, onClick }: CardProps) {
   return (
     <div
       className={cn(
-        'rounded-xl border border-white/[0.06] bg-surface-2 p-5',
-        hover && 'cursor-pointer transition-all hover:border-brand-500/30 hover:bg-surface-3',
+        'rounded-xl border border-gray-200 bg-white p-5 shadow-sm',
+        hover && 'cursor-pointer transition-all hover:border-brand-500/30 hover:shadow-md',
         onClick && 'cursor-pointer',
         className
       )}
@@ -37,8 +37,8 @@ export function CardHeader({ title, subtitle, action, className }: CardHeaderPro
   return (
     <div className={cn('mb-4 flex items-start justify-between', className)}>
       <div>
-        <h3 className="text-sm font-semibold text-white">{title}</h3>
-        {subtitle && <p className="mt-0.5 text-xs text-zinc-400">{subtitle}</p>}
+        <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
+        {subtitle && <p className="mt-0.5 text-xs text-gray-500">{subtitle}</p>}
       </div>
       {action}
     </div>
@@ -73,14 +73,14 @@ export function MetricCard({
     <Card className={cn('relative overflow-hidden', className)}>
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-xs font-medium uppercase tracking-wider text-zinc-500">{label}</p>
+          <p className="text-xs font-medium uppercase tracking-wider text-gray-500">{label}</p>
           <p
             className={cn(
               'mt-1.5 font-semibold',
               size === 'sm' && 'text-xl',
               size === 'md' && 'text-2xl',
               size === 'lg' && 'text-3xl',
-              valueColor || 'text-white'
+              valueColor || 'text-gray-900'
             )}
           >
             {value}
@@ -90,18 +90,18 @@ export function MetricCard({
               <span
                 className={cn(
                   'rounded-full px-1.5 py-0.5 text-[10px] font-bold',
-                  isPositive && 'bg-emerald-500/10 text-emerald-400',
-                  isNegative && 'bg-red-500/10 text-red-400',
-                  !isPositive && !isNegative && 'bg-zinc-500/10 text-zinc-400'
+                  isPositive && 'bg-emerald-50 text-emerald-600',
+                  isNegative && 'bg-red-50 text-red-600',
+                  !isPositive && !isNegative && 'bg-gray-100 text-gray-500'
                 )}
               >
                 {isPositive ? '↑' : isNegative ? '↓' : '→'} {Math.abs(trend).toFixed(1)}%
               </span>
-              {trendLabel && <span className="text-[10px] text-zinc-500">{trendLabel}</span>}
+              {trendLabel && <span className="text-[10px] text-gray-500">{trendLabel}</span>}
             </div>
           )}
         </div>
-        {icon && <div className="text-zinc-600">{icon}</div>}
+        {icon && <div className="text-gray-400">{icon}</div>}
       </div>
     </Card>
   );
@@ -114,15 +114,15 @@ interface GradeProps {
 
 export function GradeBadge({ grade, size = 'sm' }: GradeProps) {
   const colorMap: Record<string, string> = {
-    'A+': 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
-    'A': 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
-    'B+': 'bg-blue-500/15 text-blue-400 border-blue-500/30',
-    'B': 'bg-blue-500/15 text-blue-400 border-blue-500/30',
-    'B-': 'bg-blue-500/15 text-blue-400 border-blue-500/30',
-    'C+': 'bg-yellow-500/15 text-yellow-400 border-yellow-500/30',
-    'C': 'bg-yellow-500/15 text-yellow-400 border-yellow-500/30',
-    'D': 'bg-orange-500/15 text-orange-400 border-orange-500/30',
-    'F': 'bg-red-500/15 text-red-400 border-red-500/30',
+    'A+': 'bg-emerald-50 text-emerald-600 border-emerald-200',
+    'A': 'bg-emerald-50 text-emerald-600 border-emerald-200',
+    'B+': 'bg-blue-50 text-blue-600 border-blue-200',
+    'B': 'bg-blue-50 text-blue-600 border-blue-200',
+    'B-': 'bg-blue-50 text-blue-600 border-blue-200',
+    'C+': 'bg-yellow-50 text-yellow-600 border-yellow-200',
+    'C': 'bg-yellow-50 text-yellow-600 border-yellow-200',
+    'D': 'bg-orange-50 text-orange-600 border-orange-200',
+    'F': 'bg-red-50 text-red-600 border-red-200',
   };
 
   return (
@@ -130,7 +130,7 @@ export function GradeBadge({ grade, size = 'sm' }: GradeProps) {
       className={cn(
         'inline-flex items-center justify-center rounded-md border font-bold',
         size === 'sm' ? 'h-6 w-8 text-[10px]' : 'h-8 w-10 text-xs',
-        colorMap[grade] || 'bg-zinc-500/15 text-zinc-400 border-zinc-500/30'
+        colorMap[grade] || 'bg-gray-100 text-gray-500 border-gray-200'
       )}
     >
       {grade}

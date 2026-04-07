@@ -93,19 +93,19 @@ function NumInput({
 }) {
   return (
     <div className="flex flex-col">
-      {label && <label className="text-[10px] text-zinc-500 font-medium mb-1 truncate">{label}</label>}
+      {label && <label className="text-[10px] text-gray-500 font-medium mb-1 truncate">{label}</label>}
       <div className="flex items-center gap-1">
-        {prefix && <span className="text-[10px] text-zinc-600">{prefix}</span>}
+        {prefix && <span className="text-[10px] text-gray-400">{prefix}</span>}
         <input
           type="number"
           value={value}
           onChange={(e) => { const v = parseFloat(e.target.value); if (!isNaN(v)) onChange(v); }}
           min={min} max={max} step={step || 1}
-          className="w-full rounded bg-white/[0.04] border border-white/[0.06] px-2 py-1.5 text-xs text-white
+          className="w-full rounded bg-gray-100 border border-gray-200 px-2 py-1.5 text-xs text-gray-900
                      focus:border-brand-500/40 focus:outline-none transition-colors [appearance:textfield]
                      [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
         />
-        {suffix && <span className="text-[10px] text-zinc-600 whitespace-nowrap">{suffix}</span>}
+        {suffix && <span className="text-[10px] text-gray-400 whitespace-nowrap">{suffix}</span>}
       </div>
     </div>
   );
@@ -116,13 +116,13 @@ function ChartTooltipContent({ active, payload, label, formatter }: any) {
   if (!active || !payload?.length) return null;
   const fmt = formatter || formatCompact;
   return (
-    <div className="rounded-lg bg-zinc-900/95 border border-white/10 p-3 shadow-xl backdrop-blur-sm">
-      <p className="text-[11px] font-medium text-zinc-400 mb-1.5">{typeof label === 'number' ? `Month ${label}` : label}</p>
+    <div className="rounded-lg bg-white/95 border border-white/10 p-3 shadow-xl backdrop-blur-sm">
+      <p className="text-[11px] font-medium text-gray-500 mb-1.5">{typeof label === 'number' ? `Month ${label}` : label}</p>
       {payload.map((entry: { name: string; value: number; color: string }, i: number) => (
         <div key={i} className="flex items-center gap-2 text-[11px]">
           <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: entry.color }} />
-          <span className="text-zinc-400">{entry.name}:</span>
-          <span className="font-medium text-white">{fmt(entry.value)}</span>
+          <span className="text-gray-500">{entry.name}:</span>
+          <span className="font-medium text-gray-900">{fmt(entry.value)}</span>
         </div>
       ))}
     </div>
@@ -138,11 +138,11 @@ function TornadoChart({ sensitivity }: { sensitivity: SensitivityItem[] }) {
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-3 text-[9px] text-zinc-600 font-medium">
+      <div className="flex items-center gap-3 text-[9px] text-gray-400 font-medium">
         <div className="w-36 text-right">Parameter</div>
         <div className="flex-1 flex justify-between px-2">
           <span>← LTV Decrease</span>
-          <span className="text-zinc-500">Base: {formatCurrency(Math.round(sensitivity[0]?.baseLTV || 0))}</span>
+          <span className="text-gray-500">Base: {formatCurrency(Math.round(sensitivity[0]?.baseLTV || 0))}</span>
           <span>LTV Increase →</span>
         </div>
         <div className="w-28 text-center">Range</div>
@@ -159,7 +159,7 @@ function TornadoChart({ sensitivity }: { sensitivity: SensitivityItem[] }) {
         return (
           <div key={item.parameter} className="flex items-center gap-3 group">
             <div className="w-36 text-right">
-              <span className="text-[11px] text-zinc-400 font-medium">{item.parameter}</span>
+              <span className="text-[11px] text-gray-500 font-medium">{item.parameter}</span>
             </div>
             <div className="flex-1 h-7 relative flex items-center">
               <div className="absolute left-1/2 top-0 bottom-0 w-px bg-white/20" />
@@ -186,14 +186,14 @@ function TornadoChart({ sensitivity }: { sensitivity: SensitivityItem[] }) {
             </div>
             <div className="w-28 text-center">
               <span className="text-[10px] text-red-400">{negative < 0 ? `−$${Math.abs(Math.round(negative))}` : '$0'}</span>
-              <span className="text-[10px] text-zinc-600 mx-1">→</span>
+              <span className="text-[10px] text-gray-400 mx-1">→</span>
               <span className="text-[10px] text-emerald-400">{positive > 0 ? `+$${Math.round(positive)}` : '$0'}</span>
             </div>
           </div>
         );
       })}
 
-      <div className="mt-4 flex items-center gap-4 text-[10px] text-zinc-500">
+      <div className="mt-4 flex items-center gap-4 text-[10px] text-gray-500">
         <div className="flex items-center gap-1.5">
           <div className="w-3 h-2 rounded bg-red-500/50" />
           <span>Decreases LTV</span>
@@ -325,7 +325,7 @@ export default function SimulatorPage() {
       {/* ═══ Header ═══ */}
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-1">
-          <h1 className="text-2xl font-bold text-white">LTV Strategy Simulator</h1>
+          <h1 className="text-2xl font-bold text-gray-900">LTV Strategy Simulator</h1>
           <span className="rounded-full bg-brand-500/10 px-2.5 py-0.5 text-[10px] font-bold text-brand-400 border border-brand-500/20">
             LIVE MODEL
           </span>
@@ -335,7 +335,7 @@ export default function SimulatorPage() {
             disabled={isExporting}
             className={cn(
               'flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-medium transition-all border',
-              'bg-white/[0.03] text-zinc-300 border-white/[0.06] hover:bg-white/[0.08] hover:text-white hover:border-white/[0.12]',
+              'bg-white/[0.03] text-gray-700 border-gray-200 hover:bg-gray-200 hover:text-gray-900 hover:border-white/[0.12]',
               isExporting && 'opacity-50 cursor-not-allowed'
             )}
           >
@@ -343,13 +343,13 @@ export default function SimulatorPage() {
             {isExporting ? 'Exporting…' : 'Export to Excel'}
           </button>
         </div>
-        <p className="text-sm text-zinc-400">
+        <p className="text-sm text-gray-500">
           Compare the current à la carte model (CGM/GLP-1 → Add-ons → Sustain) against a proposed bundle strategy.
         </p>
       </div>
 
       {/* ═══ Model Toggle ═══ */}
-      <div className="flex gap-2 mb-6 p-1 rounded-lg bg-white/[0.02] border border-white/[0.04] w-fit">
+      <div className="flex gap-2 mb-6 p-1 rounded-lg bg-gray-50 border border-gray-200 w-fit">
         {([
           { key: 'current', label: 'Current Model', icon: <ShoppingBag className="h-3.5 w-3.5" />, desc: 'Programs + Add-ons + Sustain' },
           { key: 'bundle', label: 'Bundle Model', icon: <Layers className="h-3.5 w-3.5" />, desc: 'Proposed Tier Pricing' },
@@ -362,13 +362,13 @@ export default function SimulatorPage() {
               'flex items-center gap-2 rounded-md px-4 py-2.5 text-xs font-medium transition-all',
               mode === key
                 ? 'bg-brand-600 text-white shadow-lg'
-                : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
+                : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
             )}
           >
             {icon}
             <div className="text-left">
               <div>{label}</div>
-              <div className={cn('text-[9px]', mode === key ? 'text-brand-200' : 'text-zinc-600')}>{desc}</div>
+              <div className={cn('text-[9px]', mode === key ? 'text-brand-200' : 'text-gray-400')}>{desc}</div>
             </div>
           </button>
         ))}
@@ -393,7 +393,7 @@ export default function SimulatorPage() {
                       'rounded-lg px-4 py-2 text-xs font-medium transition-all border',
                       activeCurrentKey === key
                         ? 'bg-brand-600 text-white border-brand-500'
-                        : 'bg-white/[0.03] text-zinc-400 border-white/[0.06] hover:bg-white/[0.06] hover:text-white'
+                        : 'bg-white/[0.03] text-gray-500 border-gray-200 hover:bg-white/[0.06] hover:text-gray-900'
                     )}
                   >
                     {sc.name}
@@ -406,21 +406,21 @@ export default function SimulatorPage() {
                   'rounded-lg px-4 py-2 text-xs font-medium transition-all border',
                   activeCurrentKey === 'custom'
                     ? 'bg-amber-600 text-white border-amber-500'
-                    : 'bg-white/[0.03] text-zinc-400 border-white/[0.06] hover:bg-white/[0.06] hover:text-white'
+                    : 'bg-white/[0.03] text-gray-500 border-gray-200 hover:bg-white/[0.06] hover:text-gray-900'
                 )}
               >
                 Custom
               </button>
             </div>
             <div className="ml-auto flex items-center gap-2">
-              <span className="text-[10px] text-zinc-500 font-medium">Horizon:</span>
+              <span className="text-[10px] text-gray-500 font-medium">Horizon:</span>
               {[12, 24, 36].map(h => (
                 <button
                   key={h}
                   onClick={() => updateCurrentConfig({ horizon: h })}
                   className={cn(
                     'rounded px-2.5 py-1 text-[10px] font-bold transition-all',
-                    currentConfig.horizon === h ? 'bg-white/10 text-white' : 'text-zinc-500 hover:text-zinc-300'
+                    currentConfig.horizon === h ? 'bg-white/10 text-gray-900' : 'text-gray-500 hover:text-gray-700'
                   )}
                 >
                   {h}mo
@@ -469,27 +469,27 @@ export default function SimulatorPage() {
                     return (
                       <div key={label} className="flex items-center gap-3">
                         <div className="w-32 text-right">
-                          <span className="text-[11px] text-zinc-400 font-medium">{label}</span>
+                          <span className="text-[11px] text-gray-500 font-medium">{label}</span>
                         </div>
                         <div className="flex-1 h-6 bg-white/[0.03] rounded-md overflow-hidden relative">
                           <div className="h-full rounded-md transition-all" style={{ width: `${Math.max(pct, 1)}%`, backgroundColor: color, opacity: 0.7 }} />
                           {pct >= 5 && (
-                            <span className="absolute inset-y-0 left-2 flex items-center text-[10px] font-bold text-white/80">
+                            <span className="absolute inset-y-0 left-2 flex items-center text-[10px] font-bold text-gray-900/80">
                               {pct.toFixed(0)}%
                             </span>
                           )}
                         </div>
                         <div className="w-20 text-right">
-                          <span className="text-xs font-bold text-white">{formatCurrency(Math.round(value))}</span>
+                          <span className="text-xs font-bold text-gray-900">{formatCurrency(Math.round(value))}</span>
                         </div>
                       </div>
                     );
                   })}
 
                   {/* Total stacked bar */}
-                  <div className="flex items-center gap-3 pt-2 border-t border-white/[0.06]">
+                  <div className="flex items-center gap-3 pt-2 border-t border-gray-200">
                     <div className="w-32 text-right">
-                      <span className="text-[11px] text-white font-bold">= Total LTV</span>
+                      <span className="text-[11px] text-gray-900 font-bold">= Total LTV</span>
                     </div>
                     <div className="flex-1">
                       <div className="h-6 rounded-md overflow-hidden flex">
@@ -504,22 +504,22 @@ export default function SimulatorPage() {
                       </div>
                     </div>
                     <div className="w-20 text-right">
-                      <span className="text-sm font-bold text-white">{formatCurrency(Math.round(currentResult.cohortLTV.revenue))}</span>
+                      <span className="text-sm font-bold text-gray-900">{formatCurrency(Math.round(currentResult.cohortLTV.revenue))}</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Add-on itemized breakdown */}
                 {currentResult.ltvBuildup.addOnLTV > 0 && (
-                  <div className="rounded-lg bg-white/[0.02] border border-white/[0.04] p-3">
-                    <p className="text-[10px] font-semibold text-zinc-500 mb-2 tracking-wide">ADD-ON BREAKDOWN</p>
+                  <div className="rounded-lg bg-gray-50 border border-gray-200 p-3">
+                    <p className="text-[10px] font-semibold text-gray-500 mb-2 tracking-wide">ADD-ON BREAKDOWN</p>
                     {Object.entries(currentResult.ltvBuildup.addOnBreakdown).map(([name, value], i) => (
                       <div key={name} className="flex justify-between items-center py-0.5">
                         <div className="flex items-center gap-1.5">
                           <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: ADDON_COLORS[i % ADDON_COLORS.length] }} />
-                          <span className="text-[10px] text-zinc-400">{name}</span>
+                          <span className="text-[10px] text-gray-500">{name}</span>
                         </div>
-                        <span className="text-[10px] font-medium text-zinc-300">+{formatCurrency(Math.round(value))}</span>
+                        <span className="text-[10px] font-medium text-gray-700">+{formatCurrency(Math.round(value))}</span>
                       </div>
                     ))}
                   </div>
@@ -528,8 +528,8 @@ export default function SimulatorPage() {
                 {/* Churn impact callout */}
                 <div className="rounded-lg bg-red-500/5 border border-red-500/10 p-3">
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-[10px] font-semibold text-zinc-500 tracking-wide">GROSS POTENTIAL (0% churn)</span>
-                    <span className="text-xs font-bold text-zinc-300">{formatCurrency(Math.round(currentResult.ltvBuildup.grossPotentialLTV))}</span>
+                    <span className="text-[10px] font-semibold text-gray-500 tracking-wide">GROSS POTENTIAL (0% churn)</span>
+                    <span className="text-xs font-bold text-gray-700">{formatCurrency(Math.round(currentResult.ltvBuildup.grossPotentialLTV))}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-[10px] font-semibold text-red-400 tracking-wide">LOST TO CHURN</span>
@@ -545,7 +545,7 @@ export default function SimulatorPage() {
 
               {/* Right: Cumulative LTV Accumulation Chart */}
               <div>
-                <p className="text-[10px] text-zinc-500 font-medium mb-2">Cumulative Revenue per Customer by Age</p>
+                <p className="text-[10px] text-gray-500 font-medium mb-2">Cumulative Revenue per Customer by Age</p>
                 <div className="h-72">
                   <ResponsiveContainer width="100%" height="100%">
                     <ComposedChart data={currentResult.ltvBuildup.monthlyAccumulation}>
@@ -557,14 +557,14 @@ export default function SimulatorPage() {
                       <Tooltip content={({ active, payload, label }: any) => {
                         if (!active || !payload?.length) return null;
                         return (
-                          <div className="rounded-lg bg-zinc-900/95 border border-white/10 p-3 shadow-xl backdrop-blur-sm">
-                            <p className="text-[11px] font-medium text-zinc-400 mb-1.5">Month {label}</p>
+                          <div className="rounded-lg bg-white/95 border border-white/10 p-3 shadow-xl backdrop-blur-sm">
+                            <p className="text-[11px] font-medium text-gray-500 mb-1.5">Month {label}</p>
                             {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                             {payload.map((entry: any, i: number) => (
                               <div key={i} className="flex items-center gap-2 text-[11px]">
                                 <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: entry.color }} />
-                                <span className="text-zinc-400">{entry.name}:</span>
-                                <span className="font-medium text-white">
+                                <span className="text-gray-500">{entry.name}:</span>
+                                <span className="font-medium text-gray-900">
                                   {entry.name === 'Survival %' ? `${(entry.value * 100).toFixed(0)}%` : formatCurrency(Math.round(entry.value))}
                                 </span>
                               </div>
@@ -576,11 +576,11 @@ export default function SimulatorPage() {
                       <Area yAxisId="ltv" type="monotone" dataKey="cumulativeAddOn" stackId="1" fill="#f59e0b" fillOpacity={0.6} stroke="#f59e0b" strokeWidth={0} name="Add-ons" />
                       <Area yAxisId="ltv" type="monotone" dataKey="cumulativeSustain" stackId="1" fill="#10b981" fillOpacity={0.6} stroke="#10b981" strokeWidth={0} name="Sustain" />
                       <Line yAxisId="surv" type="monotone" dataKey="survivalRate" stroke="#ef4444" strokeWidth={2} strokeDasharray="6 3" dot={false} name="Survival %" />
-                      <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-zinc-400 text-[10px]">{value}</span>} />
+                      <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-gray-500 text-[10px]">{value}</span>} />
                     </ComposedChart>
                   </ResponsiveContainer>
                 </div>
-                <p className="text-[10px] text-zinc-500 mt-2 text-center">
+                <p className="text-[10px] text-gray-500 mt-2 text-center">
                   Stacked areas show cumulative LTV per customer. Dashed red line shows cohort survival rate.
                 </p>
               </div>
@@ -592,14 +592,14 @@ export default function SimulatorPage() {
             <button onClick={() => setShowCurrentCustomize(!showCurrentCustomize)} className="w-full flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <FlaskConical className="h-4 w-4 text-brand-400" />
-                <span className="text-sm font-semibold text-white">Customize Parameters</span>
-                <span className="text-[10px] text-zinc-500">
+                <span className="text-sm font-semibold text-gray-900">Customize Parameters</span>
+                <span className="text-[10px] text-gray-500">
                   {activeCurrentKey !== 'custom'
                     ? `Using ${CURRENT_SCENARIOS[activeCurrentKey]?.name || 'Current State'} preset`
                     : 'Custom configuration'}
                 </span>
               </div>
-              {showCurrentCustomize ? <ChevronUp className="h-4 w-4 text-zinc-500" /> : <ChevronDown className="h-4 w-4 text-zinc-500" />}
+              {showCurrentCustomize ? <ChevronUp className="h-4 w-4 text-gray-500" /> : <ChevronDown className="h-4 w-4 text-gray-500" />}
             </button>
 
             {showCurrentCustomize && (
@@ -616,28 +616,28 @@ export default function SimulatorPage() {
 
                 {/* Programs Table */}
                 <div>
-                  <h4 className="text-xs font-semibold text-zinc-300 mb-3">Entry Programs</h4>
+                  <h4 className="text-xs font-semibold text-gray-700 mb-3">Entry Programs</h4>
                   <div className="overflow-x-auto">
                     <table className="w-full text-xs">
                       <thead>
-                        <tr className="border-b border-white/[0.06]">
-                          <th className="py-2 text-left text-[10px] font-medium text-zinc-500 w-32">Program</th>
-                          <th className="py-2 text-center text-[10px] font-medium text-zinc-500">Price/mo</th>
-                          <th className="py-2 text-center text-[10px] font-medium text-zinc-500">COGS/mo</th>
-                          <th className="py-2 text-center text-[10px] font-medium text-zinc-500">Margin</th>
-                          <th className="py-2 text-center text-[10px] font-medium text-zinc-500">Early Churn</th>
-                          <th className="py-2 text-center text-[10px] font-medium text-zinc-500">Mid Churn</th>
-                          <th className="py-2 text-center text-[10px] font-medium text-zinc-500">Late Churn</th>
-                          <th className="py-2 text-center text-[10px] font-medium text-zinc-500">Mix %</th>
+                        <tr className="border-b border-gray-200">
+                          <th className="py-2 text-left text-[10px] font-medium text-gray-500 w-32">Program</th>
+                          <th className="py-2 text-center text-[10px] font-medium text-gray-500">Price/mo</th>
+                          <th className="py-2 text-center text-[10px] font-medium text-gray-500">COGS/mo</th>
+                          <th className="py-2 text-center text-[10px] font-medium text-gray-500">Margin</th>
+                          <th className="py-2 text-center text-[10px] font-medium text-gray-500">Early Churn</th>
+                          <th className="py-2 text-center text-[10px] font-medium text-gray-500">Mid Churn</th>
+                          <th className="py-2 text-center text-[10px] font-medium text-gray-500">Late Churn</th>
+                          <th className="py-2 text-center text-[10px] font-medium text-gray-500">Mix %</th>
                         </tr>
                       </thead>
                       <tbody>
                         {currentConfig.programs.map((prog, i) => (
-                          <tr key={prog.name} className="border-b border-white/[0.03]">
+                          <tr key={prog.name} className="border-b border-gray-200">
                             <td className="py-2">
                               <div className="flex items-center gap-2">
                                 <div className="w-2 h-2 rounded-full" style={{ backgroundColor: PROGRAM_COLORS[prog.name] || '#71717a' }} />
-                                <span className="text-zinc-300 font-medium">{prog.name}</span>
+                                <span className="text-gray-700 font-medium">{prog.name}</span>
                               </div>
                             </td>
                             <td className="py-2 px-1"><NumInput value={prog.price} onChange={v => updateProgram(i, { price: v })} prefix="$" min={0} step={10} /></td>
@@ -660,26 +660,26 @@ export default function SimulatorPage() {
 
                 {/* Add-ons Table */}
                 <div>
-                  <h4 className="text-xs font-semibold text-zinc-300 mb-3">À la Carte Add-ons</h4>
+                  <h4 className="text-xs font-semibold text-gray-700 mb-3">À la Carte Add-ons</h4>
                   <div className="overflow-x-auto">
                     <table className="w-full text-xs">
                       <thead>
-                        <tr className="border-b border-white/[0.06]">
-                          <th className="py-2 text-left text-[10px] font-medium text-zinc-500 w-32">Add-on</th>
-                          <th className="py-2 text-center text-[10px] font-medium text-zinc-500">Price/mo</th>
-                          <th className="py-2 text-center text-[10px] font-medium text-zinc-500">COGS/mo</th>
-                          <th className="py-2 text-center text-[10px] font-medium text-zinc-500">Max Attach</th>
-                          <th className="py-2 text-center text-[10px] font-medium text-zinc-500">Ramp (mo)</th>
-                          <th className="py-2 text-center text-[10px] font-medium text-zinc-500">Delay (mo)</th>
+                        <tr className="border-b border-gray-200">
+                          <th className="py-2 text-left text-[10px] font-medium text-gray-500 w-32">Add-on</th>
+                          <th className="py-2 text-center text-[10px] font-medium text-gray-500">Price/mo</th>
+                          <th className="py-2 text-center text-[10px] font-medium text-gray-500">COGS/mo</th>
+                          <th className="py-2 text-center text-[10px] font-medium text-gray-500">Max Attach</th>
+                          <th className="py-2 text-center text-[10px] font-medium text-gray-500">Ramp (mo)</th>
+                          <th className="py-2 text-center text-[10px] font-medium text-gray-500">Delay (mo)</th>
                         </tr>
                       </thead>
                       <tbody>
                         {currentConfig.addOns.map((ao, i) => (
-                          <tr key={ao.name} className="border-b border-white/[0.03]">
+                          <tr key={ao.name} className="border-b border-gray-200">
                             <td className="py-2">
                               <div className="flex items-center gap-2">
                                 <div className="w-2 h-2 rounded-full" style={{ backgroundColor: ADDON_COLORS[i % ADDON_COLORS.length] }} />
-                                <span className="text-zinc-300 font-medium">{ao.name}</span>
+                                <span className="text-gray-700 font-medium">{ao.name}</span>
                               </div>
                             </td>
                             <td className="py-2 px-1"><NumInput value={ao.price} onChange={v => updateAddOn(i, { price: v })} prefix="$" min={0} step={5} /></td>
@@ -696,7 +696,7 @@ export default function SimulatorPage() {
 
                 {/* Sustain Config */}
                 <div>
-                  <h4 className="text-xs font-semibold text-zinc-300 mb-3">Sustain Plan Transition</h4>
+                  <h4 className="text-xs font-semibold text-gray-700 mb-3">Sustain Plan Transition</h4>
                   <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                     <NumInput label="Price/mo" value={currentConfig.sustain.price} onChange={v => updateSustain({ price: v })} prefix="$" min={0} step={10} />
                     <NumInput label="COGS/mo" value={currentConfig.sustain.cogs} onChange={v => updateSustain({ cogs: v })} prefix="$" min={0} step={5} />
@@ -726,24 +726,24 @@ export default function SimulatorPage() {
                 const ltv = currentResult.programCohortLTV[prog.name];
                 if (!ltv) return null;
                 return (
-                  <div key={prog.name} className="rounded-lg bg-white/[0.02] border border-white/[0.04] p-3">
+                  <div key={prog.name} className="rounded-lg bg-gray-50 border border-gray-200 p-3">
                     <div className="flex items-center gap-2 mb-2">
                       <div className="w-2 h-2 rounded-full" style={{ backgroundColor: PROGRAM_COLORS[prog.name] || '#71717a' }} />
-                      <span className="text-[11px] font-semibold text-zinc-300">{prog.name}</span>
-                      <span className="text-[9px] text-zinc-600 ml-auto">{(prog.mixPct * 100).toFixed(0)}% mix</span>
+                      <span className="text-[11px] font-semibold text-gray-700">{prog.name}</span>
+                      <span className="text-[9px] text-gray-400 ml-auto">{(prog.mixPct * 100).toFixed(0)}% mix</span>
                     </div>
                     <div className="space-y-1">
                       <div className="flex justify-between">
-                        <span className="text-[10px] text-zinc-500">LTV (Rev)</span>
-                        <span className="text-xs font-bold text-white">{formatCurrency(Math.round(ltv.revenue))}</span>
+                        <span className="text-[10px] text-gray-500">LTV (Rev)</span>
+                        <span className="text-xs font-bold text-gray-900">{formatCurrency(Math.round(ltv.revenue))}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-[10px] text-zinc-500">LTV (GP)</span>
+                        <span className="text-[10px] text-gray-500">LTV (GP)</span>
                         <span className="text-xs font-bold text-emerald-400">{formatCurrency(Math.round(ltv.grossProfit))}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-[10px] text-zinc-500">Gross Margin</span>
-                        <span className="text-[10px] font-medium text-zinc-400">{((1 - prog.cogs / prog.price) * 100).toFixed(0)}%</span>
+                        <span className="text-[10px] text-gray-500">Gross Margin</span>
+                        <span className="text-[10px] font-medium text-gray-500">{((1 - prog.cogs / prog.price) * 100).toFixed(0)}%</span>
                       </div>
                     </div>
                   </div>
@@ -768,7 +768,7 @@ export default function SimulatorPage() {
                     <Area type="monotone" dataKey="baseArpu" stackId="1" fill="#3b82f6" fillOpacity={0.6} stroke="#3b82f6" strokeWidth={0} name="Program Base" />
                     <Area type="monotone" dataKey="addOnArpu" stackId="1" fill="#f59e0b" fillOpacity={0.6} stroke="#f59e0b" strokeWidth={0} name="Add-on Revenue" />
                     <Area type="monotone" dataKey="sustainArpu" stackId="1" fill="#10b981" fillOpacity={0.6} stroke="#10b981" strokeWidth={0} name="Sustain Revenue" />
-                    <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-zinc-400 text-[10px]">{value}</span>} />
+                    <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-gray-500 text-[10px]">{value}</span>} />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -787,7 +787,7 @@ export default function SimulatorPage() {
                     {currentConfig.addOns.map((ao, i) => (
                       <Line key={ao.name} type="monotone" dataKey={ao.name} stroke={ADDON_COLORS[i % ADDON_COLORS.length]} strokeWidth={2} dot={false} />
                     ))}
-                    <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-zinc-400 text-[10px]">{value}</span>} />
+                    <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-gray-500 text-[10px]">{value}</span>} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -809,7 +809,7 @@ export default function SimulatorPage() {
                     <Tooltip content={<ChartTooltipContent formatter={(v: number) => v.toLocaleString()} />} />
                     <Area type="monotone" dataKey="On Program" stackId="1" fill="#3b82f6" fillOpacity={0.7} stroke="#3b82f6" strokeWidth={0} />
                     <Area type="monotone" dataKey="On Sustain" stackId="1" fill="#10b981" fillOpacity={0.7} stroke="#10b981" strokeWidth={0} />
-                    <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-zinc-400 text-[10px]">{value}</span>} />
+                    <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-gray-500 text-[10px]">{value}</span>} />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -833,7 +833,7 @@ export default function SimulatorPage() {
                     <Area type="monotone" dataKey="Program Revenue" stackId="1" fill="#3b82f6" fillOpacity={0.6} stroke="#3b82f6" strokeWidth={0} />
                     <Area type="monotone" dataKey="Add-on Revenue" stackId="1" fill="#f59e0b" fillOpacity={0.6} stroke="#f59e0b" strokeWidth={0} />
                     <Area type="monotone" dataKey="Sustain Revenue" stackId="1" fill="#10b981" fillOpacity={0.6} stroke="#10b981" strokeWidth={0} />
-                    <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-zinc-400 text-[10px]">{value}</span>} />
+                    <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-gray-500 text-[10px]">{value}</span>} />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -855,7 +855,7 @@ export default function SimulatorPage() {
                     <Tooltip content={<ChartTooltipContent formatter={(v: number) => `${v.toFixed(1)}%`} />} />
                     <Line type="monotone" dataKey="Gross Margin" stroke="#10b981" strokeWidth={2} dot={false} />
                     <Line type="monotone" dataKey="Contribution Margin" stroke="#8b5cf6" strokeWidth={2} dot={false} strokeDasharray="5 5" />
-                    <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-zinc-400 text-[10px]">{value}</span>} />
+                    <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-gray-500 text-[10px]">{value}</span>} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -882,7 +882,7 @@ export default function SimulatorPage() {
                     <Line type="monotone" dataKey="Marketing" stroke="#f59e0b" strokeWidth={2} dot={false} strokeDasharray="5 5" />
                     <Line type="monotone" dataKey="Net Profit" stroke="#10b981" strokeWidth={2} dot={{ r: 3, fill: '#10b981' }} />
                     <ReferenceLine y={0} stroke="#ffffff20" />
-                    <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-zinc-400 text-[10px]">{value}</span>} />
+                    <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-gray-500 text-[10px]">{value}</span>} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -893,27 +893,27 @@ export default function SimulatorPage() {
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
             <Card>
               <CardHeader title={`${currentConfig.horizon}-Month Summary`} subtitle="Key financial metrics" />
-              <div className="rounded-lg bg-surface-0 p-4 font-mono text-[11px] leading-relaxed">
-                <p className="text-zinc-500 font-bold mb-2">REVENUE & PROFITABILITY:</p>
-                <p className="text-zinc-300">• Total Revenue: <span className="text-white font-bold">{formatCompact(cs.totalRevenue)}</span></p>
-                <p className="text-zinc-300">• Total COGS: <span className="text-red-400">{formatCompact(cs.totalCOGS)}</span></p>
-                <p className="text-zinc-300">• Total Gross Profit: <span className="text-emerald-400">{formatCompact(cs.totalGP)}</span></p>
-                <p className="text-zinc-300">• Total Marketing: <span className="text-amber-400">{formatCompact(cs.totalMarketing)}</span></p>
-                <p className="text-zinc-300">• Total Net Profit: <span className="text-emerald-400 font-bold">{formatCompact(cs.totalProfit)}</span></p>
+              <div className="rounded-lg bg-gray-50 p-4 font-mono text-[11px] leading-relaxed">
+                <p className="text-gray-500 font-bold mb-2">REVENUE & PROFITABILITY:</p>
+                <p className="text-gray-700">• Total Revenue: <span className="text-gray-900 font-bold">{formatCompact(cs.totalRevenue)}</span></p>
+                <p className="text-gray-700">• Total COGS: <span className="text-red-400">{formatCompact(cs.totalCOGS)}</span></p>
+                <p className="text-gray-700">• Total Gross Profit: <span className="text-emerald-400">{formatCompact(cs.totalGP)}</span></p>
+                <p className="text-gray-700">• Total Marketing: <span className="text-amber-400">{formatCompact(cs.totalMarketing)}</span></p>
+                <p className="text-gray-700">• Total Net Profit: <span className="text-emerald-400 font-bold">{formatCompact(cs.totalProfit)}</span></p>
 
-                <p className="text-zinc-500 font-bold mt-4 mb-2">UNIT ECONOMICS:</p>
-                <p className="text-zinc-300">• LTV (Revenue): <span className="text-white font-bold">{formatCurrency(Math.round(currentResult.cohortLTV.revenue))}</span></p>
-                <p className="text-zinc-300">• LTV (Gross Profit): <span className="text-emerald-400 font-bold">{formatCurrency(Math.round(currentResult.cohortLTV.grossProfit))}</span></p>
-                <p className="text-zinc-300">• CAC: <span className="text-white">{formatCurrency(cs.blendedCAC)}</span></p>
-                <p className="text-zinc-300">• LTV:CAC Ratio: <span className={cn('font-bold', cs.ltvCacRatio >= 3 ? 'text-emerald-400' : 'text-red-400')}>{cs.ltvCacRatio.toFixed(2)}:1</span></p>
-                <p className="text-zinc-300">• Payback: <span className="text-white">~{cs.paybackMonths} months</span></p>
-                <p className="text-zinc-300">• Peak ARPU: <span className="text-brand-400 font-bold">{formatCurrency(Math.round(cs.peakARPU))}</span></p>
+                <p className="text-gray-500 font-bold mt-4 mb-2">UNIT ECONOMICS:</p>
+                <p className="text-gray-700">• LTV (Revenue): <span className="text-gray-900 font-bold">{formatCurrency(Math.round(currentResult.cohortLTV.revenue))}</span></p>
+                <p className="text-gray-700">• LTV (Gross Profit): <span className="text-emerald-400 font-bold">{formatCurrency(Math.round(currentResult.cohortLTV.grossProfit))}</span></p>
+                <p className="text-gray-700">• CAC: <span className="text-gray-900">{formatCurrency(cs.blendedCAC)}</span></p>
+                <p className="text-gray-700">• LTV:CAC Ratio: <span className={cn('font-bold', cs.ltvCacRatio >= 3 ? 'text-emerald-400' : 'text-red-400')}>{cs.ltvCacRatio.toFixed(2)}:1</span></p>
+                <p className="text-gray-700">• Payback: <span className="text-gray-900">~{cs.paybackMonths} months</span></p>
+                <p className="text-gray-700">• Peak ARPU: <span className="text-brand-400 font-bold">{formatCurrency(Math.round(cs.peakARPU))}</span></p>
 
-                <p className="text-zinc-500 font-bold mt-4 mb-2">CUSTOMERS:</p>
-                <p className="text-zinc-300">• Total Acquired: <span className="text-white">{cs.totalAcquired.toLocaleString()}</span></p>
-                <p className="text-zinc-300">• Mo {currentConfig.horizon} Active: <span className="text-white">{Math.round(cs.finalActive).toLocaleString()}</span></p>
-                <p className="text-zinc-300">• Retention Rate: <span className="text-white">{cs.retentionRate.toFixed(1)}%</span></p>
-                <p className="text-zinc-300">• On Sustain: <span className="text-emerald-400">{cs.sustainPct.toFixed(1)}%</span></p>
+                <p className="text-gray-500 font-bold mt-4 mb-2">CUSTOMERS:</p>
+                <p className="text-gray-700">• Total Acquired: <span className="text-gray-900">{cs.totalAcquired.toLocaleString()}</span></p>
+                <p className="text-gray-700">• Mo {currentConfig.horizon} Active: <span className="text-gray-900">{Math.round(cs.finalActive).toLocaleString()}</span></p>
+                <p className="text-gray-700">• Retention Rate: <span className="text-gray-900">{cs.retentionRate.toFixed(1)}%</span></p>
+                <p className="text-gray-700">• On Sustain: <span className="text-emerald-400">{cs.sustainPct.toFixed(1)}%</span></p>
               </div>
             </Card>
 
@@ -929,10 +929,10 @@ export default function SimulatorPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="border-b border-white/[0.06]">
-                    <th className="py-2 text-left text-[10px] font-medium text-zinc-500 w-44">Metric</th>
+                  <tr className="border-b border-gray-200">
+                    <th className="py-2 text-left text-[10px] font-medium text-gray-500 w-44">Metric</th>
                     {CURRENT_SCENARIO_KEYS.map(key => (
-                      <th key={key} className={cn('py-2 text-center text-[10px] font-medium', activeCurrentKey === key ? 'text-brand-400' : 'text-zinc-500')}>
+                      <th key={key} className={cn('py-2 text-center text-[10px] font-medium', activeCurrentKey === key ? 'text-brand-400' : 'text-gray-500')}>
                         {CURRENT_SCENARIOS[key].name}
                       </th>
                     ))}
@@ -953,10 +953,10 @@ export default function SimulatorPage() {
                       { label: 'Retention Rate', values: results.map(r => `${r.summary.retentionRate.toFixed(1)}%`) },
                     ];
                     return rows.map(row => (
-                      <tr key={row.label} className="border-b border-white/[0.03]">
-                        <td className="py-2 text-zinc-400">{row.label}</td>
+                      <tr key={row.label} className="border-b border-gray-200">
+                        <td className="py-2 text-gray-500">{row.label}</td>
                         {row.values.map((v, i) => (
-                          <td key={i} className={cn('py-2 text-center font-medium', row.highlight ? 'text-emerald-400' : 'text-zinc-300', activeCurrentKey === CURRENT_SCENARIO_KEYS[i] && 'bg-brand-500/5')}>
+                          <td key={i} className={cn('py-2 text-center font-medium', row.highlight ? 'text-emerald-400' : 'text-gray-700', activeCurrentKey === CURRENT_SCENARIO_KEYS[i] && 'bg-brand-500/5')}>
                             {v}
                           </td>
                         ))}
@@ -989,7 +989,7 @@ export default function SimulatorPage() {
                       'rounded-lg px-4 py-2 text-xs font-medium transition-all border',
                       activeBundleKey === key
                         ? 'bg-brand-600 text-white border-brand-500'
-                        : 'bg-white/[0.03] text-zinc-400 border-white/[0.06] hover:bg-white/[0.06] hover:text-white'
+                        : 'bg-white/[0.03] text-gray-500 border-gray-200 hover:bg-white/[0.06] hover:text-gray-900'
                     )}
                   >
                     {sc.name}
@@ -1002,21 +1002,21 @@ export default function SimulatorPage() {
                   'rounded-lg px-4 py-2 text-xs font-medium transition-all border',
                   activeBundleKey === 'custom'
                     ? 'bg-amber-600 text-white border-amber-500'
-                    : 'bg-white/[0.03] text-zinc-400 border-white/[0.06] hover:bg-white/[0.06] hover:text-white'
+                    : 'bg-white/[0.03] text-gray-500 border-gray-200 hover:bg-white/[0.06] hover:text-gray-900'
                 )}
               >
                 Custom
               </button>
             </div>
             <div className="ml-auto flex items-center gap-2">
-              <span className="text-[10px] text-zinc-500 font-medium">Horizon:</span>
+              <span className="text-[10px] text-gray-500 font-medium">Horizon:</span>
               {[12, 24, 36].map(h => (
                 <button
                   key={h}
                   onClick={() => updateBundleConfig({ horizon: h })}
                   className={cn(
                     'rounded px-2.5 py-1 text-[10px] font-bold transition-all',
-                    bundleConfig.horizon === h ? 'bg-white/10 text-white' : 'text-zinc-500 hover:text-zinc-300'
+                    bundleConfig.horizon === h ? 'bg-white/10 text-gray-900' : 'text-gray-500 hover:text-gray-700'
                   )}
                 >
                   {h}mo
@@ -1061,27 +1061,27 @@ export default function SimulatorPage() {
                     return (
                       <div key={tier.name} className="flex items-center gap-3">
                         <div className="w-32 text-right">
-                          <span className="text-[11px] text-zinc-400 font-medium">{tier.name}</span>
+                          <span className="text-[11px] text-gray-500 font-medium">{tier.name}</span>
                         </div>
                         <div className="flex-1 h-6 bg-white/[0.03] rounded-md overflow-hidden relative">
                           <div className="h-full rounded-md transition-all" style={{ width: `${Math.max(pct, 1)}%`, backgroundColor: TIER_COLORS[tier.name] || '#71717a', opacity: 0.7 }} />
                           {pct >= 5 && (
-                            <span className="absolute inset-y-0 left-2 flex items-center text-[10px] font-bold text-white/80">
+                            <span className="absolute inset-y-0 left-2 flex items-center text-[10px] font-bold text-gray-900/80">
                               {pct.toFixed(0)}%
                             </span>
                           )}
                         </div>
                         <div className="w-20 text-right">
-                          <span className="text-xs font-bold text-white">{formatCurrency(Math.round(tierLTV))}</span>
+                          <span className="text-xs font-bold text-gray-900">{formatCurrency(Math.round(tierLTV))}</span>
                         </div>
                       </div>
                     );
                   })}
 
                   {/* Total stacked bar */}
-                  <div className="flex items-center gap-3 pt-2 border-t border-white/[0.06]">
+                  <div className="flex items-center gap-3 pt-2 border-t border-gray-200">
                     <div className="w-32 text-right">
-                      <span className="text-[11px] text-white font-bold">= Total LTV</span>
+                      <span className="text-[11px] text-gray-900 font-bold">= Total LTV</span>
                     </div>
                     <div className="flex-1">
                       <div className="h-6 rounded-md overflow-hidden flex">
@@ -1093,23 +1093,23 @@ export default function SimulatorPage() {
                       </div>
                     </div>
                     <div className="w-20 text-right">
-                      <span className="text-sm font-bold text-white">{formatCurrency(Math.round(bundleResult.cohortLTV.revenue))}</span>
+                      <span className="text-sm font-bold text-gray-900">{formatCurrency(Math.round(bundleResult.cohortLTV.revenue))}</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Per-tier detail */}
-                <div className="rounded-lg bg-white/[0.02] border border-white/[0.04] p-3">
-                  <p className="text-[10px] font-semibold text-zinc-500 mb-2 tracking-wide">WEIGHTED TIER CONTRIBUTION</p>
+                <div className="rounded-lg bg-gray-50 border border-gray-200 p-3">
+                  <p className="text-[10px] font-semibold text-gray-500 mb-2 tracking-wide">WEIGHTED TIER CONTRIBUTION</p>
                   {bundleConfig.tiers.map(tier => {
                     const tierLTV = bundleResult.ltvBuildup.byTierLTV[tier.name] || 0;
                     return (
                       <div key={tier.name} className="flex justify-between items-center py-0.5">
                         <div className="flex items-center gap-1.5">
                           <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: TIER_COLORS[tier.name] || '#71717a' }} />
-                          <span className="text-[10px] text-zinc-400">{tier.name} ({(tier.mixPct * 100).toFixed(0)}% mix)</span>
+                          <span className="text-[10px] text-gray-500">{tier.name} ({(tier.mixPct * 100).toFixed(0)}% mix)</span>
                         </div>
-                        <span className="text-[10px] font-medium text-zinc-300">{formatCurrency(Math.round(tierLTV))}</span>
+                        <span className="text-[10px] font-medium text-gray-700">{formatCurrency(Math.round(tierLTV))}</span>
                       </div>
                     );
                   })}
@@ -1118,8 +1118,8 @@ export default function SimulatorPage() {
                 {/* Churn impact callout */}
                 <div className="rounded-lg bg-red-500/5 border border-red-500/10 p-3">
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-[10px] font-semibold text-zinc-500 tracking-wide">GROSS POTENTIAL (0% churn)</span>
-                    <span className="text-xs font-bold text-zinc-300">{formatCurrency(Math.round(bundleResult.ltvBuildup.grossPotentialLTV))}</span>
+                    <span className="text-[10px] font-semibold text-gray-500 tracking-wide">GROSS POTENTIAL (0% churn)</span>
+                    <span className="text-xs font-bold text-gray-700">{formatCurrency(Math.round(bundleResult.ltvBuildup.grossPotentialLTV))}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-[10px] font-semibold text-red-400 tracking-wide">LOST TO CHURN</span>
@@ -1135,7 +1135,7 @@ export default function SimulatorPage() {
 
               {/* Right: Cumulative LTV Accumulation Chart */}
               <div>
-                <p className="text-[10px] text-zinc-500 font-medium mb-2">Cumulative Revenue per Customer by Age</p>
+                <p className="text-[10px] text-gray-500 font-medium mb-2">Cumulative Revenue per Customer by Age</p>
                 <div className="h-72">
                   <ResponsiveContainer width="100%" height="100%">
                     <ComposedChart data={bundleResult.ltvBuildup.monthlyAccumulation}>
@@ -1147,14 +1147,14 @@ export default function SimulatorPage() {
                       <Tooltip content={({ active, payload, label }: any) => {
                         if (!active || !payload?.length) return null;
                         return (
-                          <div className="rounded-lg bg-zinc-900/95 border border-white/10 p-3 shadow-xl backdrop-blur-sm">
-                            <p className="text-[11px] font-medium text-zinc-400 mb-1.5">Month {label}</p>
+                          <div className="rounded-lg bg-white/95 border border-white/10 p-3 shadow-xl backdrop-blur-sm">
+                            <p className="text-[11px] font-medium text-gray-500 mb-1.5">Month {label}</p>
                             {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                             {payload.map((entry: any, i: number) => (
                               <div key={i} className="flex items-center gap-2 text-[11px]">
                                 <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: entry.color }} />
-                                <span className="text-zinc-400">{entry.name}:</span>
-                                <span className="font-medium text-white">
+                                <span className="text-gray-500">{entry.name}:</span>
+                                <span className="font-medium text-gray-900">
                                   {entry.name === 'Survival %' ? `${(entry.value * 100).toFixed(0)}%` : formatCurrency(Math.round(entry.value))}
                                 </span>
                               </div>
@@ -1164,11 +1164,11 @@ export default function SimulatorPage() {
                       }} />
                       <Area yAxisId="ltv" type="monotone" dataKey="cumulativeLTV" fill="#8b5cf6" fillOpacity={0.4} stroke="#8b5cf6" strokeWidth={2} name="Cumulative LTV" />
                       <Line yAxisId="surv" type="monotone" dataKey="survivalRate" stroke="#ef4444" strokeWidth={2} strokeDasharray="6 3" dot={false} name="Survival %" />
-                      <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-zinc-400 text-[10px]">{value}</span>} />
+                      <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-gray-500 text-[10px]">{value}</span>} />
                     </ComposedChart>
                   </ResponsiveContainer>
                 </div>
-                <p className="text-[10px] text-zinc-500 mt-2 text-center">
+                <p className="text-[10px] text-gray-500 mt-2 text-center">
                   Purple area shows cumulative LTV per customer. Dashed red line shows cohort survival rate.
                 </p>
               </div>
@@ -1180,12 +1180,12 @@ export default function SimulatorPage() {
             <button onClick={() => setShowBundleCustomize(!showBundleCustomize)} className="w-full flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <FlaskConical className="h-4 w-4 text-brand-400" />
-                <span className="text-sm font-semibold text-white">Customize Parameters</span>
-                <span className="text-[10px] text-zinc-500">
+                <span className="text-sm font-semibold text-gray-900">Customize Parameters</span>
+                <span className="text-[10px] text-gray-500">
                   {activeBundleKey !== 'custom' ? `Using ${BUNDLE_SCENARIOS[activeBundleKey]?.name || 'Base Case'} preset` : 'Custom configuration'}
                 </span>
               </div>
-              {showBundleCustomize ? <ChevronUp className="h-4 w-4 text-zinc-500" /> : <ChevronDown className="h-4 w-4 text-zinc-500" />}
+              {showBundleCustomize ? <ChevronUp className="h-4 w-4 text-gray-500" /> : <ChevronDown className="h-4 w-4 text-gray-500" />}
             </button>
 
             {showBundleCustomize && (
@@ -1197,26 +1197,26 @@ export default function SimulatorPage() {
                   </div>
                 )}
                 <div>
-                  <h4 className="text-xs font-semibold text-zinc-300 mb-3">Tier Pricing & Costs</h4>
+                  <h4 className="text-xs font-semibold text-gray-700 mb-3">Tier Pricing & Costs</h4>
                   <div className="overflow-x-auto">
                     <table className="w-full text-xs">
                       <thead>
-                        <tr className="border-b border-white/[0.06]">
-                          <th className="py-2 text-left text-[10px] font-medium text-zinc-500 w-32">Tier</th>
-                          <th className="py-2 text-center text-[10px] font-medium text-zinc-500">Price/mo</th>
-                          <th className="py-2 text-center text-[10px] font-medium text-zinc-500">COGS/mo</th>
-                          <th className="py-2 text-center text-[10px] font-medium text-zinc-500">Margin</th>
-                          <th className="py-2 text-center text-[10px] font-medium text-zinc-500">Churn/mo</th>
-                          <th className="py-2 text-center text-[10px] font-medium text-zinc-500">Mix %</th>
+                        <tr className="border-b border-gray-200">
+                          <th className="py-2 text-left text-[10px] font-medium text-gray-500 w-32">Tier</th>
+                          <th className="py-2 text-center text-[10px] font-medium text-gray-500">Price/mo</th>
+                          <th className="py-2 text-center text-[10px] font-medium text-gray-500">COGS/mo</th>
+                          <th className="py-2 text-center text-[10px] font-medium text-gray-500">Margin</th>
+                          <th className="py-2 text-center text-[10px] font-medium text-gray-500">Churn/mo</th>
+                          <th className="py-2 text-center text-[10px] font-medium text-gray-500">Mix %</th>
                         </tr>
                       </thead>
                       <tbody>
                         {bundleConfig.tiers.map((tier, i) => (
-                          <tr key={tier.name} className="border-b border-white/[0.03]">
+                          <tr key={tier.name} className="border-b border-gray-200">
                             <td className="py-2">
                               <div className="flex items-center gap-2">
                                 <div className="w-2 h-2 rounded-full" style={{ backgroundColor: TIER_COLORS[tier.name] }} />
-                                <span className="text-zinc-300 font-medium">{tier.name}</span>
+                                <span className="text-gray-700 font-medium">{tier.name}</span>
                               </div>
                             </td>
                             <td className="py-2 px-1"><NumInput value={tier.price} onChange={v => updateTier(i, { price: v })} prefix="$" min={0} step={10} /></td>
@@ -1255,16 +1255,16 @@ export default function SimulatorPage() {
                 const ltv = bundleResult.tierCohortLTV[tier.name];
                 if (!ltv) return null;
                 return (
-                  <div key={tier.name} className="rounded-lg bg-white/[0.02] border border-white/[0.04] p-3">
+                  <div key={tier.name} className="rounded-lg bg-gray-50 border border-gray-200 p-3">
                     <div className="flex items-center gap-2 mb-2">
                       <div className="w-2 h-2 rounded-full" style={{ backgroundColor: TIER_COLORS[tier.name] }} />
-                      <span className="text-[11px] font-semibold text-zinc-300">{tier.name}</span>
-                      <span className="text-[9px] text-zinc-600 ml-auto">{(tier.mixPct * 100).toFixed(0)}% mix</span>
+                      <span className="text-[11px] font-semibold text-gray-700">{tier.name}</span>
+                      <span className="text-[9px] text-gray-400 ml-auto">{(tier.mixPct * 100).toFixed(0)}% mix</span>
                     </div>
                     <div className="space-y-1">
-                      <div className="flex justify-between"><span className="text-[10px] text-zinc-500">LTV (Rev)</span><span className="text-xs font-bold text-white">{formatCurrency(Math.round(ltv.revenue))}</span></div>
-                      <div className="flex justify-between"><span className="text-[10px] text-zinc-500">LTV (GP)</span><span className="text-xs font-bold text-emerald-400">{formatCurrency(Math.round(ltv.grossProfit))}</span></div>
-                      <div className="flex justify-between"><span className="text-[10px] text-zinc-500">GM</span><span className="text-[10px] font-medium text-zinc-400">{((1 - tier.cogs / tier.price) * 100).toFixed(0)}%</span></div>
+                      <div className="flex justify-between"><span className="text-[10px] text-gray-500">LTV (Rev)</span><span className="text-xs font-bold text-gray-900">{formatCurrency(Math.round(ltv.revenue))}</span></div>
+                      <div className="flex justify-between"><span className="text-[10px] text-gray-500">LTV (GP)</span><span className="text-xs font-bold text-emerald-400">{formatCurrency(Math.round(ltv.grossProfit))}</span></div>
+                      <div className="flex justify-between"><span className="text-[10px] text-gray-500">GM</span><span className="text-[10px] font-medium text-gray-500">{((1 - tier.cogs / tier.price) * 100).toFixed(0)}%</span></div>
                     </div>
                   </div>
                 );
@@ -1285,7 +1285,7 @@ export default function SimulatorPage() {
                     <Tooltip content={<ChartTooltipContent />} />
                     <Area type="monotone" dataKey="COGS" stackId="1" fill="#ef4444" fillOpacity={0.6} stroke="#ef4444" strokeWidth={0} />
                     <Area type="monotone" dataKey="Gross Profit" stackId="1" fill="#10b981" fillOpacity={0.6} stroke="#10b981" strokeWidth={0} />
-                    <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-zinc-400 text-[10px]">{value}</span>} />
+                    <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-gray-500 text-[10px]">{value}</span>} />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -1307,7 +1307,7 @@ export default function SimulatorPage() {
                     {bundleConfig.tiers.map(tier => (
                       <Area key={tier.name} type="monotone" dataKey={tier.name} stackId="1" fill={TIER_COLORS[tier.name]} fillOpacity={0.7} stroke={TIER_COLORS[tier.name]} strokeWidth={0} />
                     ))}
-                    <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-zinc-400 text-[10px]">{value}</span>} />
+                    <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-gray-500 text-[10px]">{value}</span>} />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -1324,7 +1324,7 @@ export default function SimulatorPage() {
                     <Tooltip content={<ChartTooltipContent formatter={(v: number) => `${v.toFixed(1)}%`} />} />
                     <Line type="monotone" dataKey="Gross Margin" stroke="#10b981" strokeWidth={2} dot={false} />
                     <Line type="monotone" dataKey="Contribution Margin" stroke="#8b5cf6" strokeWidth={2} dot={false} strokeDasharray="5 5" />
-                    <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-zinc-400 text-[10px]">{value}</span>} />
+                    <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-gray-500 text-[10px]">{value}</span>} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -1344,7 +1344,7 @@ export default function SimulatorPage() {
                     <Line type="monotone" dataKey="Marketing" stroke="#f59e0b" strokeWidth={2} dot={false} strokeDasharray="5 5" />
                     <Line type="monotone" dataKey="Net Profit" stroke="#10b981" strokeWidth={2} dot={{ r: 3, fill: '#10b981' }} />
                     <ReferenceLine y={0} stroke="#ffffff20" />
-                    <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-zinc-400 text-[10px]">{value}</span>} />
+                    <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-gray-500 text-[10px]">{value}</span>} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -1355,23 +1355,23 @@ export default function SimulatorPage() {
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
             <Card>
               <CardHeader title={`${bundleConfig.horizon}-Month Summary`} subtitle="Key financial metrics" />
-              <div className="rounded-lg bg-surface-0 p-4 font-mono text-[11px] leading-relaxed">
-                <p className="text-zinc-500 font-bold mb-2">REVENUE & PROFITABILITY:</p>
-                <p className="text-zinc-300">• Total Revenue: <span className="text-white font-bold">{formatCompact(bs.totalRevenue)}</span></p>
-                <p className="text-zinc-300">• Total COGS: <span className="text-red-400">{formatCompact(bs.totalCOGS)}</span></p>
-                <p className="text-zinc-300">• Total Gross Profit: <span className="text-emerald-400">{formatCompact(bs.totalGP)}</span></p>
-                <p className="text-zinc-300">• Total Marketing: <span className="text-amber-400">{formatCompact(bs.totalMarketing)}</span></p>
-                <p className="text-zinc-300">• Total Net Profit: <span className="text-emerald-400 font-bold">{formatCompact(bs.totalProfit)}</span></p>
-                <p className="text-zinc-500 font-bold mt-4 mb-2">UNIT ECONOMICS:</p>
-                <p className="text-zinc-300">• LTV (Revenue): <span className="text-white font-bold">{formatCurrency(Math.round(bundleResult.cohortLTV.revenue))}</span></p>
-                <p className="text-zinc-300">• LTV (Gross Profit): <span className="text-emerald-400 font-bold">{formatCurrency(Math.round(bundleResult.cohortLTV.grossProfit))}</span></p>
-                <p className="text-zinc-300">• CAC: <span className="text-white">{formatCurrency(bs.blendedCAC)}</span></p>
-                <p className="text-zinc-300">• LTV:CAC Ratio: <span className={cn('font-bold', bs.ltvCacRatio >= 3 ? 'text-emerald-400' : 'text-red-400')}>{bs.ltvCacRatio.toFixed(2)}:1</span></p>
-                <p className="text-zinc-300">• Payback: <span className="text-white">~{bs.paybackMonths} months</span></p>
-                <p className="text-zinc-500 font-bold mt-4 mb-2">CUSTOMERS:</p>
-                <p className="text-zinc-300">• Total Acquired: <span className="text-white">{bs.totalAcquired.toLocaleString()}</span></p>
-                <p className="text-zinc-300">• Mo {bundleConfig.horizon} Active: <span className="text-white">{bs.finalActive.toLocaleString()}</span></p>
-                <p className="text-zinc-300">• Retention Rate: <span className="text-white">{bs.retentionRate.toFixed(1)}%</span></p>
+              <div className="rounded-lg bg-gray-50 p-4 font-mono text-[11px] leading-relaxed">
+                <p className="text-gray-500 font-bold mb-2">REVENUE & PROFITABILITY:</p>
+                <p className="text-gray-700">• Total Revenue: <span className="text-gray-900 font-bold">{formatCompact(bs.totalRevenue)}</span></p>
+                <p className="text-gray-700">• Total COGS: <span className="text-red-400">{formatCompact(bs.totalCOGS)}</span></p>
+                <p className="text-gray-700">• Total Gross Profit: <span className="text-emerald-400">{formatCompact(bs.totalGP)}</span></p>
+                <p className="text-gray-700">• Total Marketing: <span className="text-amber-400">{formatCompact(bs.totalMarketing)}</span></p>
+                <p className="text-gray-700">• Total Net Profit: <span className="text-emerald-400 font-bold">{formatCompact(bs.totalProfit)}</span></p>
+                <p className="text-gray-500 font-bold mt-4 mb-2">UNIT ECONOMICS:</p>
+                <p className="text-gray-700">• LTV (Revenue): <span className="text-gray-900 font-bold">{formatCurrency(Math.round(bundleResult.cohortLTV.revenue))}</span></p>
+                <p className="text-gray-700">• LTV (Gross Profit): <span className="text-emerald-400 font-bold">{formatCurrency(Math.round(bundleResult.cohortLTV.grossProfit))}</span></p>
+                <p className="text-gray-700">• CAC: <span className="text-gray-900">{formatCurrency(bs.blendedCAC)}</span></p>
+                <p className="text-gray-700">• LTV:CAC Ratio: <span className={cn('font-bold', bs.ltvCacRatio >= 3 ? 'text-emerald-400' : 'text-red-400')}>{bs.ltvCacRatio.toFixed(2)}:1</span></p>
+                <p className="text-gray-700">• Payback: <span className="text-gray-900">~{bs.paybackMonths} months</span></p>
+                <p className="text-gray-500 font-bold mt-4 mb-2">CUSTOMERS:</p>
+                <p className="text-gray-700">• Total Acquired: <span className="text-gray-900">{bs.totalAcquired.toLocaleString()}</span></p>
+                <p className="text-gray-700">• Mo {bundleConfig.horizon} Active: <span className="text-gray-900">{bs.finalActive.toLocaleString()}</span></p>
+                <p className="text-gray-700">• Retention Rate: <span className="text-gray-900">{bs.retentionRate.toFixed(1)}%</span></p>
               </div>
             </Card>
             <Card>
@@ -1386,10 +1386,10 @@ export default function SimulatorPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="border-b border-white/[0.06]">
-                    <th className="py-2 text-left text-[10px] font-medium text-zinc-500 w-44">Metric</th>
+                  <tr className="border-b border-gray-200">
+                    <th className="py-2 text-left text-[10px] font-medium text-gray-500 w-44">Metric</th>
                     {BUNDLE_SCENARIO_KEYS.map(key => (
-                      <th key={key} className={cn('py-2 text-center text-[10px] font-medium', activeBundleKey === key ? 'text-brand-400' : 'text-zinc-500')}>
+                      <th key={key} className={cn('py-2 text-center text-[10px] font-medium', activeBundleKey === key ? 'text-brand-400' : 'text-gray-500')}>
                         {BUNDLE_SCENARIOS[key].name}
                       </th>
                     ))}
@@ -1409,10 +1409,10 @@ export default function SimulatorPage() {
                       { label: 'Retention Rate', values: results.map(r => `${r.summary.retentionRate.toFixed(1)}%`) },
                     ];
                     return rows.map(row => (
-                      <tr key={row.label} className="border-b border-white/[0.03]">
-                        <td className="py-2 text-zinc-400">{row.label}</td>
+                      <tr key={row.label} className="border-b border-gray-200">
+                        <td className="py-2 text-gray-500">{row.label}</td>
                         {row.values.map((v, i) => (
-                          <td key={i} className={cn('py-2 text-center font-medium', row.highlight ? 'text-emerald-400' : 'text-zinc-300', activeBundleKey === BUNDLE_SCENARIO_KEYS[i] && 'bg-brand-500/5')}>{v}</td>
+                          <td key={i} className={cn('py-2 text-center font-medium', row.highlight ? 'text-emerald-400' : 'text-gray-700', activeBundleKey === BUNDLE_SCENARIO_KEYS[i] && 'bg-brand-500/5')}>{v}</td>
                         ))}
                       </tr>
                     ));
@@ -1464,8 +1464,8 @@ export default function SimulatorPage() {
         return (
           <>
             {/* Hero comparison */}
-            <div className="mb-6 rounded-xl bg-gradient-to-r from-blue-500/5 via-transparent to-purple-500/5 border border-white/[0.04] p-6">
-              <h2 className="text-lg font-bold text-white mb-4">Current Model vs Bundle Strategy</h2>
+            <div className="mb-6 rounded-xl bg-gradient-to-r from-blue-500/5 via-transparent to-purple-500/5 border border-gray-200 p-6">
+              <h2 className="text-lg font-bold text-gray-900 mb-4">Current Model vs Bundle Strategy</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Current */}
                 <div className="space-y-3">
@@ -1475,19 +1475,19 @@ export default function SimulatorPage() {
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div className="rounded-lg bg-white/[0.03] p-2.5">
-                      <div className="text-[10px] text-zinc-500">LTV (GP)</div>
+                      <div className="text-[10px] text-gray-500">LTV (GP)</div>
                       <div className="text-lg font-bold text-blue-400">{formatCurrency(Math.round(cResult.cohortLTV.grossProfit))}</div>
                     </div>
                     <div className="rounded-lg bg-white/[0.03] p-2.5">
-                      <div className="text-[10px] text-zinc-500">LTV:CAC</div>
+                      <div className="text-[10px] text-gray-500">LTV:CAC</div>
                       <div className="text-lg font-bold text-blue-400">{cS.ltvCacRatio.toFixed(1)}:1</div>
                     </div>
                     <div className="rounded-lg bg-white/[0.03] p-2.5">
-                      <div className="text-[10px] text-zinc-500">Payback</div>
+                      <div className="text-[10px] text-gray-500">Payback</div>
                       <div className="text-lg font-bold text-blue-400">{cS.paybackMonths} mo</div>
                     </div>
                     <div className="rounded-lg bg-white/[0.03] p-2.5">
-                      <div className="text-[10px] text-zinc-500">{horizon}-Mo Profit</div>
+                      <div className="text-[10px] text-gray-500">{horizon}-Mo Profit</div>
                       <div className="text-lg font-bold text-blue-400">{formatCompact(cS.totalProfit)}</div>
                     </div>
                   </div>
@@ -1500,19 +1500,19 @@ export default function SimulatorPage() {
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div className="rounded-lg bg-white/[0.03] p-2.5">
-                      <div className="text-[10px] text-zinc-500">LTV (GP)</div>
+                      <div className="text-[10px] text-gray-500">LTV (GP)</div>
                       <div className="text-lg font-bold text-purple-400">{formatCurrency(Math.round(bResult.cohortLTV.grossProfit))}</div>
                     </div>
                     <div className="rounded-lg bg-white/[0.03] p-2.5">
-                      <div className="text-[10px] text-zinc-500">LTV:CAC</div>
+                      <div className="text-[10px] text-gray-500">LTV:CAC</div>
                       <div className="text-lg font-bold text-purple-400">{bS.ltvCacRatio.toFixed(1)}:1</div>
                     </div>
                     <div className="rounded-lg bg-white/[0.03] p-2.5">
-                      <div className="text-[10px] text-zinc-500">Payback</div>
+                      <div className="text-[10px] text-gray-500">Payback</div>
                       <div className="text-lg font-bold text-purple-400">{bS.paybackMonths} mo</div>
                     </div>
                     <div className="rounded-lg bg-white/[0.03] p-2.5">
-                      <div className="text-[10px] text-zinc-500">{horizon}-Mo Profit</div>
+                      <div className="text-[10px] text-gray-500">{horizon}-Mo Profit</div>
                       <div className="text-lg font-bold text-purple-400">{formatCompact(bS.totalProfit)}</div>
                     </div>
                   </div>
@@ -1520,9 +1520,9 @@ export default function SimulatorPage() {
               </div>
 
               {/* Delta callout */}
-              <div className="mt-4 p-3 rounded-lg bg-white/[0.03] border border-white/[0.06]">
+              <div className="mt-4 p-3 rounded-lg bg-white/[0.03] border border-gray-200">
                 <div className="flex items-center gap-4 flex-wrap text-[11px]">
-                  <span className="text-zinc-500 font-medium">Bundle vs Current Δ:</span>
+                  <span className="text-gray-500 font-medium">Bundle vs Current Δ:</span>
                   <span className={cn('font-bold', bResult.cohortLTV.grossProfit > cResult.cohortLTV.grossProfit ? 'text-emerald-400' : 'text-red-400')}>
                     LTV: {bResult.cohortLTV.grossProfit > cResult.cohortLTV.grossProfit ? '+' : ''}{formatCurrency(Math.round(bResult.cohortLTV.grossProfit - cResult.cohortLTV.grossProfit))}
                     {' '}({((bResult.cohortLTV.grossProfit / Math.max(1, cResult.cohortLTV.grossProfit) - 1) * 100).toFixed(0)}%)
@@ -1551,7 +1551,7 @@ export default function SimulatorPage() {
                       <Tooltip content={<ChartTooltipContent formatter={(v: number) => `$${v.toFixed(0)}`} />} />
                       <Line type="monotone" dataKey="Current ARPU" stroke="#3b82f6" strokeWidth={2} dot={false} />
                       <Line type="monotone" dataKey="Bundle ARPU" stroke="#8b5cf6" strokeWidth={2} dot={false} strokeDasharray="6 3" />
-                      <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-zinc-400 text-[10px]">{value}</span>} />
+                      <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-gray-500 text-[10px]">{value}</span>} />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
@@ -1569,7 +1569,7 @@ export default function SimulatorPage() {
                       <Tooltip content={<ChartTooltipContent />} />
                       <Line type="monotone" dataKey="Current Revenue" stroke="#3b82f6" strokeWidth={2} dot={{ r: 2, fill: '#3b82f6' }} />
                       <Line type="monotone" dataKey="Bundle Revenue" stroke="#8b5cf6" strokeWidth={2} dot={{ r: 2, fill: '#8b5cf6' }} strokeDasharray="6 3" />
-                      <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-zinc-400 text-[10px]">{value}</span>} />
+                      <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-gray-500 text-[10px]">{value}</span>} />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
@@ -1588,7 +1588,7 @@ export default function SimulatorPage() {
                       <ReferenceLine y={0} stroke="#ffffff20" />
                       <Line type="monotone" dataKey="Current Profit" stroke="#3b82f6" strokeWidth={2} dot={{ r: 2, fill: '#3b82f6' }} />
                       <Line type="monotone" dataKey="Bundle Profit" stroke="#8b5cf6" strokeWidth={2} dot={{ r: 2, fill: '#8b5cf6' }} strokeDasharray="6 3" />
-                      <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-zinc-400 text-[10px]">{value}</span>} />
+                      <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-gray-500 text-[10px]">{value}</span>} />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
@@ -1606,7 +1606,7 @@ export default function SimulatorPage() {
                       <Tooltip content={<ChartTooltipContent formatter={(v: number) => v.toLocaleString()} />} />
                       <Line type="monotone" dataKey="Current Active" stroke="#3b82f6" strokeWidth={2} dot={{ r: 2, fill: '#3b82f6' }} />
                       <Line type="monotone" dataKey="Bundle Active" stroke="#8b5cf6" strokeWidth={2} dot={{ r: 2, fill: '#8b5cf6' }} strokeDasharray="6 3" />
-                      <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-zinc-400 text-[10px]">{value}</span>} />
+                      <Legend wrapperStyle={{ fontSize: '10px' }} formatter={(value: string) => <span className="text-gray-500 text-[10px]">{value}</span>} />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
@@ -1619,15 +1619,15 @@ export default function SimulatorPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-xs">
                   <thead>
-                    <tr className="border-b border-white/[0.06]">
-                      <th className="py-2 text-left text-[10px] font-medium text-zinc-500 w-52">Metric</th>
+                    <tr className="border-b border-gray-200">
+                      <th className="py-2 text-left text-[10px] font-medium text-gray-500 w-52">Metric</th>
                       <th className="py-2 text-center text-[10px] font-medium text-blue-400">
                         <div className="flex items-center justify-center gap-1"><ShoppingBag className="h-3 w-3" /> Current Model</div>
                       </th>
                       <th className="py-2 text-center text-[10px] font-medium text-purple-400">
                         <div className="flex items-center justify-center gap-1"><Layers className="h-3 w-3" /> Bundle Model</div>
                       </th>
-                      <th className="py-2 text-center text-[10px] font-medium text-zinc-500">Δ (Bundle advantage)</th>
+                      <th className="py-2 text-center text-[10px] font-medium text-gray-500">Δ (Bundle advantage)</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1643,12 +1643,12 @@ export default function SimulatorPage() {
                       { label: `Mo ${horizon} Active`, c: Math.round(cS.finalActive).toLocaleString(), b: bS.finalActive.toLocaleString(), delta: bS.finalActive - cS.finalActive, fmt: (v: number) => Math.round(v).toLocaleString() },
                       { label: 'Retention Rate', c: `${cS.retentionRate.toFixed(1)}%`, b: `${bS.retentionRate.toFixed(1)}%`, delta: bS.retentionRate - cS.retentionRate, fmt: (v: number) => `${v > 0 ? '+' : ''}${v.toFixed(1)}pp` },
                     ].map(row => (
-                      <tr key={row.label} className="border-b border-white/[0.03]">
-                        <td className="py-2 text-zinc-400 font-medium">{row.label}</td>
-                        <td className={cn('py-2 text-center font-medium', row.highlight ? 'text-blue-400' : 'text-zinc-300')}>{row.c}</td>
-                        <td className={cn('py-2 text-center font-medium', row.highlight ? 'text-purple-400' : 'text-zinc-300')}>{row.b}</td>
+                      <tr key={row.label} className="border-b border-gray-200">
+                        <td className="py-2 text-gray-500 font-medium">{row.label}</td>
+                        <td className={cn('py-2 text-center font-medium', row.highlight ? 'text-blue-400' : 'text-gray-700')}>{row.c}</td>
+                        <td className={cn('py-2 text-center font-medium', row.highlight ? 'text-purple-400' : 'text-gray-700')}>{row.b}</td>
                         <td className={cn('py-2 text-center text-[10px] font-bold',
-                          (row.invert ? row.delta >= 0 : row.delta > 0) ? 'text-emerald-400' : row.delta === 0 ? 'text-zinc-500' : 'text-red-400'
+                          (row.invert ? row.delta >= 0 : row.delta > 0) ? 'text-emerald-400' : row.delta === 0 ? 'text-gray-500' : 'text-red-400'
                         )}>
                           {row.delta > 0 && !row.invert ? '+' : ''}{row.fmt(Math.round(row.delta))}
                         </td>

@@ -74,14 +74,14 @@ export default function RevenuePage() {
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-1">
-          <h1 className="text-2xl font-bold text-white">Revenue & Shopify</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Revenue & Shopify</h1>
           {isConnected && (
             <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-bold text-emerald-400 border border-emerald-500/20">
               MODE MRR DATA LIVE
             </span>
           )}
         </div>
-        <p className="text-sm text-zinc-400">
+        <p className="text-sm text-gray-500">
           Order analytics, revenue breakdown, payment health, and discount impact
         </p>
       </div>
@@ -90,7 +90,7 @@ export default function RevenuePage() {
       {loading && (
         <div className="flex items-center justify-center py-20">
           <Loader2 className="h-6 w-6 text-brand-400 animate-spin" />
-          <span className="ml-3 text-sm text-zinc-400">Loading revenue data...</span>
+          <span className="ml-3 text-sm text-gray-500">Loading revenue data...</span>
         </div>
       )}
 
@@ -119,7 +119,7 @@ export default function RevenuePage() {
           <div className="flex justify-end mb-4">
             <button
               onClick={fetchData}
-              className="inline-flex items-center gap-2 rounded-lg bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-zinc-400 hover:bg-white/[0.08] transition-colors"
+              className="inline-flex items-center gap-2 rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-500 hover:bg-gray-200 transition-colors"
             >
               <RefreshCw className="h-3 w-3" />
               Refresh
@@ -165,8 +165,8 @@ export default function RevenuePage() {
                 return (
                   <div key={m.month} className="flex-1 flex flex-col items-center group relative">
                     <div className="absolute bottom-full mb-2 hidden group-hover:block z-10">
-                      <div className="rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-xs whitespace-nowrap shadow-xl">
-                        <p className="font-semibold text-white">{m.month}</p>
+                      <div className="rounded-lg bg-white border border-gray-200 px-3 py-2 text-xs whitespace-nowrap shadow-xl">
+                        <p className="font-semibold text-gray-900">{m.month}</p>
                         <p className="text-emerald-400">{formatCompact(m.mrr)}</p>
                       </div>
                     </div>
@@ -182,7 +182,7 @@ export default function RevenuePage() {
               {monthlyMRR.map((m, i) => (
                 <div key={m.month} className="flex-1 text-center">
                   {i % 4 === 0 && (
-                    <span className="text-[8px] text-zinc-600">{m.month.slice(2)}</span>
+                    <span className="text-[8px] text-gray-400">{m.month.slice(2)}</span>
                   )}
                 </div>
               ))}
@@ -195,12 +195,12 @@ export default function RevenuePage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-white/[0.06]">
-                    <th className="py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Month</th>
-                    <th className="py-3 text-right text-xs font-medium text-zinc-500 uppercase tracking-wider">MRR</th>
-                    <th className="py-3 text-right text-xs font-medium text-zinc-500 uppercase tracking-wider">Change</th>
-                    <th className="py-3 text-right text-xs font-medium text-zinc-500 uppercase tracking-wider">% Change</th>
-                    <th className="py-3 text-center text-xs font-medium text-zinc-500 uppercase tracking-wider w-40">Trend</th>
+                  <tr className="border-b border-gray-200">
+                    <th className="py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Month</th>
+                    <th className="py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">MRR</th>
+                    <th className="py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Change</th>
+                    <th className="py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">% Change</th>
+                    <th className="py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-40">Trend</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -212,9 +212,9 @@ export default function RevenuePage() {
                     const barWidth = maxMRR > 0 ? (m.mrr / maxMRR) * 100 : 0;
 
                     return (
-                      <tr key={m.month} className="border-b border-white/[0.03] hover:bg-white/[0.02]">
-                        <td className="py-2.5 text-xs font-medium text-zinc-300">{m.month}</td>
-                        <td className="py-2.5 text-right text-xs font-semibold text-white">{formatCompact(m.mrr)}</td>
+                      <tr key={m.month} className="border-b border-gray-200 hover:bg-gray-50">
+                        <td className="py-2.5 text-xs font-medium text-gray-700">{m.month}</td>
+                        <td className="py-2.5 text-right text-xs font-semibold text-gray-900">{formatCompact(m.mrr)}</td>
                         <td className={cn('py-2.5 text-right text-xs font-medium', change >= 0 ? 'text-emerald-400' : 'text-red-400')}>
                           {i > 0 ? `${change >= 0 ? '+' : ''}${formatCompact(change)}` : '—'}
                         </td>
@@ -222,7 +222,7 @@ export default function RevenuePage() {
                           {i > 0 ? `${changePct >= 0 ? '+' : ''}${changePct.toFixed(1)}%` : '—'}
                         </td>
                         <td className="py-2.5">
-                          <div className="h-1.5 rounded-full bg-zinc-800 overflow-hidden">
+                          <div className="h-1.5 rounded-full bg-gray-100 overflow-hidden">
                             <div
                               className="h-full rounded-full bg-emerald-500 transition-all"
                               style={{ width: `${barWidth}%` }}
@@ -279,11 +279,11 @@ export default function RevenuePage() {
             {['Monthly Revenue', 'Total Orders', 'Avg Order Value', 'Payment Success Rate'].map((label) => (
               <div
                 key={label}
-                className="rounded-xl border border-dashed border-zinc-700/50 bg-white/[0.01] p-5"
+                className="rounded-xl border border-dashed border-gray-200/50 bg-white/[0.01] p-5"
               >
-                <p className="text-xs font-medium uppercase tracking-wider text-zinc-500">{label}</p>
-                <p className="mt-2 text-2xl font-semibold text-zinc-600">—</p>
-                <p className="mt-1 text-[10px] text-zinc-600">Shopify integration required</p>
+                <p className="text-xs font-medium uppercase tracking-wider text-gray-500">{label}</p>
+                <p className="mt-2 text-2xl font-semibold text-gray-400">—</p>
+                <p className="mt-1 text-[10px] text-gray-400">Shopify integration required</p>
               </div>
             ))}
           </div>

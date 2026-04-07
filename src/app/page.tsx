@@ -88,14 +88,14 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-1">
-          <h1 className="text-2xl font-bold text-white">LTV Command Center</h1>
+          <h1 className="text-2xl font-bold text-gray-900">LTV Command Center</h1>
           {isConnected && (
             <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-bold text-emerald-400 border border-emerald-500/20">
               MODE LIVE — {formatNumber(kpis?.totalLifetimeUsers || 0)} users
             </span>
           )}
         </div>
-        <p className="text-sm text-zinc-400">
+        <p className="text-sm text-gray-500">
           Real-time lifetime value intelligence across acquisition, engagement, and retention.
         </p>
       </div>
@@ -104,7 +104,7 @@ export default function DashboardPage() {
       {loading && (
         <div className="flex items-center justify-center py-20">
           <Loader2 className="h-6 w-6 text-brand-400 animate-spin" />
-          <span className="ml-3 text-sm text-zinc-400">Connecting to Mode Analytics...</span>
+          <span className="ml-3 text-sm text-gray-500">Connecting to Mode Analytics...</span>
         </div>
       )}
 
@@ -144,7 +144,7 @@ export default function DashboardPage() {
           <div className="flex justify-end mb-4">
             <button
               onClick={fetchData}
-              className="inline-flex items-center gap-2 rounded-lg bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-zinc-400 hover:bg-white/[0.08] transition-colors"
+              className="inline-flex items-center gap-2 rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-500 hover:bg-gray-200 transition-colors"
             >
               <RefreshCw className="h-3 w-3" />
               Refresh Data
@@ -203,11 +203,11 @@ export default function DashboardPage() {
                       <div key={m.month} className="flex-1 flex flex-col items-center group relative">
                         {/* Tooltip */}
                         <div className="absolute bottom-full mb-2 hidden group-hover:block z-10">
-                          <div className="rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-xs whitespace-nowrap shadow-xl">
-                            <p className="font-semibold text-white">{m.month}</p>
-                            <p className="text-zinc-400">Active: {formatNumber(m.activeEnd)}</p>
-                            <p className="text-zinc-400">New: +{formatNumber(m.newSubs)}</p>
-                            <p className="text-zinc-400">Lost: -{formatNumber(m.lostSubs)}</p>
+                          <div className="rounded-lg bg-white border border-gray-200 px-3 py-2 text-xs whitespace-nowrap shadow-xl">
+                            <p className="font-semibold text-gray-900">{m.month}</p>
+                            <p className="text-gray-500">Active: {formatNumber(m.activeEnd)}</p>
+                            <p className="text-gray-500">New: +{formatNumber(m.newSubs)}</p>
+                            <p className="text-gray-500">Lost: -{formatNumber(m.lostSubs)}</p>
                             <p className={cn('font-medium', m.churnRate <= 5 ? 'text-emerald-400' : m.churnRate <= 10 ? 'text-amber-400' : 'text-red-400')}>
                               Churn: {formatPercent(m.churnRate)}
                             </p>
@@ -231,13 +231,13 @@ export default function DashboardPage() {
                   {churn.monthlyChurn.slice(-24).map((m, i) => (
                     <div key={m.month} className="flex-1 text-center">
                       {i % 4 === 0 && (
-                        <span className="text-[8px] text-zinc-600">{m.month.slice(2)}</span>
+                        <span className="text-[8px] text-gray-400">{m.month.slice(2)}</span>
                       )}
                     </div>
                   ))}
                 </div>
               </div>
-              <p className="text-[10px] text-zinc-600 mt-2 text-center">Bar color: 🟢 ≤5% churn · 🟡 5-10% · 🔴 &gt;10%</p>
+              <p className="text-[10px] text-gray-400 mt-2 text-center">Bar color: 🟢 ≤5% churn · 🟡 5-10% · 🔴 &gt;10%</p>
             </Card>
 
             {/* Churn Rate Trend */}
@@ -252,7 +252,7 @@ export default function DashboardPage() {
                   <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
                     {[20, 15, 10, 5, 0].map((pct) => (
                       <div key={pct} className="flex items-center gap-2 border-b border-white/[0.03]">
-                        <span className="text-[8px] text-zinc-700 w-6 text-right">{pct}%</span>
+                        <span className="text-[8px] text-gray-500 w-6 text-right">{pct}%</span>
                       </div>
                     ))}
                   </div>
@@ -261,8 +261,8 @@ export default function DashboardPage() {
                     return (
                       <div key={m.month} className="flex-1 flex flex-col items-center group relative z-10">
                         <div className="absolute bottom-full mb-2 hidden group-hover:block z-20">
-                          <div className="rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-xs whitespace-nowrap shadow-xl">
-                            <p className="font-semibold text-white">{m.month}</p>
+                          <div className="rounded-lg bg-white border border-gray-200 px-3 py-2 text-xs whitespace-nowrap shadow-xl">
+                            <p className="font-semibold text-gray-900">{m.month}</p>
                             <p className={cn('font-medium', m.churnRate <= 5 ? 'text-emerald-400' : m.churnRate <= 10 ? 'text-amber-400' : 'text-red-400')}>
                               Churn: {formatPercent(m.churnRate)}
                             </p>
@@ -285,7 +285,7 @@ export default function DashboardPage() {
                   {churn.monthlyChurn.slice(-24).map((m, i) => (
                     <div key={m.month} className="flex-1 text-center">
                       {i % 4 === 0 && (
-                        <span className="text-[8px] text-zinc-600">{m.month.slice(2)}</span>
+                        <span className="text-[8px] text-gray-400">{m.month.slice(2)}</span>
                       )}
                     </div>
                   ))}
@@ -306,9 +306,9 @@ export default function DashboardPage() {
                   return (
                     <div key={plan.plan} className="flex items-center gap-3">
                       <div className="w-36 truncate">
-                        <span className="text-xs font-medium text-zinc-300">{plan.label}</span>
+                        <span className="text-xs font-medium text-gray-700">{plan.label}</span>
                       </div>
-                      <div className="flex-1 h-6 rounded-lg bg-zinc-800/60 overflow-hidden relative">
+                      <div className="flex-1 h-6 rounded-lg bg-gray-100 overflow-hidden relative">
                         <div
                           className="h-full rounded-lg bg-brand-500 transition-all"
                           style={{ width: `${pct}%`, opacity: 0.6 }}
@@ -340,17 +340,17 @@ export default function DashboardPage() {
                     };
                     const textMap: Record<string, string> = {
                       ACTIVE: 'text-emerald-400',
-                      EXPIRED: 'text-zinc-400',
+                      EXPIRED: 'text-gray-500',
                       CANCELLED: 'text-red-400',
                       PAUSED: 'text-amber-400',
                     };
                     return (
                       <div key={status}>
                         <div className="flex items-center justify-between mb-1">
-                          <span className={cn('text-xs font-semibold', textMap[status] || 'text-zinc-400')}>
+                          <span className={cn('text-xs font-semibold', textMap[status] || 'text-gray-500')}>
                             {status}
                           </span>
-                          <span className="text-xs text-zinc-500">
+                          <span className="text-xs text-gray-500">
                             {formatNumber(count)} ({formatPercent(pct, 1)})
                           </span>
                         </div>
@@ -380,8 +380,8 @@ export default function DashboardPage() {
                 return (
                   <div key={m.month} className="flex-1 flex flex-col items-center group relative">
                     <div className="absolute bottom-full mb-2 hidden group-hover:block z-10">
-                      <div className="rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-xs whitespace-nowrap shadow-xl">
-                        <p className="font-semibold text-white">{m.month}</p>
+                      <div className="rounded-lg bg-white border border-gray-200 px-3 py-2 text-xs whitespace-nowrap shadow-xl">
+                        <p className="font-semibold text-gray-900">{m.month}</p>
                         <p className="text-emerald-400">{formatCompact(m.mrr)}</p>
                       </div>
                     </div>
@@ -397,7 +397,7 @@ export default function DashboardPage() {
               {mrr.monthlyMRR.map((m, i) => (
                 <div key={m.month} className="flex-1 text-center">
                   {i % 4 === 0 && (
-                    <span className="text-[8px] text-zinc-600">{m.month.slice(2)}</span>
+                    <span className="text-[8px] text-gray-400">{m.month.slice(2)}</span>
                   )}
                 </div>
               ))}
@@ -419,12 +419,12 @@ export default function DashboardPage() {
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-500/10 border border-brand-500/20 mb-4">
                   <Lightbulb className="h-5 w-5 text-brand-400" />
                 </div>
-                <h4 className="text-sm font-semibold text-zinc-300 mb-1">AI Insights Coming Soon</h4>
-                <p className="text-xs text-zinc-500 max-w-sm mb-3">
+                <h4 className="text-sm font-semibold text-gray-700 mb-1">AI Insights Coming Soon</h4>
+                <p className="text-xs text-gray-500 max-w-sm mb-3">
                   Mode data is connected! Add the Anthropic API key to enable AI-powered insights that analyze churn patterns, MRR trends, and recommend high-impact programs.
                 </p>
                 <div className="flex flex-wrap justify-center gap-2">
-                  <span className="inline-flex items-center gap-1 rounded-md bg-zinc-800/60 px-2 py-0.5 text-[10px] font-medium text-zinc-400 border border-zinc-700/40">
+                  <span className="inline-flex items-center gap-1 rounded-md bg-gray-100 px-2 py-0.5 text-[10px] font-medium text-gray-500 border border-gray-200">
                     <Zap className="h-2.5 w-2.5" />
                     ANTHROPIC_API_KEY
                   </span>

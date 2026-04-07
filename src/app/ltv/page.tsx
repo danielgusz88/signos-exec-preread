@@ -159,13 +159,13 @@ const COLORS = ['#8b5cf6', '#10b981', '#06b6d4', '#f59e0b', '#ef4444', '#ec4899'
 function ChartTooltipContent({ active, payload, label, formatter }: any) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-lg bg-zinc-900/95 border border-zinc-700 px-3 py-2 text-xs shadow-xl">
-      <p className="font-medium text-zinc-300 mb-1">{label}</p>
+    <div className="rounded-lg bg-white/95 border border-gray-200 px-3 py-2 text-xs shadow-xl">
+      <p className="font-medium text-gray-700 mb-1">{label}</p>
       {payload.map((p: any, i: number) => (
         <div key={i} className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full" style={{ backgroundColor: p.color }} />
-          <span className="text-zinc-400">{p.name}:</span>
-          <span className="font-medium text-white">
+          <span className="text-gray-500">{p.name}:</span>
+          <span className="font-medium text-gray-900">
             {formatter ? formatter(p.value) : typeof p.value === 'number' ? p.value.toLocaleString() : p.value}
           </span>
         </div>
@@ -190,13 +190,13 @@ function CollapsibleSection({
 }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div className="border border-white/[0.06] rounded-lg overflow-hidden">
+    <div className="border border-gray-200 rounded-lg overflow-hidden">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between p-4 hover:bg-white/[0.02] transition-colors text-left"
+        className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors text-left"
       >
         <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold text-white">{title}</span>
+          <span className="text-sm font-semibold text-gray-900">{title}</span>
           {badge && (
             <span className="rounded-full bg-violet-500/10 px-2 py-0.5 text-[9px] font-bold text-violet-400 border border-violet-500/20">
               {badge}
@@ -204,11 +204,11 @@ function CollapsibleSection({
           )}
         </div>
         <div className="flex items-center gap-2">
-          {subtitle && <span className="text-[10px] text-zinc-500 hidden md:block">{subtitle}</span>}
-          {open ? <ChevronUp className="h-4 w-4 text-zinc-500" /> : <ChevronDown className="h-4 w-4 text-zinc-500" />}
+          {subtitle && <span className="text-[10px] text-gray-500 hidden md:block">{subtitle}</span>}
+          {open ? <ChevronUp className="h-4 w-4 text-gray-500" /> : <ChevronDown className="h-4 w-4 text-gray-500" />}
         </div>
       </button>
-      {open && <div className="px-4 pb-4 border-t border-white/[0.04]">{children}</div>}
+      {open && <div className="px-4 pb-4 border-t border-gray-200">{children}</div>}
     </div>
   );
 }
@@ -234,29 +234,29 @@ function FormulaStep({
       'rounded-lg border p-3',
       highlight
         ? 'border-emerald-500/20 bg-emerald-500/[0.03]'
-        : 'border-white/[0.06] bg-white/[0.01]'
+        : 'border-gray-200 bg-white/[0.01]'
     )}>
       <div className="flex items-start gap-3">
         <div className={cn(
           'flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold',
           highlight
             ? 'bg-emerald-500/20 text-emerald-400'
-            : 'bg-zinc-800 text-zinc-400'
+            : 'bg-gray-100 text-gray-500'
         )}>
           {step}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-semibold text-zinc-300 mb-1">{label}</p>
+          <p className="text-xs font-semibold text-gray-700 mb-1">{label}</p>
           <div className="font-mono text-xs leading-relaxed mb-1.5">{formula}</div>
           <div className="flex items-center justify-between">
             <span className={cn(
               'font-mono font-bold text-sm',
-              highlight ? 'text-emerald-400' : 'text-white'
+              highlight ? 'text-emerald-400' : 'text-gray-900'
             )}>
               = {result}
             </span>
           </div>
-          <p className="text-[10px] text-zinc-500 mt-1">{explanation}</p>
+          <p className="text-[10px] text-gray-500 mt-1">{explanation}</p>
         </div>
       </div>
     </div>
@@ -431,7 +431,7 @@ export default function LTVPage() {
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-1">
-          <h1 className="text-2xl font-bold text-white">LTV Deep Dive</h1>
+          <h1 className="text-2xl font-bold text-gray-900">LTV Deep Dive</h1>
           <span className="rounded-full bg-violet-500/10 px-2.5 py-0.5 text-[10px] font-bold text-violet-400 border border-violet-500/20">
             UNIT ECONOMICS
           </span>
@@ -446,7 +446,7 @@ export default function LTVPage() {
             </span>
           )}
         </div>
-        <p className="text-sm text-zinc-400">
+        <p className="text-sm text-gray-500">
           Revenue LTV by cohort, Shopify revenue, subscription economics, and customer journey analysis — powered by Snowflake via Mode Analytics
         </p>
       </div>
@@ -455,7 +455,7 @@ export default function LTVPage() {
       {loading && (
         <div className="flex items-center justify-center py-20">
           <Loader2 className="h-6 w-6 text-brand-400 animate-spin" />
-          <span className="ml-3 text-sm text-zinc-400">Loading real-time data from Mode Analytics & Snowflake...</span>
+          <span className="ml-3 text-sm text-gray-500">Loading real-time data from Mode Analytics & Snowflake...</span>
         </div>
       )}
 
@@ -483,7 +483,7 @@ export default function LTVPage() {
           <div className="flex justify-end mb-4">
             <button
               onClick={fetchData}
-              className="inline-flex items-center gap-2 rounded-lg bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-zinc-400 hover:bg-white/[0.08] transition-colors"
+              className="inline-flex items-center gap-2 rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-500 hover:bg-gray-200 transition-colors"
             >
               <RefreshCw className="h-3 w-3" />
               Refresh
@@ -541,26 +541,26 @@ export default function LTVPage() {
             />
 
             {/* Overview panel */}
-            <div className="rounded-lg bg-black/40 border border-white/[0.06] p-4 mb-5">
+            <div className="rounded-lg bg-black/40 border border-gray-200 p-4 mb-5">
               <div className="flex items-start gap-3 mb-3">
                 <Info className="h-4 w-4 text-brand-400 mt-0.5 flex-shrink-0" />
-                <div className="text-xs text-zinc-400 space-y-1">
-                  <p className="text-zinc-300 font-medium">Two methods are used to calculate LTV. Both are shown below with real numbers so you can verify each step.</p>
-                  <p><span className="text-violet-400 font-semibold">Method A (ARPU-Based)</span> uses current subscription data: <span className="text-white font-mono">LTV = ARPU × (1 / Monthly Churn Rate)</span>. Best for quick estimation based on current operating metrics.</p>
-                  <p><span className="text-emerald-400 font-semibold">Method B (Cohort-Based)</span> uses actual historical invoice data grouped by signup month: <span className="text-white font-mono">LTV = Total Cohort Revenue / Cohort Size</span>. More accurate as it reflects real customer payment behavior.</p>
+                <div className="text-xs text-gray-500 space-y-1">
+                  <p className="text-gray-700 font-medium">Two methods are used to calculate LTV. Both are shown below with real numbers so you can verify each step.</p>
+                  <p><span className="text-violet-400 font-semibold">Method A (ARPU-Based)</span> uses current subscription data: <span className="text-gray-900 font-mono">LTV = ARPU × (1 / Monthly Churn Rate)</span>. Best for quick estimation based on current operating metrics.</p>
+                  <p><span className="text-emerald-400 font-semibold">Method B (Cohort-Based)</span> uses actual historical invoice data grouped by signup month: <span className="text-gray-900 font-mono">LTV = Total Cohort Revenue / Cohort Size</span>. More accurate as it reflects real customer payment behavior.</p>
                 </div>
               </div>
               {ltv && (
                 <div className="grid grid-cols-2 gap-3 mt-3">
                   <div className="rounded-lg bg-violet-500/[0.05] border border-violet-500/10 p-3 text-center">
                     <p className="text-[9px] font-bold text-violet-400 tracking-wider mb-1">METHOD A: ARPU-BASED</p>
-                    <p className="text-xl font-bold text-white">{formatCompact(estimatedRevenueLTV)}</p>
-                    <p className="text-[10px] text-zinc-500">Estimated from current metrics</p>
+                    <p className="text-xl font-bold text-gray-900">{formatCompact(estimatedRevenueLTV)}</p>
+                    <p className="text-[10px] text-gray-500">Estimated from current metrics</p>
                   </div>
                   <div className="rounded-lg bg-emerald-500/[0.05] border border-emerald-500/10 p-3 text-center">
                     <p className="text-[9px] font-bold text-emerald-400 tracking-wider mb-1">METHOD B: COHORT-BASED</p>
-                    <p className="text-xl font-bold text-white">{formatCompact(actualLTV)}</p>
-                    <p className="text-[10px] text-zinc-500">Actual from {formatNumber(totalCohortUsers)} users</p>
+                    <p className="text-xl font-bold text-gray-900">{formatCompact(actualLTV)}</p>
+                    <p className="text-[10px] text-gray-500">Actual from {formatNumber(totalCohortUsers)} users</p>
                   </div>
                 </div>
               )}
@@ -580,7 +580,7 @@ export default function LTVPage() {
                     label="Current Monthly Recurring Revenue (MRR)"
                     formula={
                       <span>
-                        <span className="text-zinc-500">MRR = </span>
+                        <span className="text-gray-500">MRR = </span>
                         <span className="text-violet-400">Sum of all subscription revenue in latest month</span>
                       </span>
                     }
@@ -593,7 +593,7 @@ export default function LTVPage() {
                     label="Active Subscribers"
                     formula={
                       <span>
-                        <span className="text-zinc-500">Active Subs = </span>
+                        <span className="text-gray-500">Active Subs = </span>
                         <span className="text-blue-400">Count of users with ACTIVE_AT_END_OF_MONTH = 1 in latest month</span>
                       </span>
                     }
@@ -606,9 +606,9 @@ export default function LTVPage() {
                     label="Average Revenue Per User (ARPU)"
                     formula={
                       <span>
-                        <span className="text-zinc-500">ARPU = MRR ÷ Active Subs = </span>
+                        <span className="text-gray-500">ARPU = MRR ÷ Active Subs = </span>
                         <span className="text-violet-400">{formatCurrency(currentMRR)}</span>
-                        <span className="text-zinc-500"> ÷ </span>
+                        <span className="text-gray-500"> ÷ </span>
                         <span className="text-blue-400">{formatNumber(activeSubs)}</span>
                       </span>
                     }
@@ -621,14 +621,14 @@ export default function LTVPage() {
                     label="Monthly Churn Rate (3-Month Trailing Average)"
                     formula={
                       <span>
-                        <span className="text-zinc-500">Churn Rate = Avg of last 3 months = (</span>
+                        <span className="text-gray-500">Churn Rate = Avg of last 3 months = (</span>
                         {recentChurnMonths.map((m, i) => (
                           <span key={m.month}>
                             <span className="text-red-400">{m.churnRate.toFixed(2)}%</span>
-                            {i < recentChurnMonths.length - 1 && <span className="text-zinc-500"> + </span>}
+                            {i < recentChurnMonths.length - 1 && <span className="text-gray-500"> + </span>}
                           </span>
                         ))}
-                        <span className="text-zinc-500">) ÷ {recentChurnMonths.length}</span>
+                        <span className="text-gray-500">) ÷ {recentChurnMonths.length}</span>
                       </span>
                     }
                     result={formatPercent(avgChurn3Month, 2)}
@@ -637,12 +637,12 @@ export default function LTVPage() {
 
                   {/* Show trailing churn detail */}
                   {recentChurnMonths.length > 0 && (
-                    <div className="ml-9 rounded-lg bg-black/30 border border-white/[0.04] p-3">
-                      <p className="text-[9px] font-bold text-zinc-500 tracking-wider mb-2">CHURN RATE — MONTHLY DETAIL</p>
+                    <div className="ml-9 rounded-lg bg-black/30 border border-gray-200 p-3">
+                      <p className="text-[9px] font-bold text-gray-500 tracking-wider mb-2">CHURN RATE — MONTHLY DETAIL</p>
                       <div className="overflow-x-auto">
                         <table className="w-full text-xs">
                           <thead>
-                            <tr className="text-zinc-500">
+                            <tr className="text-gray-500">
                               <th className="text-left pb-1 pr-4 font-medium">Month</th>
                               <th className="text-right pb-1 pr-4 font-medium">Active (Start)</th>
                               <th className="text-right pb-1 pr-4 font-medium">Lost</th>
@@ -653,12 +653,12 @@ export default function LTVPage() {
                           </thead>
                           <tbody>
                             {recentChurnMonths.map(m => (
-                              <tr key={m.month} className="border-t border-white/[0.03]">
-                                <td className="py-1.5 pr-4 text-zinc-300 font-mono">{m.month}</td>
-                                <td className="py-1.5 pr-4 text-right text-zinc-400 font-mono">{formatNumber(m.activeStart)}</td>
+                              <tr key={m.month} className="border-t border-gray-200">
+                                <td className="py-1.5 pr-4 text-gray-700 font-mono">{m.month}</td>
+                                <td className="py-1.5 pr-4 text-right text-gray-500 font-mono">{formatNumber(m.activeStart)}</td>
                                 <td className="py-1.5 pr-4 text-right text-red-400 font-mono">{formatNumber(m.lostSubs)}</td>
                                 <td className="py-1.5 pr-4 text-right text-emerald-400 font-mono">+{formatNumber(m.newSubs)}</td>
-                                <td className="py-1.5 pr-4 text-right text-zinc-300 font-mono">{formatNumber(m.activeEnd)}</td>
+                                <td className="py-1.5 pr-4 text-right text-gray-700 font-mono">{formatNumber(m.activeEnd)}</td>
                                 <td className="py-1.5 text-right font-mono font-semibold">
                                   <span className={m.churnRate > avgChurn3Month ? 'text-red-400' : 'text-amber-400'}>
                                     {m.churnRate.toFixed(2)}%
@@ -666,14 +666,14 @@ export default function LTVPage() {
                                 </td>
                               </tr>
                             ))}
-                            <tr className="border-t border-white/[0.06]">
-                              <td className="py-1.5 pr-4 text-zinc-300 font-semibold" colSpan={5}>3-Month Average</td>
-                              <td className="py-1.5 text-right font-mono font-bold text-white">{formatPercent(avgChurn3Month, 2)}</td>
+                            <tr className="border-t border-gray-200">
+                              <td className="py-1.5 pr-4 text-gray-700 font-semibold" colSpan={5}>3-Month Average</td>
+                              <td className="py-1.5 text-right font-mono font-bold text-gray-900">{formatPercent(avgChurn3Month, 2)}</td>
                             </tr>
                           </tbody>
                         </table>
                       </div>
-                      <p className="text-[9px] text-zinc-600 mt-2">
+                      <p className="text-[9px] text-gray-400 mt-2">
                         Formula: Churn Rate = Lost Subscriptions ÷ Active at Start of Month × 100
                       </p>
                     </div>
@@ -684,7 +684,7 @@ export default function LTVPage() {
                     label="Average Customer Lifespan"
                     formula={
                       <span>
-                        <span className="text-zinc-500">Lifespan = 1 ÷ Churn Rate = 1 ÷ </span>
+                        <span className="text-gray-500">Lifespan = 1 ÷ Churn Rate = 1 ÷ </span>
                         <span className="text-red-400">{(avgChurn3Month / 100).toFixed(4)}</span>
                       </span>
                     }
@@ -697,9 +697,9 @@ export default function LTVPage() {
                     label="Estimated Revenue LTV"
                     formula={
                       <span>
-                        <span className="text-zinc-500">LTV = ARPU × Lifespan = </span>
+                        <span className="text-gray-500">LTV = ARPU × Lifespan = </span>
                         <span className="text-violet-400">{formatCurrency(Math.round(arpu * 100) / 100)}</span>
-                        <span className="text-zinc-500"> × </span>
+                        <span className="text-gray-500"> × </span>
                         <span className="text-blue-400">{avgLifetimeMonths.toFixed(1)} months</span>
                       </span>
                     }
@@ -724,12 +724,12 @@ export default function LTVPage() {
                       label="Group Users by Signup Month (Cohort)"
                       formula={
                         <span>
-                          <span className="text-zinc-500">Cohorts = </span>
+                          <span className="text-gray-500">Cohorts = </span>
                           <span className="text-cyan-400">{ltv.cohorts.length} monthly cohorts</span>
-                          <span className="text-zinc-500"> from </span>
-                          <span className="text-white">{ltv.cohorts[0]?.cohortMonth || '?'}</span>
-                          <span className="text-zinc-500"> to </span>
-                          <span className="text-white">{ltv.cohorts[ltv.cohorts.length - 1]?.cohortMonth || '?'}</span>
+                          <span className="text-gray-500"> from </span>
+                          <span className="text-gray-900">{ltv.cohorts[0]?.cohortMonth || '?'}</span>
+                          <span className="text-gray-500"> to </span>
+                          <span className="text-gray-900">{ltv.cohorts[ltv.cohorts.length - 1]?.cohortMonth || '?'}</span>
                         </span>
                       }
                       result={`${formatNumber(totalCohortUsers)} total users`}
@@ -741,7 +741,7 @@ export default function LTVPage() {
                       label="Sum Total Revenue Across All Cohorts"
                       formula={
                         <span>
-                          <span className="text-zinc-500">Total Revenue = Σ Cohort Revenue = </span>
+                          <span className="text-gray-500">Total Revenue = Σ Cohort Revenue = </span>
                           <span className="text-emerald-400">{formatCurrency(Math.round(totalCohortRevenue))}</span>
                         </span>
                       }
@@ -754,9 +754,9 @@ export default function LTVPage() {
                       label="Overall Average LTV"
                       formula={
                         <span>
-                          <span className="text-zinc-500">Avg LTV = Total Revenue ÷ Total Users = </span>
+                          <span className="text-gray-500">Avg LTV = Total Revenue ÷ Total Users = </span>
                           <span className="text-emerald-400">{formatCurrency(Math.round(totalCohortRevenue))}</span>
-                          <span className="text-zinc-500"> ÷ </span>
+                          <span className="text-gray-500"> ÷ </span>
                           <span className="text-cyan-400">{formatNumber(totalCohortUsers)}</span>
                         </span>
                       }
@@ -770,14 +770,14 @@ export default function LTVPage() {
                       label="Recent 6-Month Average LTV"
                       formula={
                         <span>
-                          <span className="text-zinc-500">Recent LTV = Avg of last 6 cohort LTVs = (</span>
+                          <span className="text-gray-500">Recent LTV = Avg of last 6 cohort LTVs = (</span>
                           {ltv.cohorts.slice(-6).map((c, i) => (
                             <span key={c.cohortMonth}>
                               <span className="text-violet-400">${Math.round(c.avgLTV)}</span>
-                              {i < 5 && <span className="text-zinc-600"> + </span>}
+                              {i < 5 && <span className="text-gray-400"> + </span>}
                             </span>
                           ))}
-                          <span className="text-zinc-500">) ÷ 6</span>
+                          <span className="text-gray-500">) ÷ 6</span>
                         </span>
                       }
                       result={formatCurrency(Math.round(recentLTV))}
@@ -789,7 +789,7 @@ export default function LTVPage() {
                       label="Average Customer Lifetime (from cohort data)"
                       formula={
                         <span>
-                          <span className="text-zinc-500">Avg Lifetime = Mean of per-cohort AVG_LIFETIME_MONTHS</span>
+                          <span className="text-gray-500">Avg Lifetime = Mean of per-cohort AVG_LIFETIME_MONTHS</span>
                         </span>
                       }
                       result={`${ltv.avgLifetimeMonths} months`}
@@ -811,7 +811,7 @@ export default function LTVPage() {
                     <div className="overflow-x-auto">
                       <table className="w-full text-xs">
                         <thead>
-                          <tr className="text-zinc-500 border-b border-white/[0.06]">
+                          <tr className="text-gray-500 border-b border-gray-200">
                             <th className="text-left pb-2 pr-4 font-medium">Plan</th>
                             <th className="text-right pb-2 pr-4 font-medium">Revenue</th>
                             <th className="text-right pb-2 pr-4 font-medium">Invoices</th>
@@ -824,17 +824,17 @@ export default function LTVPage() {
                             const totalRev = planRevenueBreakdown.reduce((s, x) => s + x.revenue, 0);
                             const pct = totalRev > 0 ? (p.revenue / totalRev) * 100 : 0;
                             return (
-                              <tr key={p.plan} className="border-t border-white/[0.03]">
-                                <td className="py-1.5 pr-4 text-zinc-300">{p.plan}</td>
-                                <td className="py-1.5 pr-4 text-right text-white font-mono">{formatCurrency(Math.round(p.revenue))}</td>
-                                <td className="py-1.5 pr-4 text-right text-zinc-400 font-mono">{formatNumber(p.count)}</td>
+                              <tr key={p.plan} className="border-t border-gray-200">
+                                <td className="py-1.5 pr-4 text-gray-700">{p.plan}</td>
+                                <td className="py-1.5 pr-4 text-right text-gray-900 font-mono">{formatCurrency(Math.round(p.revenue))}</td>
+                                <td className="py-1.5 pr-4 text-right text-gray-500 font-mono">{formatNumber(p.count)}</td>
                                 <td className="py-1.5 pr-4 text-right text-violet-400 font-mono">{formatCurrency(Math.round(p.arpu))}</td>
                                 <td className="py-1.5 text-right">
                                   <div className="flex items-center justify-end gap-2">
-                                    <div className="w-16 h-1.5 rounded bg-zinc-800 overflow-hidden">
+                                    <div className="w-16 h-1.5 rounded bg-gray-100 overflow-hidden">
                                       <div className="h-full rounded bg-violet-500/60" style={{ width: `${pct}%` }} />
                                     </div>
-                                    <span className="text-zinc-400 font-mono w-10 text-right">{pct.toFixed(1)}%</span>
+                                    <span className="text-gray-500 font-mono w-10 text-right">{pct.toFixed(1)}%</span>
                                   </div>
                                 </td>
                               </tr>
@@ -842,23 +842,23 @@ export default function LTVPage() {
                           })}
                         </tbody>
                         <tfoot>
-                          <tr className="border-t border-white/[0.06]">
-                            <td className="pt-2 pr-4 text-zinc-300 font-semibold">Total</td>
-                            <td className="pt-2 pr-4 text-right text-white font-mono font-semibold">
+                          <tr className="border-t border-gray-200">
+                            <td className="pt-2 pr-4 text-gray-700 font-semibold">Total</td>
+                            <td className="pt-2 pr-4 text-right text-gray-900 font-mono font-semibold">
                               {formatCurrency(Math.round(planRevenueBreakdown.reduce((s, p) => s + p.revenue, 0)))}
                             </td>
-                            <td className="pt-2 pr-4 text-right text-zinc-400 font-mono font-semibold">
+                            <td className="pt-2 pr-4 text-right text-gray-500 font-mono font-semibold">
                               {formatNumber(planRevenueBreakdown.reduce((s, p) => s + p.count, 0))}
                             </td>
                             <td className="pt-2 pr-4 text-right text-violet-400 font-mono font-semibold">
                               {formatCurrency(Math.round(latestSubMonth?.arpu || 0))}
                             </td>
-                            <td className="pt-2 text-right text-zinc-400 font-mono font-semibold">100.0%</td>
+                            <td className="pt-2 text-right text-gray-500 font-mono font-semibold">100.0%</td>
                           </tr>
                         </tfoot>
                       </table>
                     </div>
-                    <p className="text-[9px] text-zinc-600 mt-3">
+                    <p className="text-[9px] text-gray-400 mt-3">
                       Source: Snowflake → invoices table, grouped by SUBSCRIPTION_PLAN_INVOICED. ARPU = Revenue ÷ Invoice Count per plan. 
                       Blended ARPU = Total Revenue ÷ Unique Users in month.
                     </p>
@@ -878,7 +878,7 @@ export default function LTVPage() {
                     <div className="overflow-x-auto">
                       <table className="w-full text-xs">
                         <thead>
-                          <tr className="text-zinc-500 border-b border-white/[0.06]">
+                          <tr className="text-gray-500 border-b border-gray-200">
                             <th className="text-left pb-2 pr-3 font-medium">Cohort</th>
                             <th className="text-right pb-2 pr-3 font-medium">Size</th>
                             <th className="text-right pb-2 pr-3 font-medium">Paying</th>
@@ -893,15 +893,15 @@ export default function LTVPage() {
                         </thead>
                         <tbody>
                           {ltv.cohorts.map(c => (
-                            <tr key={c.cohortMonth} className="border-t border-white/[0.03] hover:bg-white/[0.02]">
-                              <td className="py-1.5 pr-3 text-zinc-300 font-mono">{c.cohortMonth}</td>
-                              <td className="py-1.5 pr-3 text-right text-zinc-400 font-mono">{formatNumber(c.cohortSize)}</td>
-                              <td className="py-1.5 pr-3 text-right text-zinc-400 font-mono">{formatNumber(c.payingUsers)}</td>
-                              <td className="py-1.5 pr-3 text-right text-white font-mono">{formatCurrency(Math.round(c.totalRevenue))}</td>
+                            <tr key={c.cohortMonth} className="border-t border-gray-200 hover:bg-gray-50">
+                              <td className="py-1.5 pr-3 text-gray-700 font-mono">{c.cohortMonth}</td>
+                              <td className="py-1.5 pr-3 text-right text-gray-500 font-mono">{formatNumber(c.cohortSize)}</td>
+                              <td className="py-1.5 pr-3 text-right text-gray-500 font-mono">{formatNumber(c.payingUsers)}</td>
+                              <td className="py-1.5 pr-3 text-right text-gray-900 font-mono">{formatCurrency(Math.round(c.totalRevenue))}</td>
                               <td className="py-1.5 pr-3 text-right text-emerald-400 font-mono font-semibold">{formatCurrency(Math.round(c.avgLTV))}</td>
                               <td className="py-1.5 pr-3 text-right text-violet-400 font-mono">{formatCurrency(Math.round(c.medianLTV))}</td>
-                              <td className="py-1.5 pr-3 text-right text-zinc-400 font-mono">{c.avgLifetimeMonths.toFixed(1)}</td>
-                              <td className="py-1.5 pr-3 text-right text-zinc-400 font-mono">{c.avgInvoicesPerUser.toFixed(1)}</td>
+                              <td className="py-1.5 pr-3 text-right text-gray-500 font-mono">{c.avgLifetimeMonths.toFixed(1)}</td>
+                              <td className="py-1.5 pr-3 text-right text-gray-500 font-mono">{c.avgInvoicesPerUser.toFixed(1)}</td>
                               <td className="py-1.5 pr-3 text-right text-red-400 font-mono">{formatNumber(c.churnedUsers)}</td>
                               <td className="py-1.5 text-right font-mono">
                                 <span className={cn(
@@ -914,22 +914,22 @@ export default function LTVPage() {
                           ))}
                         </tbody>
                         <tfoot>
-                          <tr className="border-t border-white/[0.06]">
-                            <td className="pt-2 pr-3 text-zinc-300 font-semibold">Overall</td>
-                            <td className="pt-2 pr-3 text-right text-white font-mono font-semibold">{formatNumber(totalCohortUsers)}</td>
-                            <td className="pt-2 pr-3 text-right text-zinc-400 font-mono">—</td>
-                            <td className="pt-2 pr-3 text-right text-white font-mono font-semibold">{formatCurrency(Math.round(totalCohortRevenue))}</td>
+                          <tr className="border-t border-gray-200">
+                            <td className="pt-2 pr-3 text-gray-700 font-semibold">Overall</td>
+                            <td className="pt-2 pr-3 text-right text-gray-900 font-mono font-semibold">{formatNumber(totalCohortUsers)}</td>
+                            <td className="pt-2 pr-3 text-right text-gray-500 font-mono">—</td>
+                            <td className="pt-2 pr-3 text-right text-gray-900 font-mono font-semibold">{formatCurrency(Math.round(totalCohortRevenue))}</td>
                             <td className="pt-2 pr-3 text-right text-emerald-400 font-mono font-semibold">{formatCurrency(Math.round(actualLTV))}</td>
                             <td className="pt-2 pr-3 text-right text-violet-400 font-mono">—</td>
-                            <td className="pt-2 pr-3 text-right text-zinc-400 font-mono">{ltv.avgLifetimeMonths}</td>
-                            <td className="pt-2 pr-3 text-right text-zinc-400 font-mono">—</td>
-                            <td className="pt-2 pr-3 text-right text-zinc-400 font-mono">—</td>
-                            <td className="pt-2 text-right text-zinc-400 font-mono">—</td>
+                            <td className="pt-2 pr-3 text-right text-gray-500 font-mono">{ltv.avgLifetimeMonths}</td>
+                            <td className="pt-2 pr-3 text-right text-gray-500 font-mono">—</td>
+                            <td className="pt-2 pr-3 text-right text-gray-500 font-mono">—</td>
+                            <td className="pt-2 text-right text-gray-500 font-mono">—</td>
                           </tr>
                         </tfoot>
                       </table>
                     </div>
-                    <div className="mt-3 text-[9px] text-zinc-600 space-y-0.5">
+                    <div className="mt-3 text-[9px] text-gray-400 space-y-0.5">
                       <p><strong>Cohort:</strong> Month of user's first subscription invoice</p>
                       <p><strong>Size:</strong> Total users who signed up in that month</p>
                       <p><strong>Paying:</strong> Users with at least one paid invoice</p>
@@ -954,7 +954,7 @@ export default function LTVPage() {
                   defaultOpen={false}
                 >
                   <div className="mt-3">
-                    <p className="text-xs text-zinc-400 mb-3">
+                    <p className="text-xs text-gray-500 mb-3">
                       This table shows how the ARPU-based LTV changes when you vary the monthly churn rate (rows) and ARPU (columns).
                       The highlighted cell is the current state. Green cells indicate higher LTV, red cells indicate lower.
                     </p>
@@ -962,7 +962,7 @@ export default function LTVPage() {
                       <table className="w-full text-xs">
                         <thead>
                           <tr>
-                            <th className="text-left pb-2 pr-2 text-zinc-500 font-medium">
+                            <th className="text-left pb-2 pr-2 text-gray-500 font-medium">
                               <span className="text-[9px]">Churn \ ARPU →</span>
                             </th>
                             {[-20, -10, 0, 10, 20].map(ad => {
@@ -970,7 +970,7 @@ export default function LTVPage() {
                               return (
                                 <th key={ad} className={cn(
                                   'text-center pb-2 px-1 font-medium',
-                                  ad === 0 ? 'text-white bg-white/[0.03] rounded-t' : 'text-zinc-500'
+                                  ad === 0 ? 'text-gray-900 bg-white/[0.03] rounded-t' : 'text-gray-500'
                                 )}>
                                   <div className="text-[9px]">{ad > 0 ? `+$${ad}` : ad < 0 ? `-$${Math.abs(ad)}` : 'Current'}</div>
                                   <div className="font-mono">{formatCurrency(Math.round(a))}</div>
@@ -983,12 +983,12 @@ export default function LTVPage() {
                           {[-2, -1, 0, 1, 2].map(cd => {
                             const newChurn = Math.max(0.5, avgChurn3Month + cd);
                             return (
-                              <tr key={cd} className="border-t border-white/[0.03]">
+                              <tr key={cd} className="border-t border-gray-200">
                                 <td className={cn(
                                   'py-1.5 pr-2 font-mono',
-                                  cd === 0 ? 'text-white font-semibold bg-white/[0.03]' : 'text-zinc-500'
+                                  cd === 0 ? 'text-gray-900 font-semibold bg-white/[0.03]' : 'text-gray-500'
                                 )}>
-                                  <div className="text-[9px] text-zinc-500">
+                                  <div className="text-[9px] text-gray-500">
                                     {cd > 0 ? `+${cd}pp` : cd < 0 ? `${cd}pp` : 'Current'}
                                   </div>
                                   <div>{newChurn.toFixed(1)}%</div>
@@ -1005,10 +1005,10 @@ export default function LTVPage() {
                                       key={ad}
                                       className={cn(
                                         'py-1.5 px-1 text-center font-mono',
-                                        isCurrent && 'bg-white/[0.06] rounded font-bold text-white',
+                                        isCurrent && 'bg-white/[0.06] rounded font-bold text-gray-900',
                                         !isCurrent && delta > 0 && 'text-emerald-400',
                                         !isCurrent && delta < 0 && 'text-red-400',
-                                        !isCurrent && delta === 0 && 'text-zinc-400',
+                                        !isCurrent && delta === 0 && 'text-gray-500',
                                       )}
                                     >
                                       <div className="font-semibold">{formatCurrency(Math.round(newLTV))}</div>
@@ -1026,7 +1026,7 @@ export default function LTVPage() {
                         </tbody>
                       </table>
                     </div>
-                    <div className="mt-3 text-[9px] text-zinc-600 space-y-0.5">
+                    <div className="mt-3 text-[9px] text-gray-400 space-y-0.5">
                       <p><strong>Reading this table:</strong> Each cell = ARPU × (1 / Churn Rate as decimal). The number below is the delta vs current LTV ({formatCurrency(Math.round(estimatedRevenueLTV))}).</p>
                       <p><strong>Example:</strong> Reducing churn by 1 percentage point (from {avgChurn3Month.toFixed(1)}% to {Math.max(0.5, avgChurn3Month - 1).toFixed(1)}%) at current ARPU = {formatCurrency(Math.round(arpu * (100 / Math.max(0.5, avgChurn3Month - 1))))} LTV ({formatCurrency(Math.round(arpu * (100 / Math.max(0.5, avgChurn3Month - 1)) - estimatedRevenueLTV))} increase)</p>
                     </div>
@@ -1042,26 +1042,26 @@ export default function LTVPage() {
                 defaultOpen={false}
               >
                 <div className="mt-3 space-y-4">
-                  <div className="rounded-lg bg-black/30 border border-white/[0.04] p-3 text-xs text-zinc-400 space-y-3">
+                  <div className="rounded-lg bg-black/30 border border-gray-200 p-3 text-xs text-gray-500 space-y-3">
                     <div>
-                      <p className="text-zinc-300 font-semibold mb-1">ARPU-Based LTV Sources</p>
+                      <p className="text-gray-700 font-semibold mb-1">ARPU-Based LTV Sources</p>
                       <div className="font-mono text-[10px] bg-black/40 rounded p-2 space-y-1">
-                        <p className="text-zinc-500">-- MRR (from Mode report: a9247d33f12e)</p>
+                        <p className="text-gray-500">-- MRR (from Mode report: a9247d33f12e)</p>
                         <p className="text-emerald-400">SELECT PAID_MONTH, SUM(WEIGHT_AVG) AS mrr</p>
                         <p className="text-emerald-400">FROM MRR_TABLE GROUP BY PAID_MONTH</p>
-                        <p className="text-zinc-600 mt-2">-- Active Subscribers (from Mode report: 7705ac7b72df)</p>
+                        <p className="text-gray-400 mt-2">-- Active Subscribers (from Mode report: 7705ac7b72df)</p>
                         <p className="text-blue-400">SELECT MONTH_ON_PLATFORM, SUM(ACTIVE_AT_END_OF_MONTH) AS active</p>
                         <p className="text-blue-400">FROM CHURN_BY_PAYMENT_CAPTURE GROUP BY MONTH_ON_PLATFORM</p>
-                        <p className="text-zinc-600 mt-2">-- Churn Rate</p>
+                        <p className="text-gray-400 mt-2">-- Churn Rate</p>
                         <p className="text-red-400">SELECT SUM(LOST_SUBSCRIPTION) / SUM(ACTIVE_AT_END_OF_PRIOR_MONTH) AS churn_rate</p>
                         <p className="text-red-400">FROM CHURN_BY_PAYMENT_CAPTURE WHERE MONTH_ON_PLATFORM IN (last 3 months)</p>
                       </div>
                     </div>
 
                     <div>
-                      <p className="text-zinc-300 font-semibold mb-1">Cohort-Based LTV Sources</p>
+                      <p className="text-gray-700 font-semibold mb-1">Cohort-Based LTV Sources</p>
                       <div className="font-mono text-[10px] bg-black/40 rounded p-2 space-y-1">
-                        <p className="text-zinc-500">-- LTV by Cohort (from Mode report: 704faa5fc878, query: 8dda7ba3db5a)</p>
+                        <p className="text-gray-500">-- LTV by Cohort (from Mode report: 704faa5fc878, query: 8dda7ba3db5a)</p>
                         <p className="text-emerald-400">SELECT DATE_TRUNC(&apos;month&apos;, first_invoice_date) AS cohort_month,</p>
                         <p className="text-emerald-400">  COUNT(*) AS cohort_size,</p>
                         <p className="text-emerald-400">  SUM(total_revenue) AS cohort_total_revenue,</p>
@@ -1073,9 +1073,9 @@ export default function LTVPage() {
                     </div>
 
                     <div>
-                      <p className="text-zinc-300 font-semibold mb-1">Subscription Revenue by Plan</p>
+                      <p className="text-gray-700 font-semibold mb-1">Subscription Revenue by Plan</p>
                       <div className="font-mono text-[10px] bg-black/40 rounded p-2 space-y-1">
-                        <p className="text-zinc-500">-- Subscription Revenue (from Mode report: 704faa5fc878, query: 6163389aac4f)</p>
+                        <p className="text-gray-500">-- Subscription Revenue (from Mode report: 704faa5fc878, query: 6163389aac4f)</p>
                         <p className="text-violet-400">SELECT DATE_TRUNC(&apos;month&apos;, invoice_date) AS revenue_month,</p>
                         <p className="text-violet-400">  SUBSCRIPTION_PLAN_INVOICED,</p>
                         <p className="text-violet-400">  SUM(total_in_cents / 100) AS total_revenue,</p>
@@ -1086,7 +1086,7 @@ export default function LTVPage() {
                     </div>
                   </div>
 
-                  <div className="text-[9px] text-zinc-600 space-y-0.5">
+                  <div className="text-[9px] text-gray-400 space-y-0.5">
                     <p><strong>Database:</strong> Snowflake (accessed via Mode Analytics API)</p>
                     <p><strong>Mode Workspace:</strong> Signos</p>
                     <p><strong>Key Tables:</strong> CHURN_BY_PAYMENT_CAPTURE, MRR (materialized view), RENEWAL_RATE, invoices, subscriptions, users</p>
@@ -1231,8 +1231,8 @@ export default function LTVPage() {
                     {productPieData.map((p, i) => (
                       <div key={i} className="flex items-center gap-2 text-xs">
                         <div className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: p.color }} />
-                        <span className="text-zinc-400 flex-1 truncate">{p.name}</span>
-                        <span className="font-medium text-white">{formatCompact(p.value)}</span>
+                        <span className="text-gray-500 flex-1 truncate">{p.name}</span>
+                        <span className="font-medium text-gray-900">{formatCompact(p.value)}</span>
                       </div>
                     ))}
                   </div>
@@ -1259,14 +1259,14 @@ export default function LTVPage() {
                     return (
                       <div key={i} className="flex items-center gap-3">
                         <div className="w-36 truncate">
-                          <span className="text-xs font-medium text-zinc-300">{s.name}</span>
+                          <span className="text-xs font-medium text-gray-700">{s.name}</span>
                         </div>
-                        <div className="flex-1 h-5 rounded bg-zinc-800/60 overflow-hidden relative">
+                        <div className="flex-1 h-5 rounded bg-gray-100 overflow-hidden relative">
                           <div
                             className="h-full rounded transition-all"
                             style={{ width: `${pct}%`, backgroundColor: s.color, opacity: 0.6 }}
                           />
-                          <span className="absolute inset-0 flex items-center px-2 text-[10px] font-medium text-white">
+                          <span className="absolute inset-0 flex items-center px-2 text-[10px] font-medium text-gray-900">
                             {formatNumber(s.value)} ({formatPercent(pct, 1)})
                           </span>
                         </div>
@@ -1292,8 +1292,8 @@ export default function LTVPage() {
                   return (
                     <div key={m.month} className="flex-1 flex flex-col items-center group relative">
                       <div className="absolute bottom-full mb-2 hidden group-hover:block z-10">
-                        <div className="rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-xs whitespace-nowrap shadow-xl">
-                          <p className="font-semibold text-white">{m.month}</p>
+                        <div className="rounded-lg bg-white border border-gray-200 px-3 py-2 text-xs whitespace-nowrap shadow-xl">
+                          <p className="font-semibold text-gray-900">{m.month}</p>
                           <p className="text-emerald-400">{formatCompact(m.mrr)}</p>
                         </div>
                       </div>
@@ -1309,7 +1309,7 @@ export default function LTVPage() {
                 {mrr.monthlyMRR.map((m, i) => (
                   <div key={m.month} className="flex-1 text-center">
                     {i % 4 === 0 && (
-                      <span className="text-[8px] text-zinc-600">{m.month.slice(2)}</span>
+                      <span className="text-[8px] text-gray-400">{m.month.slice(2)}</span>
                     )}
                   </div>
                 ))}
@@ -1332,9 +1332,9 @@ export default function LTVPage() {
                     return (
                       <div key={m.month} className="flex-1 flex flex-col items-center group relative">
                         <div className="absolute bottom-full mb-2 hidden group-hover:block z-10">
-                          <div className="rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-xs whitespace-nowrap shadow-xl">
-                            <p className="font-semibold text-white">{m.month}</p>
-                            <p className="text-zinc-400">{formatNumber(m.renewed)} of {formatNumber(m.upForRenewal)} renewed</p>
+                          <div className="rounded-lg bg-white border border-gray-200 px-3 py-2 text-xs whitespace-nowrap shadow-xl">
+                            <p className="font-semibold text-gray-900">{m.month}</p>
+                            <p className="text-gray-500">{formatNumber(m.renewed)} of {formatNumber(m.upForRenewal)} renewed</p>
                             <p className={cn('font-medium', m.renewalRate >= 30 ? 'text-emerald-400' : 'text-amber-400')}>
                               {formatPercent(m.renewalRate)}
                             </p>
@@ -1359,7 +1359,7 @@ export default function LTVPage() {
                   .map((m, i) => (
                     <div key={m.month} className="flex-1 text-center">
                       {i % 3 === 0 && (
-                        <span className="text-[8px] text-zinc-600">{m.month.slice(2)}</span>
+                        <span className="text-[8px] text-gray-400">{m.month.slice(2)}</span>
                       )}
                     </div>
                   ))}
@@ -1381,14 +1381,14 @@ export default function LTVPage() {
                   return (
                     <div key={plan.plan} className="flex items-center gap-3">
                       <div className="w-44 truncate">
-                        <span className="text-xs font-medium text-zinc-300">{plan.label}</span>
+                        <span className="text-xs font-medium text-gray-700">{plan.label}</span>
                       </div>
-                      <div className="flex-1 h-6 rounded-lg bg-zinc-800/60 overflow-hidden relative">
+                      <div className="flex-1 h-6 rounded-lg bg-gray-100 overflow-hidden relative">
                         <div
                           className="h-full rounded-lg bg-violet-500 transition-all"
                           style={{ width: `${pct}%`, opacity: 0.5 }}
                         />
-                        <span className="absolute inset-0 flex items-center px-3 text-[10px] font-medium text-white">
+                        <span className="absolute inset-0 flex items-center px-3 text-[10px] font-medium text-gray-900">
                           {formatNumber(plan.activeCount)} ({formatPercent(pct, 1)})
                         </span>
                       </div>
@@ -1403,12 +1403,12 @@ export default function LTVPage() {
           <Card className="border-brand-500/20 bg-gradient-to-br from-brand-500/[0.03] to-transparent">
             <CardHeader title="LTV Insights" subtitle="Key observations from live data" />
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              <div className="rounded-lg p-4 border border-white/[0.06] bg-white/[0.02]">
+              <div className="rounded-lg p-4 border border-gray-200 bg-gray-50">
                 <div className="flex items-center gap-2 mb-2">
                   <Lightbulb className="h-4 w-4 text-brand-400" />
-                  <span className="text-xs font-semibold text-zinc-300">Revenue Potential</span>
+                  <span className="text-xs font-semibold text-gray-700">Revenue Potential</span>
                 </div>
-                <p className="text-[11px] text-zinc-400">
+                <p className="text-[11px] text-gray-500">
                   {ltv ? (
                     <>
                       Actual LTV is {formatCompact(ltv.overallLTV)} based on {ltv.totalUsers.toLocaleString()} users.
@@ -1423,12 +1423,12 @@ export default function LTVPage() {
                   )}
                 </p>
               </div>
-              <div className="rounded-lg p-4 border border-white/[0.06] bg-white/[0.02]">
+              <div className="rounded-lg p-4 border border-gray-200 bg-gray-50">
                 <div className="flex items-center gap-2 mb-2">
                   <ShoppingBag className="h-4 w-4 text-violet-400" />
-                  <span className="text-xs font-semibold text-zinc-300">Shopify Revenue</span>
+                  <span className="text-xs font-semibold text-gray-700">Shopify Revenue</span>
                 </div>
-                <p className="text-[11px] text-zinc-400">
+                <p className="text-[11px] text-gray-500">
                   {shopRevenue ? (
                     <>
                       Current month: {formatCompact(shopRevenue.currentMonth.revenue)} from {shopRevenue.currentMonth.orders.toLocaleString()} orders
@@ -1442,12 +1442,12 @@ export default function LTVPage() {
                 </p>
               </div>
               {journey && (
-                <div className="rounded-lg p-4 border border-white/[0.06] bg-white/[0.02]">
+                <div className="rounded-lg p-4 border border-gray-200 bg-gray-50">
                   <div className="flex items-center gap-2 mb-2">
                     <BarChart3 className="h-4 w-4 text-cyan-400" />
-                    <span className="text-xs font-semibold text-zinc-300">User Journey</span>
+                    <span className="text-xs font-semibold text-gray-700">User Journey</span>
                   </div>
-                  <p className="text-[11px] text-zinc-400">
+                  <p className="text-[11px] text-gray-500">
                     {journey.totalTracked.toLocaleString()} users tracked.
                     {journey.overallStatus['Active - Onboarded'] && (
                       <> {formatNumber(journey.overallStatus['Active - Onboarded'])} active & onboarded. </>
@@ -1460,12 +1460,12 @@ export default function LTVPage() {
                 </div>
               )}
               {renewal && (
-                <div className="rounded-lg p-4 border border-white/[0.06] bg-white/[0.02]">
+                <div className="rounded-lg p-4 border border-gray-200 bg-gray-50">
                   <div className="flex items-center gap-2 mb-2">
                     <Repeat className="h-4 w-4 text-blue-400" />
-                    <span className="text-xs font-semibold text-zinc-300">Renewal Impact</span>
+                    <span className="text-xs font-semibold text-gray-700">Renewal Impact</span>
                   </div>
-                  <p className="text-[11px] text-zinc-400">
+                  <p className="text-[11px] text-gray-500">
                     {formatPercent(renewal.overallRenewalRate)} overall renewal rate across {formatNumber(renewal.totalUpForRenewal)} renewal opportunities.
                     {renewal.overallRenewalRate < 30
                       ? ' Low renewal rate is the #1 LTV drag. Targeted renewal campaigns could significantly boost LTV.'

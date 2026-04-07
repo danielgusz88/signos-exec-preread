@@ -75,13 +75,13 @@ const COLORS = ['#8b5cf6', '#10b981', '#06b6d4', '#f59e0b', '#ef4444', '#ec4899'
 function ChartTooltipContent({ active, payload, label, formatter }: any) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-lg bg-zinc-900/95 border border-zinc-700 px-3 py-2 text-xs shadow-xl">
-      <p className="font-medium text-zinc-300 mb-1">{label}</p>
+    <div className="rounded-lg bg-white/95 border border-gray-200 px-3 py-2 text-xs shadow-xl">
+      <p className="font-medium text-gray-700 mb-1">{label}</p>
       {payload.map((p: any, i: number) => (
         <div key={i} className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full" style={{ backgroundColor: p.color }} />
-          <span className="text-zinc-400">{p.name}:</span>
-          <span className="font-medium text-white">
+          <span className="text-gray-500">{p.name}:</span>
+          <span className="font-medium text-gray-900">
             {formatter ? formatter(p.value) : typeof p.value === 'number' ? p.value.toLocaleString() : p.value}
           </span>
         </div>
@@ -164,14 +164,14 @@ export default function ProductsPage() {
     <div className="p-6 pb-20">
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-1">
-          <h1 className="text-2xl font-bold text-white">Revenue & Products</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Revenue & Products</h1>
           {isConnected && (
             <span className="rounded-full bg-blue-500/10 px-2.5 py-0.5 text-[10px] font-bold text-blue-400 border border-blue-500/20">
               SHOPIFY + SNOWFLAKE LIVE
             </span>
           )}
         </div>
-        <p className="text-sm text-zinc-400">
+        <p className="text-sm text-gray-500">
           Shopify order revenue, product mix, subscription economics — data from Snowflake via Mode Analytics
         </p>
       </div>
@@ -180,7 +180,7 @@ export default function ProductsPage() {
       {loading && (
         <div className="flex items-center justify-center py-20">
           <Loader2 className="h-6 w-6 text-brand-400 animate-spin" />
-          <span className="ml-3 text-sm text-zinc-400">Loading product data from Snowflake...</span>
+          <span className="ml-3 text-sm text-gray-500">Loading product data from Snowflake...</span>
         </div>
       )}
 
@@ -208,7 +208,7 @@ export default function ProductsPage() {
           <div className="flex justify-end mb-4">
             <button
               onClick={fetchData}
-              className="inline-flex items-center gap-2 rounded-lg bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-zinc-400 hover:bg-white/[0.08] transition-colors"
+              className="inline-flex items-center gap-2 rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-500 hover:bg-gray-200 transition-colors"
             >
               <RefreshCw className="h-3 w-3" />
               Refresh
@@ -310,9 +310,9 @@ export default function ProductsPage() {
                     {categoryPieData.map((p, i) => (
                       <div key={i} className="flex items-center gap-2 text-xs">
                         <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: p.color }} />
-                        <span className="text-zinc-400 flex-1 truncate">{p.name}</span>
-                        <span className="font-medium text-white">{formatCompact(p.value)}</span>
-                        <span className="text-zinc-600">{p.orders} orders</span>
+                        <span className="text-gray-500 flex-1 truncate">{p.name}</span>
+                        <span className="font-medium text-gray-900">{formatCompact(p.value)}</span>
+                        <span className="text-gray-400">{p.orders} orders</span>
                       </div>
                     ))}
                   </div>
@@ -359,14 +359,14 @@ export default function ProductsPage() {
                   return (
                     <div key={i} className="flex items-center gap-3">
                       <div className="w-28 truncate">
-                        <span className="text-xs font-medium text-zinc-300">{plan.name}</span>
+                        <span className="text-xs font-medium text-gray-700">{plan.name}</span>
                       </div>
-                      <div className="flex-1 h-6 rounded-lg bg-zinc-800/60 overflow-hidden relative">
+                      <div className="flex-1 h-6 rounded-lg bg-gray-100 overflow-hidden relative">
                         <div
                           className="h-full rounded-lg transition-all"
                           style={{ width: `${pct}%`, backgroundColor: plan.color, opacity: 0.5 }}
                         />
-                        <span className="absolute inset-0 flex items-center px-3 text-[10px] font-medium text-white">
+                        <span className="absolute inset-0 flex items-center px-3 text-[10px] font-medium text-gray-900">
                           {formatCompact(plan.revenue)} · {plan.invoices} invoices
                         </span>
                       </div>
@@ -377,17 +377,17 @@ export default function ProductsPage() {
 
               {/* New vs Renewal */}
               {subRevenue?.newVsRenewal && (
-                <div className="mt-4 pt-4 border-t border-white/[0.06] flex gap-4 text-xs">
+                <div className="mt-4 pt-4 border-t border-gray-200 flex gap-4 text-xs">
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded-sm bg-emerald-500" />
-                    <span className="text-zinc-400">New Revenue:</span>
-                    <span className="font-medium text-white">{formatCompact(subRevenue.newVsRenewal.newRevenue)}</span>
+                    <span className="text-gray-500">New Revenue:</span>
+                    <span className="font-medium text-gray-900">{formatCompact(subRevenue.newVsRenewal.newRevenue)}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded-sm bg-violet-500" />
-                    <span className="text-zinc-400">Renewal Revenue:</span>
-                    <span className="font-medium text-white">{formatCompact(subRevenue.newVsRenewal.renewalRevenue)}</span>
-                    <span className="text-zinc-600">({formatPercent(subRevenue.newVsRenewal.renewalPct, 1)} of total)</span>
+                    <span className="text-gray-500">Renewal Revenue:</span>
+                    <span className="font-medium text-gray-900">{formatCompact(subRevenue.newVsRenewal.renewalRevenue)}</span>
+                    <span className="text-gray-400">({formatPercent(subRevenue.newVsRenewal.renewalPct, 1)} of total)</span>
                   </div>
                 </div>
               )}
@@ -404,7 +404,7 @@ export default function ProductsPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-xs">
                   <thead>
-                    <tr className="border-b border-white/[0.06] text-zinc-500">
+                    <tr className="border-b border-gray-200 text-gray-500">
                       <th className="text-left py-2 px-3 font-medium">Product</th>
                       <th className="text-left py-2 px-3 font-medium">Variant</th>
                       <th className="text-right py-2 px-3 font-medium">Revenue</th>
@@ -415,13 +415,13 @@ export default function ProductsPage() {
                   </thead>
                   <tbody>
                     {(products?.products || []).slice(0, 15).map((p, i) => (
-                      <tr key={i} className="border-b border-white/[0.03] hover:bg-white/[0.02]">
-                        <td className="py-2 px-3 text-zinc-300 max-w-[200px] truncate">{p.name}</td>
-                        <td className="py-2 px-3 text-zinc-500 max-w-[120px] truncate">{p.variant || '—'}</td>
+                      <tr key={i} className="border-b border-gray-200 hover:bg-gray-50">
+                        <td className="py-2 px-3 text-gray-700 max-w-[200px] truncate">{p.name}</td>
+                        <td className="py-2 px-3 text-gray-500 max-w-[120px] truncate">{p.variant || '—'}</td>
                         <td className="py-2 px-3 text-right font-medium text-emerald-400">{formatCompact(p.totalRevenue)}</td>
-                        <td className="py-2 px-3 text-right text-zinc-400">{formatNumber(p.orderCount)}</td>
-                        <td className="py-2 px-3 text-right text-zinc-400">{formatNumber(p.uniqueBuyers)}</td>
-                        <td className="py-2 px-3 text-right text-zinc-400">{formatCompact(p.avgPrice)}</td>
+                        <td className="py-2 px-3 text-right text-gray-500">{formatNumber(p.orderCount)}</td>
+                        <td className="py-2 px-3 text-right text-gray-500">{formatNumber(p.uniqueBuyers)}</td>
+                        <td className="py-2 px-3 text-right text-gray-500">{formatCompact(p.avgPrice)}</td>
                       </tr>
                     ))}
                   </tbody>

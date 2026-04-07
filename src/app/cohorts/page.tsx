@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import { Lightbulb } from 'lucide-react';
 
 function getRetentionColor(value: number | null): string {
-  if (value === null) return 'bg-transparent text-zinc-600';
+  if (value === null) return 'bg-transparent text-gray-400';
   if (value >= 85) return 'bg-emerald-500/20 text-emerald-400';
   if (value >= 70) return 'bg-emerald-500/10 text-emerald-300';
   if (value >= 60) return 'bg-yellow-500/10 text-yellow-400';
@@ -18,8 +18,8 @@ export default function CohortsPage() {
   return (
     <div className="p-6 pb-20">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-white mb-1">Cohort Analysis</h1>
-        <p className="text-sm text-zinc-400">
+        <h1 className="text-2xl font-bold text-gray-900 mb-1">Cohort Analysis</h1>
+        <p className="text-sm text-gray-500">
           Track monthly acquisition cohorts through their lifecycle — identify improving or declining retention trends.
         </p>
       </div>
@@ -68,7 +68,7 @@ export default function CohortsPage() {
             <h3 className="text-sm font-semibold text-brand-400">Cohort Intelligence</h3>
           </div>
           <div className="flex flex-col items-center justify-center py-6 text-center">
-            <p className="text-xs text-zinc-500 max-w-sm">
+            <p className="text-xs text-gray-500 max-w-sm">
               Connect data sources to enable AI-powered cohort intelligence — segment comparisons,
               seasonal patterns, and program impact analysis.
             </p>
@@ -82,23 +82,23 @@ export default function CohortsPage() {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <div className="h-4 w-8 rounded bg-emerald-500/20" />
-            <span className="text-xs text-zinc-400">≥85% (Excellent)</span>
+            <span className="text-xs text-gray-500">≥85% (Excellent)</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="h-4 w-8 rounded bg-emerald-500/10" />
-            <span className="text-xs text-zinc-400">70-84% (Good)</span>
+            <span className="text-xs text-gray-500">70-84% (Good)</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="h-4 w-8 rounded bg-yellow-500/10" />
-            <span className="text-xs text-zinc-400">60-69% (Needs attention)</span>
+            <span className="text-xs text-gray-500">60-69% (Needs attention)</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="h-4 w-8 rounded bg-orange-500/10" />
-            <span className="text-xs text-zinc-400">50-59% (At risk)</span>
+            <span className="text-xs text-gray-500">50-59% (At risk)</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="h-4 w-8 rounded bg-red-500/10" />
-            <span className="text-xs text-zinc-400">&lt;50% (Critical)</span>
+            <span className="text-xs text-gray-500">&lt;50% (Critical)</span>
           </div>
         </div>
       </Card>

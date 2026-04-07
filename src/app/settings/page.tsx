@@ -78,8 +78,8 @@ export default function SettingsPage() {
   return (
     <div className="p-6 pb-20">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-white mb-1">Settings</h1>
-        <p className="text-sm text-zinc-400">
+        <h1 className="text-2xl font-bold text-gray-900 mb-1">Settings</h1>
+        <p className="text-sm text-gray-500">
           Configure integrations, API keys, and data sync preferences.
         </p>
       </div>
@@ -89,7 +89,7 @@ export default function SettingsPage() {
         <CardHeader title="Integration Connections" subtitle="API connectivity status — test live connections" />
         <div className="space-y-4">
           {/* Mode */}
-          <div className="flex items-center justify-between rounded-lg bg-white/[0.02] p-4 border border-white/[0.04]">
+          <div className="flex items-center justify-between rounded-lg bg-gray-50 p-4 border border-gray-200">
             <div className="flex items-center gap-4">
               <div className={cn(
                 'flex h-10 w-10 items-center justify-center rounded-lg',
@@ -97,14 +97,14 @@ export default function SettingsPage() {
               )}>
                 <Server className={cn(
                   'h-5 w-5',
-                  connectionStatus.mode.status === 'connected' ? 'text-emerald-400' : 'text-zinc-500'
+                  connectionStatus.mode.status === 'connected' ? 'text-emerald-400' : 'text-gray-500'
                 )} />
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-white">Mode Analytics</h4>
+                <h4 className="text-sm font-semibold text-gray-900">Mode Analytics</h4>
                 <div className="flex items-center gap-1.5 mt-0.5">
                   {connectionStatus.mode.status === 'checking' && (
-                    <RefreshCw className="h-3 w-3 text-zinc-500 animate-spin" />
+                    <RefreshCw className="h-3 w-3 text-gray-500 animate-spin" />
                   )}
                   {connectionStatus.mode.status === 'connected' && (
                     <CheckCircle2 className="h-3 w-3 text-emerald-400" />
@@ -115,7 +115,7 @@ export default function SettingsPage() {
                   <span className={cn(
                     'text-[10px] font-medium',
                     connectionStatus.mode.status === 'connected' ? 'text-emerald-400' :
-                    connectionStatus.mode.status === 'error' ? 'text-red-400' : 'text-zinc-500'
+                    connectionStatus.mode.status === 'error' ? 'text-red-400' : 'text-gray-500'
                   )}>
                     {connectionStatus.mode.message}
                   </span>
@@ -123,12 +123,12 @@ export default function SettingsPage() {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] text-zinc-500">MODE_API_TOKEN, MODE_API_SECRET, MODE_WORKSPACE</span>
+              <span className="text-[10px] text-gray-500">MODE_API_TOKEN, MODE_API_SECRET, MODE_WORKSPACE</span>
             </div>
           </div>
 
           {/* Iterable */}
-          <div className="flex items-center justify-between rounded-lg bg-white/[0.02] p-4 border border-white/[0.04]">
+          <div className="flex items-center justify-between rounded-lg bg-gray-50 p-4 border border-gray-200">
             <div className="flex items-center gap-4">
               <div className={cn(
                 'flex h-10 w-10 items-center justify-center rounded-lg',
@@ -136,14 +136,14 @@ export default function SettingsPage() {
               )}>
                 <Globe className={cn(
                   'h-5 w-5',
-                  connectionStatus.iterable.status === 'connected' ? 'text-emerald-400' : 'text-zinc-500'
+                  connectionStatus.iterable.status === 'connected' ? 'text-emerald-400' : 'text-gray-500'
                 )} />
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-white">Iterable</h4>
+                <h4 className="text-sm font-semibold text-gray-900">Iterable</h4>
                 <div className="flex items-center gap-1.5 mt-0.5">
                   {connectionStatus.iterable.status === 'checking' && (
-                    <RefreshCw className="h-3 w-3 text-zinc-500 animate-spin" />
+                    <RefreshCw className="h-3 w-3 text-gray-500 animate-spin" />
                   )}
                   {connectionStatus.iterable.status === 'connected' && (
                     <CheckCircle2 className="h-3 w-3 text-emerald-400" />
@@ -154,7 +154,7 @@ export default function SettingsPage() {
                   <span className={cn(
                     'text-[10px] font-medium',
                     connectionStatus.iterable.status === 'connected' ? 'text-emerald-400' :
-                    connectionStatus.iterable.status === 'error' ? 'text-red-400' : 'text-zinc-500'
+                    connectionStatus.iterable.status === 'error' ? 'text-red-400' : 'text-gray-500'
                   )}>
                     {connectionStatus.iterable.message}
                   </span>
@@ -162,12 +162,12 @@ export default function SettingsPage() {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] text-zinc-500">ITERABLE_API_KEY</span>
+              <span className="text-[10px] text-gray-500">ITERABLE_API_KEY</span>
             </div>
           </div>
 
           {/* Shopify */}
-          <div className="flex items-center justify-between rounded-lg bg-white/[0.02] p-4 border border-white/[0.04]">
+          <div className="flex items-center justify-between rounded-lg bg-gray-50 p-4 border border-gray-200">
             <div className="flex items-center gap-4">
               <div className={cn(
                 'flex h-10 w-10 items-center justify-center rounded-lg',
@@ -175,14 +175,14 @@ export default function SettingsPage() {
               )}>
                 <ShoppingBag className={cn(
                   'h-5 w-5',
-                  connectionStatus.shopify.status === 'connected' ? 'text-emerald-400' : 'text-zinc-500'
+                  connectionStatus.shopify.status === 'connected' ? 'text-emerald-400' : 'text-gray-500'
                 )} />
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-white">Shopify</h4>
+                <h4 className="text-sm font-semibold text-gray-900">Shopify</h4>
                 <div className="flex items-center gap-1.5 mt-0.5">
                   {connectionStatus.shopify.status === 'checking' && (
-                    <RefreshCw className="h-3 w-3 text-zinc-500 animate-spin" />
+                    <RefreshCw className="h-3 w-3 text-gray-500 animate-spin" />
                   )}
                   {connectionStatus.shopify.status === 'connected' && (
                     <CheckCircle2 className="h-3 w-3 text-emerald-400" />
@@ -193,7 +193,7 @@ export default function SettingsPage() {
                   <span className={cn(
                     'text-[10px] font-medium',
                     connectionStatus.shopify.status === 'connected' ? 'text-emerald-400' :
-                    connectionStatus.shopify.status === 'error' ? 'text-red-400' : 'text-zinc-500'
+                    connectionStatus.shopify.status === 'error' ? 'text-red-400' : 'text-gray-500'
                   )}>
                     {connectionStatus.shopify.message}
                   </span>
@@ -201,7 +201,7 @@ export default function SettingsPage() {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] text-zinc-500">SHOPIFY_ACCESS_TOKEN, SHOPIFY_STORE_DOMAIN</span>
+              <span className="text-[10px] text-gray-500">SHOPIFY_ACCESS_TOKEN, SHOPIFY_STORE_DOMAIN</span>
             </div>
           </div>
         </div>
@@ -213,11 +213,11 @@ export default function SettingsPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-white/[0.06]">
-                <th className="py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Variable</th>
-                <th className="py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Service</th>
-                <th className="py-3 text-center text-xs font-medium text-zinc-500 uppercase tracking-wider">Required</th>
-                <th className="py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Description</th>
+              <tr className="border-b border-gray-200">
+                <th className="py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Variable</th>
+                <th className="py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
+                <th className="py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Required</th>
+                <th className="py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
               </tr>
             </thead>
             <tbody>
@@ -233,21 +233,21 @@ export default function SettingsPage() {
                 { var: 'META_ADS_ACCOUNT_ID', service: 'Meta Ads', required: false, desc: 'Ad account ID' },
                 { var: 'ANTHROPIC_API_KEY', service: 'Claude AI', required: false, desc: 'For AI insight generation' },
               ].map((envVar) => (
-                <tr key={envVar.var} className="border-b border-white/[0.03]">
+                <tr key={envVar.var} className="border-b border-gray-200">
                   <td className="py-3 text-left">
-                    <code className="rounded bg-white/[0.04] px-2 py-0.5 text-xs font-mono text-brand-400">
+                    <code className="rounded bg-gray-100 px-2 py-0.5 text-xs font-mono text-brand-400">
                       {envVar.var}
                     </code>
                   </td>
-                  <td className="py-3 text-left text-zinc-300 text-xs">{envVar.service}</td>
+                  <td className="py-3 text-left text-gray-700 text-xs">{envVar.service}</td>
                   <td className="py-3 text-center">
                     {envVar.required ? (
                       <span className="text-red-400 text-xs font-bold">Required</span>
                     ) : (
-                      <span className="text-zinc-500 text-xs">Optional</span>
+                      <span className="text-gray-500 text-xs">Optional</span>
                     )}
                   </td>
-                  <td className="py-3 text-left text-zinc-400 text-xs">{envVar.desc}</td>
+                  <td className="py-3 text-left text-gray-500 text-xs">{envVar.desc}</td>
                 </tr>
               ))}
             </tbody>
@@ -258,20 +258,20 @@ export default function SettingsPage() {
       {/* Database */}
       <Card>
         <CardHeader title="Database" subtitle="PostgreSQL via Prisma ORM — 25 models" />
-        <div className="rounded-lg bg-white/[0.02] p-4 border border-white/[0.04]">
-          <p className="text-xs text-zinc-400 mb-3">
+        <div className="rounded-lg bg-gray-50 p-4 border border-gray-200">
+          <p className="text-xs text-gray-500 mb-3">
             FunnelAI uses its own isolated Prisma schema with 25 models tracking the full customer lifecycle
             from signos.com visit through Shopify purchase, app onboarding, subscription management, and renewal/sustain transitions.
           </p>
           <div className="space-y-2">
-            <div className="rounded-md bg-surface-0 p-3 font-mono text-xs text-zinc-300">
-              <span className="text-zinc-500"># Generate Prisma client</span><br />
+            <div className="rounded-md bg-gray-50 p-3 font-mono text-xs text-gray-700">
+              <span className="text-gray-500"># Generate Prisma client</span><br />
               npx prisma generate<br /><br />
-              <span className="text-zinc-500"># Push schema to database</span><br />
+              <span className="text-gray-500"># Push schema to database</span><br />
               npx prisma db push<br /><br />
-              <span className="text-zinc-500"># Seed with mock data (optional)</span><br />
+              <span className="text-gray-500"># Seed with mock data (optional)</span><br />
               npx tsx prisma/seed.ts<br /><br />
-              <span className="text-zinc-500"># Open Prisma Studio to explore data</span><br />
+              <span className="text-gray-500"># Open Prisma Studio to explore data</span><br />
               npx prisma studio
             </div>
           </div>

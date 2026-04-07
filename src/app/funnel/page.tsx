@@ -77,14 +77,14 @@ export default function FunnelPage() {
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-1">
-          <h1 className="text-2xl font-bold text-white">Acquisition Funnel</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Acquisition Funnel</h1>
           {isConnected && funnel && (
             <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-bold text-emerald-400 border border-emerald-500/20">
               MODE LIVE — {formatNumber(funnel.totalCustomers)} customers tracked
             </span>
           )}
         </div>
-        <p className="text-sm text-zinc-400">
+        <p className="text-sm text-gray-500">
           Payment Authorization → Clinical Protocol → Doctor Approval → Payment Capture → Shipping → Onboarding
         </p>
       </div>
@@ -93,7 +93,7 @@ export default function FunnelPage() {
       {loading && (
         <div className="flex items-center justify-center py-20">
           <Loader2 className="h-6 w-6 text-brand-400 animate-spin" />
-          <span className="ml-3 text-sm text-zinc-400">Loading funnel data from Mode...</span>
+          <span className="ml-3 text-sm text-gray-500">Loading funnel data from Mode...</span>
         </div>
       )}
 
@@ -120,7 +120,7 @@ export default function FunnelPage() {
           <div className="flex justify-end mb-4">
             <button
               onClick={fetchData}
-              className="inline-flex items-center gap-2 rounded-lg bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-zinc-400 hover:bg-white/[0.08] transition-colors"
+              className="inline-flex items-center gap-2 rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-500 hover:bg-gray-200 transition-colors"
             >
               <RefreshCw className="h-3 w-3" />
               Refresh
@@ -183,11 +183,11 @@ export default function FunnelPage() {
                     <div className="flex items-center gap-4 group relative">
                       {/* Stage label */}
                       <div className="w-44 flex-shrink-0 text-right">
-                        <p className="text-xs font-medium text-zinc-300">{step.label}</p>
+                        <p className="text-xs font-medium text-gray-700">{step.label}</p>
                       </div>
 
                       {/* Bar */}
-                      <div className="flex-1 h-10 rounded-lg bg-zinc-800/40 overflow-hidden relative">
+                      <div className="flex-1 h-10 rounded-lg bg-gray-100/40 overflow-hidden relative">
                         <div
                           className={cn(
                             'h-full rounded-lg transition-all flex items-center',
@@ -195,11 +195,11 @@ export default function FunnelPage() {
                           )}
                           style={{ width: `${barWidth}%` }}
                         >
-                          <span className="px-3 text-xs font-bold text-white whitespace-nowrap">
+                          <span className="px-3 text-xs font-bold text-gray-900 whitespace-nowrap">
                             {formatNumber(step.count)}
                           </span>
                         </div>
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-zinc-400">
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-gray-500">
                           {formatPercent(step.percent)}
                         </span>
                       </div>
@@ -231,9 +231,9 @@ export default function FunnelPage() {
               {funnel.currentStageDistribution.slice(0, 10).map((stage) => (
                 <div key={stage.stage} className="flex items-center gap-3">
                   <div className="w-56 truncate">
-                    <span className="text-xs font-medium text-zinc-300">{stage.stage}</span>
+                    <span className="text-xs font-medium text-gray-700">{stage.stage}</span>
                   </div>
-                  <div className="flex-1 h-6 rounded-lg bg-zinc-800/60 overflow-hidden relative">
+                  <div className="flex-1 h-6 rounded-lg bg-gray-100 overflow-hidden relative">
                     <div
                       className={cn(
                         'h-full rounded-lg transition-all',
@@ -244,7 +244,7 @@ export default function FunnelPage() {
                       )}
                       style={{ width: `${stage.percent}%`, opacity: 0.5 }}
                     />
-                    <span className="absolute inset-0 flex items-center px-3 text-[10px] font-medium text-white">
+                    <span className="absolute inset-0 flex items-center px-3 text-[10px] font-medium text-gray-900">
                       {formatNumber(stage.count)} ({formatPercent(stage.percent, 1)})
                     </span>
                   </div>
@@ -257,23 +257,23 @@ export default function FunnelPage() {
           <Card className="border-brand-500/20 bg-gradient-to-br from-brand-500/[0.03] to-transparent">
             <CardHeader title="Funnel Insights" subtitle="Key observations from customer journey data" />
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              <div className="rounded-lg p-4 border border-white/[0.06] bg-white/[0.02]">
+              <div className="rounded-lg p-4 border border-gray-200 bg-gray-50">
                 <div className="flex items-center gap-2 mb-2">
                   <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                  <span className="text-xs font-semibold text-zinc-300">Conversion Strength</span>
+                  <span className="text-xs font-semibold text-gray-700">Conversion Strength</span>
                 </div>
-                <p className="text-[11px] text-zinc-400">
+                <p className="text-[11px] text-gray-500">
                   {kpis.customerConversionRate >= 75
                     ? `Strong ${formatPercent(kpis.customerConversionRate)} payment-to-onboarding conversion. The clinical protocol and payment stages flow well.`
                     : `${formatPercent(kpis.customerConversionRate)} conversion rate suggests room for improvement in the payment → onboarding pipeline.`}
                 </p>
               </div>
-              <div className="rounded-lg p-4 border border-white/[0.06] bg-white/[0.02]">
+              <div className="rounded-lg p-4 border border-gray-200 bg-gray-50">
                 <div className="flex items-center gap-2 mb-2">
                   <AlertTriangle className="h-4 w-4 text-amber-400" />
-                  <span className="text-xs font-semibold text-zinc-300">Biggest Drop-off Point</span>
+                  <span className="text-xs font-semibold text-gray-700">Biggest Drop-off Point</span>
                 </div>
-                <p className="text-[11px] text-zinc-400">
+                <p className="text-[11px] text-gray-500">
                   {biggestDropOff
                     ? `The largest drop occurs at "${biggestDropOff.label}" with ${formatPercent(biggestDropOff.dropOff)} loss. ${
                         biggestDropOff.stage === 'ONBOARDING_STARTED' || biggestDropOff.stage === 'ONBOARDING_COMPLETED'
