@@ -14,15 +14,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62.5,600;62.5,700;75,600;75,700;100,400;100,500;100,600;100,700;125,600;125,700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet" />
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62.5,600;62.5,700;75,600;75,700;100,400;100,500;100,600;100,700;125,600;125,700&family=JetBrains+Mono:wght@500;600&display=swap');
+      /* Inline @font-face rules — Iterable-safe (no <link> dependency).
+         Variable Archivo handles weights 400-700 and widths 62.5%-125%.
+         Per-stretch declarations help browsers that don't properly map
+         font-variation-settings:'wdth' to an unscoped variable @font-face. */
+      @font-face { font-family:'Archivo'; font-style:normal; font-weight:400 700; font-stretch:62.5%; font-display:swap; src:url(https://fonts.gstatic.com/s/archivo/v25/k3kQo8UDI-1M0wlSfdnoLmvDIaI.woff2) format('woff2'); }
+      @font-face { font-family:'Archivo'; font-style:normal; font-weight:400 700; font-stretch:75%;   font-display:swap; src:url(https://fonts.gstatic.com/s/archivo/v25/k3kQo8UDI-1M0wlSfdnoLmvDIaI.woff2) format('woff2'); }
+      @font-face { font-family:'Archivo'; font-style:normal; font-weight:400 700; font-stretch:100%;  font-display:swap; src:url(https://fonts.gstatic.com/s/archivo/v25/k3kQo8UDI-1M0wlSfdnoLmvDIaI.woff2) format('woff2'); }
+      @font-face { font-family:'Archivo'; font-style:normal; font-weight:400 700; font-stretch:125%;  font-display:swap; src:url(https://fonts.gstatic.com/s/archivo/v25/k3kQo8UDI-1M0wlSfdnoLmvDIaI.woff2) format('woff2'); }
+      @font-face { font-family:'JetBrains Mono'; font-style:normal; font-weight:500 600; font-display:swap; src:url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxDcwgknk-4.woff2) format('woff2'); }
       :root { color-scheme: only light; supported-color-schemes: only light; }
       body,table,td,p,a,li,blockquote { -webkit-text-size-adjust:100%;-ms-text-size-adjust:100%; }
       table,td { mso-table-lspace:0;mso-table-rspace:0; }
       img { -ms-interpolation-mode:bicubic;border:0;display:block;outline:none;text-decoration:none; }
-      body { margin:0;padding:0;width:100%!important;min-width:100%;background-color:#ffffff;font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,Helvetica,sans-serif;color:#21263a;font-kerning:normal;-webkit-font-kerning:normal;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-feature-settings:"kern" 1, "liga" 1; }
+      body { margin:0;padding:0;width:100%!important;min-width:100%;background-color:#f5f6f7;font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,Helvetica,sans-serif;color:#21263a;font-kerning:normal;-webkit-font-kerning:normal;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-feature-settings:"kern" 1, "liga" 1; }
       /* Force-light strategy: meta tags + :root declaration above suppress dark-mode rendering on every client that respects standards. No @media (prefers-color-scheme: dark) block — prior iPhone 16 Pro Mail incident confirmed partial-inversion risk. */
-      .wrapper { width:100%;background-color:#ffffff; }
+      .wrapper { width:100%;background-color:#f5f6f7; }
       .container { width:600px;max-width:600px;margin:0 auto; }
-      .bg-pebble { background-color:#ffffff!important; }
+      .bg-pebble { background-color:#f5f6f7!important; }
       .bg-gray { background-color:#e3e4e7!important; }
       .bg-stone { background-color:#21263a!important; }
       .h1 { font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:36px;line-height:1.1;text-transform:uppercase;margin:0;color:#21263a;font-stretch:expanded;font-variation-settings:'wdth' 125, 'wght' 700;letter-spacing:-0.01em; }
@@ -43,7 +52,7 @@
       .body-bold-luteal { font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:18px;line-height:24px;margin:0;color:#6b4700; }
       .body-bold-cerise { font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:18px;line-height:24px;margin:0;color:#fd3576; }
       .btn-cerise { display:inline-block;padding:16px 30px;border-radius:16px;font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:18px;line-height:normal;text-decoration:none;color:#ffffff!important;background-color:#fd3576;text-align:center;border:2px solid #ce0259;border-bottom:4px solid #ce0259;max-width:520px;box-sizing:border-box;font-stretch:expanded;font-variation-settings:'wdth' 125; }
-      .footer-copy { font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:500;font-size:10px;line-height:1.3;color:#ffffff;margin:0; }
+      .footer-copy { font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:500;font-size:10px;line-height:1.3;color:#f5f6f7;margin:0; }
       .footer-links { font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:14px;line-height:normal;text-transform:uppercase;color:#b5c3d6;font-stretch:condensed;font-variation-settings:'wdth' 75; }
       .ref-copy { font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:500;font-size:10px;line-height:1.3;color:#b5c3d6;margin:0; }
       @media screen and (max-width:620px) {
@@ -65,10 +74,10 @@
       }
     </style>
   </head>
-  <body style="margin:0;padding:0;background-color:#ffffff;">
+  <body style="margin:0;padding:0;background-color:#f5f6f7;">
     <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">Your cycle quietly rewrites the glucose rules every month. Here&rsquo;s how to read yours.&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;</div>
 
-    <table class="wrapper" role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="background-color:#ffffff;">
+    <table class="wrapper" role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="background-color:#f5f6f7;">
       <tr><td align="center">
         <table class="container" role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" style="width:600px;max-width:600px;margin:0 auto;">
 
@@ -83,14 +92,14 @@
 
           <!-- ===== TOP HERO IMAGE ===== -->
           <tr>
-            <td class="bg-pebble" style="background-color:#ffffff;padding:0;line-height:0;font-size:0;">
+            <td class="bg-pebble" style="background-color:#f5f6f7;padding:0;line-height:0;font-size:0;">
               <img src="https://funnel-ai-signos.netlify.app/email-assets/menstrual-cycle/hero-top.jpg?v=2" width="600" alt="Woman in white with Signos app showing her menstrual cycle and glucose data" style="display:block;width:100%;height:auto;" />
             </td>
           </tr>
 
           <!-- ===== SECTION 1: TITLE + INTRO + FIRST CTA ===== -->
           <tr>
-            <td class="bg-pebble px-m" style="background-color:#ffffff;padding:32px 16px 16px 16px;">
+            <td class="bg-pebble px-m" style="background-color:#f5f6f7;padding:32px 16px 16px 16px;">
               <p class="h1" style="font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:36px;line-height:1.1;text-transform:uppercase;margin:0;color:#21263a;font-stretch:expanded;font-variation-settings:'wdth' 125, 'wght' 700;letter-spacing:-0.01em;">
                 <span class="h1-accent" style="color:#fd3576;font-size:40px;font-variation-settings:'wdth' 125, 'wght' 700;">Un-phased:</span><br />
                 <span class="h1-cta-alt" style="color:#21263a;font-size:36px;font-weight:600;font-stretch:extra-condensed;font-variation-settings:'wdth' 62.5, 'wght' 600;letter-spacing:-0.01em;">How your menstrual cycle affects blood sugar</span>
@@ -98,13 +107,13 @@
             </td>
           </tr>
           <tr>
-            <td class="bg-pebble px-m" style="background-color:#ffffff;padding:0 16px 16px 16px;">
+            <td class="bg-pebble px-m" style="background-color:#f5f6f7;padding:0 16px 16px 16px;">
               <p class="body-lg" style="font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:400;font-size:18px;line-height:24px;margin:0 0 16px 0;color:#21263a;">One moment you can&rsquo;t stop thinking about chocolate, the next you feel like you could take on a 10K (even if you don&rsquo;t). Hormonal changes play a huge role in how we feel throughout our menstrual cycle.</p>
               <p class="body-lg" style="font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:400;font-size:18px;line-height:24px;margin:0;color:#21263a;">And since our hormones also regulate blood sugar levels, it&rsquo;s important to understand how our blood sugar may change throughout our cycle so we can work with it, not against it.</p>
             </td>
           </tr>
           <tr>
-            <td class="bg-pebble px-m" style="background-color:#ffffff;padding:16px 16px 48px 16px;">
+            <td class="bg-pebble px-m" style="background-color:#f5f6f7;padding:16px 16px 48px 16px;">
               <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%"><tr><td align="center">
                 <!--[if mso]>
                 <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://www.signos.com/mobileapp/home" style="height:54px;v-text-anchor:middle;width:520px;" arcsize="30%" strokecolor="#ce0259" strokeweight="2px" fillcolor="#fd3576">
@@ -119,8 +128,8 @@
 
           <!-- transition band: light-to-alt -->
           <tr>
-            <td style="padding:0;line-height:0;font-size:0;mso-line-height-rule:exactly;background-color:#ffffff;">
-              <img src="https://funnel-ai-signos.netlify.app/email-assets/menstrual-cycle/band-light-to-alt.png?v=2" width="600" height="60" alt="" style="display:block;width:100%;height:auto;" />
+            <td style="padding:0;line-height:0;font-size:0;mso-line-height-rule:exactly;background-color:#f5f6f7;">
+              <img src="https://funnel-ai-signos.netlify.app/email-assets/menstrual-cycle/band-light-to-alt.png?v=3" width="600" height="60" alt="" style="display:block;width:100%;height:auto;" />
             </td>
           </tr>
 
@@ -134,17 +143,17 @@
           <!-- ===== PHASE: FOLLICULAR INTRO RAIL (hex-cut + badge) ===== -->
           <tr>
             <td style="padding:0;line-height:0;font-size:0;mso-line-height-rule:exactly;background-color:#e3e4e7;">
-              <img src="https://funnel-ai-signos.netlify.app/email-assets/menstrual-cycle/rail-follicular.png?v=2" width="600" height="149" alt="" style="display:block;width:100%;height:auto;" />
+              <img src="https://funnel-ai-signos.netlify.app/email-assets/menstrual-cycle/rail-follicular.png?v=3" width="600" height="149" alt="" style="display:block;width:100%;height:auto;" />
             </td>
           </tr>
           <tr>
-            <td class="bg-pebble px-m" style="background-color:#ffffff;padding:16px 16px 16px 16px;">
+            <td class="bg-pebble px-m" style="background-color:#f5f6f7;padding:16px 16px 16px 16px;">
               <p class="h2" style="font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:36px;line-height:1.1;text-transform:uppercase;margin:0 0 4px 0;color:#21263a;font-stretch:expanded;font-variation-settings:'wdth' 125;">Follicular Phase</p>
               <p class="h2-sub-follicular" style="font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:600;font-size:36px;line-height:1.1;text-transform:uppercase;margin:0;color:#8097b5;font-stretch:extra-condensed;font-variation-settings:'wdth' 62.5, 'wght' 600;letter-spacing:-0.01em;">Days 6&ndash;13</p>
             </td>
           </tr>
           <tr>
-            <td class="bg-pebble px-m" style="background-color:#ffffff;padding:16px 16px 48px 16px;">
+            <td class="bg-pebble px-m" style="background-color:#f5f6f7;padding:16px 16px 48px 16px;">
               <p class="body-lg" style="font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:400;font-size:18px;line-height:24px;margin:0 0 16px 0;color:#21263a;">The follicular phase begins on day 1 of your period and typically lasts until ovulation (around day 14 of a 28-day cycle, though it can range from 10 to 22 days). While your period itself might leave you feeling a little wiped, this is often the phase where energy picks up, mood improves, and sleep gets better.</p>
               <p class="body-lg" style="font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:400;font-size:18px;line-height:24px;margin:0 0 16px 0;color:#21263a;">So what&rsquo;s going on?</p>
               <p class="body-bold-follicular" style="font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:18px;line-height:24px;margin:0 0 16px 0;color:#465b7a;">Estrogen is at its highest during this phase, which promotes insulin sensitivity.</p>
@@ -155,8 +164,8 @@
 
           <!-- transition band: light-to-alt -->
           <tr>
-            <td style="padding:0;line-height:0;font-size:0;mso-line-height-rule:exactly;background-color:#ffffff;">
-              <img src="https://funnel-ai-signos.netlify.app/email-assets/menstrual-cycle/band-light-to-alt.png?v=2" width="600" height="60" alt="" style="display:block;width:100%;height:auto;" />
+            <td style="padding:0;line-height:0;font-size:0;mso-line-height-rule:exactly;background-color:#f5f6f7;">
+              <img src="https://funnel-ai-signos.netlify.app/email-assets/menstrual-cycle/band-light-to-alt.png?v=3" width="600" height="60" alt="" style="display:block;width:100%;height:auto;" />
             </td>
           </tr>
 
@@ -184,17 +193,17 @@
           <!-- ===== PHASE: OVULATORY INTRO RAIL (hex-cut + badge) ===== -->
           <tr>
             <td style="padding:0;line-height:0;font-size:0;mso-line-height-rule:exactly;background-color:#e3e4e7;">
-              <img src="https://funnel-ai-signos.netlify.app/email-assets/menstrual-cycle/rail-ovulatory.png?v=2" width="600" height="149" alt="" style="display:block;width:100%;height:auto;" />
+              <img src="https://funnel-ai-signos.netlify.app/email-assets/menstrual-cycle/rail-ovulatory.png?v=3" width="600" height="149" alt="" style="display:block;width:100%;height:auto;" />
             </td>
           </tr>
           <tr>
-            <td class="bg-pebble px-m" style="background-color:#ffffff;padding:16px 16px 16px 16px;">
+            <td class="bg-pebble px-m" style="background-color:#f5f6f7;padding:16px 16px 16px 16px;">
               <p class="h2" style="font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:36px;line-height:1.1;text-transform:uppercase;margin:0 0 4px 0;color:#21263a;font-stretch:expanded;font-variation-settings:'wdth' 125;">Ovulatory Phase</p>
               <p class="h2-sub-ovulatory" style="font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:600;font-size:36px;line-height:1.1;text-transform:uppercase;margin:0;color:#3b88ff;font-stretch:extra-condensed;font-variation-settings:'wdth' 62.5, 'wght' 600;letter-spacing:-0.01em;">Day 14&ndash;21</p>
             </td>
           </tr>
           <tr>
-            <td class="bg-pebble px-m" style="background-color:#ffffff;padding:16px 16px 48px 16px;">
+            <td class="bg-pebble px-m" style="background-color:#f5f6f7;padding:16px 16px 48px 16px;">
               <p class="body-lg" style="font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:400;font-size:18px;line-height:24px;margin:0 0 16px 0;color:#21263a;">Ovulation is short (typically occurring 14&ndash;16 days before menstruation), so it often gets lumped in with the follicular phase in research. But it&rsquo;s worth paying attention to because this is where the metabolic shift begins.</p>
               <p class="body-bold-ovulatory" style="font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:18px;line-height:24px;margin:0 0 16px 0;color:#3b88ff;">You probably feel great right now.</p>
               <p class="body-lg" style="font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:400;font-size:18px;line-height:24px;margin:0 0 16px 0;color:#21263a;">Energy is high, you may be more social, and workouts feel a little easier.<sup style="font-size:11px;line-height:0;vertical-align:super;position:relative;top:-0.1em;">5</sup></p>
@@ -205,8 +214,8 @@
 
           <!-- transition band: light-to-alt -->
           <tr>
-            <td style="padding:0;line-height:0;font-size:0;mso-line-height-rule:exactly;background-color:#ffffff;">
-              <img src="https://funnel-ai-signos.netlify.app/email-assets/menstrual-cycle/band-light-to-alt.png?v=2" width="600" height="60" alt="" style="display:block;width:100%;height:auto;" />
+            <td style="padding:0;line-height:0;font-size:0;mso-line-height-rule:exactly;background-color:#f5f6f7;">
+              <img src="https://funnel-ai-signos.netlify.app/email-assets/menstrual-cycle/band-light-to-alt.png?v=3" width="600" height="60" alt="" style="display:block;width:100%;height:auto;" />
             </td>
           </tr>
 
@@ -231,17 +240,17 @@
           <!-- ===== PHASE: LUTEAL INTRO RAIL (hex-cut + badge) ===== -->
           <tr>
             <td style="padding:0;line-height:0;font-size:0;mso-line-height-rule:exactly;background-color:#e3e4e7;">
-              <img src="https://funnel-ai-signos.netlify.app/email-assets/menstrual-cycle/rail-luteal.png?v=2" width="600" height="149" alt="" style="display:block;width:100%;height:auto;" />
+              <img src="https://funnel-ai-signos.netlify.app/email-assets/menstrual-cycle/rail-luteal.png?v=3" width="600" height="149" alt="" style="display:block;width:100%;height:auto;" />
             </td>
           </tr>
           <tr>
-            <td class="bg-pebble px-m" style="background-color:#ffffff;padding:16px 16px 16px 16px;">
+            <td class="bg-pebble px-m" style="background-color:#f5f6f7;padding:16px 16px 16px 16px;">
               <p class="h2" style="font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:36px;line-height:1.1;text-transform:uppercase;margin:0 0 4px 0;color:#21263a;font-stretch:expanded;font-variation-settings:'wdth' 125;">Luteal Phase</p>
               <p class="h2-sub-luteal" style="font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:600;font-size:36px;line-height:1.1;text-transform:uppercase;margin:0;color:#6b4700;font-stretch:extra-condensed;font-variation-settings:'wdth' 62.5, 'wght' 600;letter-spacing:-0.01em;">Day 21&ndash;28</p>
             </td>
           </tr>
           <tr>
-            <td class="bg-pebble px-m" style="background-color:#ffffff;padding:16px 16px 48px 16px;">
+            <td class="bg-pebble px-m" style="background-color:#f5f6f7;padding:16px 16px 48px 16px;">
               <p class="body-lg" style="font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:400;font-size:18px;line-height:24px;margin:0 0 16px 0;color:#21263a;">After ovulation, estrogen drops and progesterone takes over. If you&rsquo;ve ever felt like your body is playing by a completely different set of rules during the second half of your cycle, you&rsquo;re not imagining it. Glucose metabolism is impaired during the luteal phase.<sup style="font-size:11px;line-height:0;vertical-align:super;position:relative;top:-0.1em;">8</sup></p>
               <p class="body-lg" style="font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:400;font-size:18px;line-height:24px;margin:0 0 16px 0;color:#21263a;">In the same CGM study, participants spent 66.8% of the day at healthy blood sugar levels during this phase (compared to 68.5% in the follicular phase), with more time spent in higher glucose ranges.<sup style="font-size:11px;line-height:0;vertical-align:super;position:relative;top:-0.1em;">5</sup> The highest median glucose levels often occur around day 24.5.</p>
               <p class="body-bold-luteal" style="font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:18px;line-height:24px;margin:0 0 16px 0;color:#6b4700;">Experiencing more cravings?</p>
@@ -252,8 +261,8 @@
 
           <!-- transition band: light-to-alt -->
           <tr>
-            <td style="padding:0;line-height:0;font-size:0;mso-line-height-rule:exactly;background-color:#ffffff;">
-              <img src="https://funnel-ai-signos.netlify.app/email-assets/menstrual-cycle/band-light-to-alt.png?v=2" width="600" height="60" alt="" style="display:block;width:100%;height:auto;" />
+            <td style="padding:0;line-height:0;font-size:0;mso-line-height-rule:exactly;background-color:#f5f6f7;">
+              <img src="https://funnel-ai-signos.netlify.app/email-assets/menstrual-cycle/band-light-to-alt.png?v=3" width="600" height="60" alt="" style="display:block;width:100%;height:auto;" />
             </td>
           </tr>
 
@@ -288,20 +297,20 @@
           <!-- transition band: alt-to-light -->
           <tr>
             <td style="padding:0;line-height:0;font-size:0;mso-line-height-rule:exactly;background-color:#e3e4e7;">
-              <img src="https://funnel-ai-signos.netlify.app/email-assets/menstrual-cycle/band-alt-to-light.png?v=2" width="600" height="60" alt="" style="display:block;width:100%;height:auto;" />
+              <img src="https://funnel-ai-signos.netlify.app/email-assets/menstrual-cycle/band-alt-to-light.png?v=3" width="600" height="60" alt="" style="display:block;width:100%;height:auto;" />
             </td>
           </tr>
 
           <!-- ===== BOTTOM HERO IMAGE ===== -->
           <tr>
-            <td class="bg-pebble" style="background-color:#ffffff;padding:0;line-height:0;font-size:0;">
+            <td class="bg-pebble" style="background-color:#f5f6f7;padding:0;line-height:0;font-size:0;">
               <img src="https://funnel-ai-signos.netlify.app/email-assets/menstrual-cycle/hero-bottom.jpg?v=2" width="600" alt="Signos CGM sensor on a table next to an iPhone showing the Signos app" style="display:block;width:100%;height:auto;" />
             </td>
           </tr>
 
           <!-- ===== FINAL CTA SECTION (members copy) ===== -->
           <tr>
-            <td class="bg-pebble px-m" style="background-color:#ffffff;padding:32px 16px 16px 16px;">
+            <td class="bg-pebble px-m" style="background-color:#f5f6f7;padding:32px 16px 16px 16px;">
               <p class="h1" style="font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:36px;line-height:1.1;text-transform:uppercase;margin:0;color:#21263a;font-stretch:expanded;font-variation-settings:'wdth' 125, 'wght' 700;letter-spacing:-0.01em;">
                 <span class="h1-accent" style="color:#fd3576;font-size:40px;font-variation-settings:'wdth' 125, 'wght' 700;">Start tracking</span><br />
                 <span class="h1-cta-alt" style="color:#21263a;font-size:36px;font-weight:600;font-stretch:extra-condensed;font-variation-settings:'wdth' 62.5, 'wght' 600;letter-spacing:-0.01em;">see your cycle next to your glucose.</span>
@@ -309,21 +318,21 @@
             </td>
           </tr>
           <tr>
-            <td class="bg-pebble px-m" style="background-color:#ffffff;padding:0 16px 16px 16px;">
+            <td class="bg-pebble px-m" style="background-color:#f5f6f7;padding:0 16px 16px 16px;">
               <p class="body-lg" style="font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:400;font-size:18px;line-height:24px;margin:0 0 16px 0;color:#21263a;">Hormones are going to impact your blood sugar, and that&rsquo;s not a problem; that&rsquo;s just Tuesday (or, you know, day 24). The point isn&rsquo;t to panic when you see a spike. It&rsquo;s to know it&rsquo;s coming and adapt your diet and routine so you feel your best.</p>
               <p class="body-lg" style="font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:400;font-size:18px;line-height:24px;margin:0;color:#21263a;">Want to learn more about what your cycle is telling you? Our latest blog dives into the latest science to help you better understand your metabolism.</p>
             </td>
           </tr>
           <tr>
-            <td class="bg-pebble px-m" style="background-color:#ffffff;padding:16px 16px 48px 16px;">
+            <td class="bg-pebble px-m" style="background-color:#f5f6f7;padding:16px 16px 48px 16px;">
               <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%"><tr><td align="center">
                 <!--[if mso]>
                 <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://www.signos.com/mobileapp/home" style="height:54px;v-text-anchor:middle;width:520px;" arcsize="30%" strokecolor="#ce0259" strokeweight="2px" fillcolor="#fd3576">
                   <w:anchorlock/>
-                  <center style="font-family:Arial,sans-serif;font-weight:bold;font-size:18px;color:#ffffff;text-decoration:none;">Balance Starts Here &rarr;</center>
+                  <center style="font-family:Arial,sans-serif;font-weight:bold;font-size:18px;color:#ffffff;text-decoration:none;">See my real-time data &rarr;</center>
                 </v:roundrect>
                 <![endif]-->
-                <!--[if !mso]><!--><a href="https://www.signos.com/mobileapp/home" class="btn-cerise" style="display:inline-block;padding:16px 30px;border-radius:16px;font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:18px;line-height:normal;text-decoration:none;color:#ffffff;background-color:#fd3576;text-align:center;border:2px solid #ce0259;border-bottom:4px solid #ce0259;max-width:520px;width:100%;box-sizing:border-box;font-stretch:expanded;font-variation-settings:'wdth' 125;">Balance Starts Here &rarr;</a><!--<![endif]-->
+                <!--[if !mso]><!--><a href="https://www.signos.com/mobileapp/home" class="btn-cerise" style="display:inline-block;padding:16px 30px;border-radius:16px;font-family:'Archivo','Archivo Narrow','Helvetica Neue Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:18px;line-height:normal;text-decoration:none;color:#ffffff;background-color:#fd3576;text-align:center;border:2px solid #ce0259;border-bottom:4px solid #ce0259;max-width:520px;width:100%;box-sizing:border-box;font-stretch:expanded;font-variation-settings:'wdth' 125;">See my real-time data &rarr;</a><!--<![endif]-->
               </td></tr></table>
             </td>
           </tr>
@@ -369,8 +378,8 @@
           <tr>
             <td class="bg-stone" style="background-color:#21263a;padding:32px 32px 0 32px;">
               <table role="presentation" border="0" cellspacing="0" cellpadding="0"><tr>
-                <td style="padding-right:12px;"><a href="https://apps.apple.com/us/app/signos/id1534943157" target="_blank"><img src="https://funnel-ai-signos.netlify.app/email-assets/menstrual-cycle/badge-app-store.png?v=2" width="124" height="44" alt="Download on the App Store" style="display:block;color:#b5c3d6;font-size:11px;" /></a></td>
-                <td><a href="https://play.google.com/store/apps/details?id=com.signos.core" target="_blank"><img src="https://funnel-ai-signos.netlify.app/email-assets/menstrual-cycle/badge-google-play.png?v=2" width="139" height="44" alt="Get it on Google Play" style="display:block;color:#b5c3d6;font-size:11px;" /></a></td>
+                <td style="padding-right:12px;"><a href="https://apps.apple.com/us/app/signos/id1534943157" target="_blank"><img src="https://funnel-ai-signos.netlify.app/email-assets/menstrual-cycle/badge-app-store.png?v=3" width="120" height="40" alt="Download on the App Store" style="display:block;color:#b5c3d6;font-size:11px;" /></a></td>
+                <td><a href="https://play.google.com/store/apps/details?id=com.signos.core" target="_blank"><img src="https://funnel-ai-signos.netlify.app/email-assets/menstrual-cycle/badge-google-play.png?v=3" width="134" height="40" alt="Get it on Google Play" style="display:block;color:#b5c3d6;font-size:11px;" /></a></td>
               </tr></table>
             </td>
           </tr>

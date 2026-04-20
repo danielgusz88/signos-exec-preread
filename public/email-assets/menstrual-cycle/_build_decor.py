@@ -27,7 +27,7 @@ HERE = Path(__file__).resolve().parent
 NUTRITION = HERE.parent / "nutrition"
 OUT = HERE
 
-PEBBLE_LIGHT = (255, 255, 255, 255)  # #FFFFFF (was #F5F6F7 — changed 2026-04-20 per Nicole's feedback: "Wave white should be FFFFFF")
+PEBBLE_LIGHT = (245, 246, 247, 255)  # #F5F6F7 (reverted 2026-04-20 per user: "where it is all white should be pebble light — a light grey")
 PEBBLE_ALT   = (227, 228, 231, 255)  # #E3E4E7
 STONE        = (33, 38, 58, 255)     # #21263A
 
