@@ -673,11 +673,20 @@
   schedule = "0 10 * * *"
   timeout = 120
 
-# Daily backup of email_hub_drafts table to Netlify Blobs (store: email-hub-backups).
-# Recovers from any future DB wipe via POST {"action":"restore","key":"latest.json"}.
-# Schedule: 06:17 UTC / 02:17 ET — off-peak, odd minute avoids :00 thundering herd.
+# Backup of email_hub_drafts table to Netlify Blobs every 12 hours.
+# Schedule: 06:17 & 18:17 UTC (02:17/14:17 ET) — off-peak, odd minute.
+# Bumped from daily → 2×/day on 2026-04-20 after the calendar data-loss
+# incident. Recovery: POST {"action":"restore","key":"latest.json"}.
 [functions."email-hub-backup"]
-  schedule = "17 6 * * *"
+  schedule = "17 */12 * * *"
+  timeout = 60
+
+# Backup of content-calendar tables (content_calendar_items + assignees
+# + review_stage_history + voice_profiles) every 12 hours at :20 past
+# the hour (offset from email-hub-backup to spread load).
+# Created 2026-04-20 in direct response to the calendar data-loss incident.
+[functions."content-calendar-backup"]
+  schedule = "20 */12 * * *"
   timeout = 60
 
 # SPA catch-all (client-side routing) — runs only when no static file matches
