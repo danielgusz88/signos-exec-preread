@@ -394,6 +394,31 @@ export default async (req: Request, _ctx: Context) => {
         audience = EXCLUDED.audience, html = EXCLUDED.html, updated_at = EXCLUDED.updated_at`;
     return json({ id, saved: true });
   }
+  /**
+   * rename-draft — update only the title of an existing draft.
+   * Lighter than save-draft (no HTML payload required). Also updates
+   * updated_at so renamed drafts float to the top of the list.
+   */
+  if (action === "rename-draft") {
+    await ensureTables();
+    const db = sql();
+    const id = (body.id as string) || "";
+    const title = ((body.title as string) || "").trim();
+    if (!id || !title) return json({ error: "id and title required" }, 400);
+    if (title.length > 200) return json({ error: "title too long (max 200 chars)" }, 400);
+    const now = Date.now();
+    const res = await db/* sql */`
+      UPDATE email_hub_drafts
+      SET title = ${title}, updated_at = ${now}
+      WHERE id = ${id}
+      RETURNING id, title, updated_at
+    `;
+    if (!res || !(res as unknown as Array<unknown>).length) {
+      return json({ error: "Draft not found" }, 404);
+    }
+    return json({ ok: true, id, title, updated_at: now });
+  }
+
   if (action === "delete-draft") {
     await ensureTables();
     const db = sql();

@@ -105,17 +105,74 @@ type Phase = 'input' | 'generating' | 'options' | 'refining';
 type ReviewStatus = 'pending' | 'reviewing' | 'done' | 'error';
 type EmailOption = { id: string; html: string; summary: string; reviewStatus: ReviewStatus; audience: string };
 
-function DraftRow({ draft, onLoad, onCopyLink, onDelete }: {
+function DraftRow({ draft, onLoad, onCopyLink, onDelete, onRename }: {
   draft: Draft;
   onLoad: (id: string) => void;
   onCopyLink: (id: string) => void;
   onDelete: (id: string) => void;
+  onRename: (id: string, newTitle: string) => Promise<boolean>;
 }) {
   const [linkCopied, setLinkCopied] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [draftName, setDraftName] = useState(draft.title);
+  const [saving, setSaving] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const startEdit = () => {
+    setDraftName(draft.title);
+    setEditing(true);
+    // Focus + select after the input renders
+    setTimeout(() => inputRef.current?.focus(), 0);
+    setTimeout(() => inputRef.current?.select(), 10);
+  };
+
+  const commit = async () => {
+    const trimmed = draftName.trim();
+    if (!trimmed || trimmed === draft.title) { setEditing(false); return; }
+    setSaving(true);
+    const ok = await onRename(draft.id, trimmed);
+    setSaving(false);
+    if (ok) setEditing(false);
+  };
+
+  const cancel = () => { setDraftName(draft.title); setEditing(false); };
+
   return (
     <div className="flex items-center justify-between px-3 py-2 hover:bg-gray-50">
-      <button onClick={() => onLoad(draft.id)} className="text-xs font-medium text-gray-800 truncate flex-1 text-left">{draft.title}</button>
+      {editing ? (
+        <input
+          ref={inputRef}
+          value={draftName}
+          onChange={e => setDraftName(e.target.value)}
+          onKeyDown={e => {
+            if (e.key === 'Enter') { e.preventDefault(); commit(); }
+            else if (e.key === 'Escape') { e.preventDefault(); cancel(); }
+          }}
+          onBlur={() => { if (!saving) commit(); }}
+          disabled={saving}
+          maxLength={200}
+          className="flex-1 rounded border border-brand-300 bg-white px-1.5 py-0.5 text-xs font-medium text-gray-800 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:opacity-60"
+        />
+      ) : (
+        <button
+          onClick={() => onLoad(draft.id)}
+          onDoubleClick={startEdit}
+          title="Click to load, double-click to rename"
+          className="text-xs font-medium text-gray-800 truncate flex-1 text-left"
+        >
+          {draft.title}
+        </button>
+      )}
       <div className="flex items-center gap-1 ml-2">
+        {!editing && (
+          <button
+            onClick={startEdit}
+            title="Rename draft"
+            className="text-gray-400 hover:text-brand-500 p-0.5"
+          >
+            <Pencil className="h-3 w-3" />
+          </button>
+        )}
         <button
           onClick={() => { onCopyLink(draft.id); setLinkCopied(true); setTimeout(() => setLinkCopied(false), 1500); }}
           title="Copy share link"
@@ -389,6 +446,35 @@ function EmailHubPage() {
       body: JSON.stringify({ action: 'delete-draft', id }),
     });
     loadDrafts();
+  };
+
+  /**
+   * Rename a draft. Updates only the title column server-side (lighter than
+   * a full save-draft upsert). Optimistically updates the drafts list so the
+   * new name appears immediately. Returns true on success for the caller to
+   * close its edit state.
+   */
+  const handleRenameDraft = async (id: string, newTitle: string): Promise<boolean> => {
+    try {
+      const res = await fetch('/api/email-hub', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'rename-draft', id, title: newTitle }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        console.warn('[email-hub] rename failed:', err);
+        return false;
+      }
+      // Optimistic local update + float to top (we set updated_at to now server-side)
+      setDrafts(prev => prev.map(d => d.id === id ? { ...d, title: newTitle, updated_at: Date.now() } : d));
+      // If this draft is currently loaded, update the local title too
+      if (draftId === id) setDraftTitle(newTitle);
+      return true;
+    } catch (e) {
+      console.warn('[email-hub] rename error:', e);
+      return false;
+    }
   };
 
   // ── File upload ─────────────────────────────────────────
@@ -1493,7 +1579,7 @@ body,.wrapper,.bg-pebble-lt { background-color: #21263a !important; }
     <div className="border-b border-gray-200 bg-white px-6 py-2">
       <div className="max-h-48 overflow-y-auto rounded-lg border border-gray-200 divide-y divide-gray-100">
         {drafts.map(d => (
-          <DraftRow key={d.id} draft={d} onLoad={handleLoadDraft} onCopyLink={copyDraftLink} onDelete={handleDeleteDraft} />
+          <DraftRow key={d.id} draft={d} onLoad={handleLoadDraft} onCopyLink={copyDraftLink} onDelete={handleDeleteDraft} onRename={handleRenameDraft} />
         ))}
       </div>
     </div>
