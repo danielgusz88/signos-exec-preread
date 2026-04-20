@@ -1,10 +1,21 @@
 [build]
-  command = "npm run build && rm -rf out/api"
+  # Fail the build if static export did not produce a root page (avoids deploying an empty site).
+  command = "npm run build && rm -rf out/api && rm -f out/_redirects && test -f out/index.html"
   publish = "out"
 
 [build.environment]
   NODE_VERSION = "18"
   NPM_FLAGS = "--legacy-peer-deps"
+  # Next.js Runtime v5 can break `output: 'export'` sites (empty/wrong publish → sitewide 404).
+  # We publish static HTML from `out/` only; skip the SSR/edge runtime wrapper.
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
+
+# Ensure skip applies for Git-triggered production & preview builds (not only local CLI).
+[context.production.environment]
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
+
+[context.deploy-preview.environment]
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
 
 [functions]
   directory = "netlify/functions"
@@ -121,6 +132,12 @@
 [[redirects]]
   from = "/api/content-calendar/iterable-push"
   to = "/.netlify/functions/iterable-push"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/voice-profile"
+  to = "/.netlify/functions/voice-profile"
   status = 200
   force = true
 
@@ -254,7 +271,7 @@
   timeout = 60
 
 [functions."marketing-ai"]
-  timeout = 60
+  timeout = 120
 
 [functions."marketing-documents"]
   timeout = 60
@@ -459,6 +476,11 @@
 [functions."email-hub"]
   timeout = 120
 
+[functions."email-hub-apply-background"]
+  # Background function — Netlify auto-detects the -background suffix
+  # and grants up to 15 minutes. Processes AI Design Review apply jobs.
+  timeout = 900
+
 [[redirects]]
   from = "/api/blog-engine/store"
   to = "/.netlify/functions/blog-engine-store"
@@ -521,6 +543,142 @@
 
 [functions."ad-studio"]
   timeout = 120
+
+# ── Page Content Editor (Inline Editing) ──────────────────────
+
+[[redirects]]
+  from = "/api/page-editor"
+  to = "/.netlify/functions/page-editor"
+  status = 200
+  force = true
+
+[functions."page-editor"]
+  timeout = 30
+
+# ── Ad System (Marketing Pipeline) ──────────────────────────────
+
+[[redirects]]
+  from = "/api/research/scrape"
+  to = "/.netlify/functions/research-scraper"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/research/language"
+  to = "/.netlify/functions/language-library"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/concepts/generate"
+  to = "/.netlify/functions/concept-generator"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/concepts/personas"
+  to = "/.netlify/functions/persona-scorer"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/copy/lab"
+  to = "/.netlify/functions/copy-lab"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/production/pipeline"
+  to = "/.netlify/functions/production-pipeline"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/figma/orchestrate"
+  to = "/.netlify/functions/figma-orchestrator"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/deploy/ads"
+  to = "/.netlify/functions/ad-deploy"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/flights/manage"
+  to = "/.netlify/functions/test-flight-manager"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/leaderboard"
+  to = "/.netlify/functions/leaderboard"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/feedback-loop"
+  to = "/.netlify/functions/feedback-loop"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/lp/match"
+  to = "/.netlify/functions/landing-page-matcher"
+  status = 200
+  force = true
+
+[functions."research-scraper"]
+  timeout = 120
+
+[functions."language-library"]
+  timeout = 60
+
+[functions."concept-generator"]
+  timeout = 120
+
+[functions."persona-scorer"]
+  timeout = 120
+
+[functions."copy-lab"]
+  timeout = 120
+
+[functions."production-pipeline"]
+  timeout = 120
+
+[functions."figma-orchestrator"]
+  timeout = 60
+
+[functions."ad-deploy"]
+  timeout = 60
+
+[functions."test-flight-manager"]
+  timeout = 60
+
+[functions."leaderboard"]
+  timeout = 120
+
+[functions."feedback-loop"]
+  timeout = 120
+
+[functions."landing-page-matcher"]
+  timeout = 60
+
+[functions."production-cron"]
+  schedule = "0 6 * * 1"
+  timeout = 120
+
+[functions."leaderboard-cron"]
+  schedule = "0 10 * * *"
+  timeout = 120
+
+# Daily backup of email_hub_drafts table to Netlify Blobs (store: email-hub-backups).
+# Recovers from any future DB wipe via POST {"action":"restore","key":"latest.json"}.
+# Schedule: 06:17 UTC / 02:17 ET — off-peak, odd minute avoids :00 thundering herd.
+[functions."email-hub-backup"]
+  schedule = "17 6 * * *"
+  timeout = 60
 
 # SPA catch-all (client-side routing) — runs only when no static file matches
 [[redirects]]
