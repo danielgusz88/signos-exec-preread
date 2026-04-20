@@ -160,6 +160,20 @@ function EmailHubPage() {
   const [directCopyFiles, setDirectCopyFiles] = useState<{ name: string; content: string }[]>([]);
   const directCopyFileRef = useRef<HTMLInputElement>(null);
 
+  /* Figma flow: build emails from Figma design links + user-uploaded images
+     with per-image placement notes. Backend renders each Figma node via the
+     REST API, forwards images + notes + instructions to Claude as multi-
+     modal input, streams HTML, and auto-saves as a draft. */
+  const [showFigmaPanel, setShowFigmaPanel] = useState(false);
+  const [figmaMode, setFigmaMode] = useState(false);
+  const [figmaUrlsText, setFigmaUrlsText] = useState(''); // one URL per line
+  const [figmaImages, setFigmaImages] = useState<
+    { dataUrl: string; note: string; filename: string; sizeKb: number }[]
+  >([]);
+  const figmaFileRef = useRef<HTMLInputElement>(null);
+  const [figmaBuilding, setFigmaBuilding] = useState(false);
+  const [figmaStatus, setFigmaStatus] = useState<string>('');
+
   /* Design presets (B): layout / palette / type scale. These are the
      primary levers for making each email visually distinct. */
   const [layout, setLayout] = useState<'editorial' | 'newsletter' | 'announcement' | 'digest' | ''>('');
@@ -423,6 +437,96 @@ function EmailHubPage() {
     const updated = directCopyFiles.filter(f => f.name !== name);
     setDirectCopyFiles(updated);
     setDirectCopyText(updated.map(f => f.content).join('\n\n'));
+  };
+
+  // ── Figma flow handlers ────────────────────────────────────
+
+  const handleFigmaImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+    const newItems: typeof figmaImages = [];
+    for (const file of Array.from(files)) {
+      if (!file.type.startsWith('image/')) continue;
+      if (file.size > 5 * 1024 * 1024) {
+        setFigmaStatus(`${file.name} skipped — images must be ≤5MB each`);
+        continue;
+      }
+      try {
+        const dataUrl = await new Promise<string>((resolve, reject) => {
+          const fr = new FileReader();
+          fr.onload = () => resolve(fr.result as string);
+          fr.onerror = reject;
+          fr.readAsDataURL(file);
+        });
+        newItems.push({ dataUrl, note: '', filename: file.name, sizeKb: Math.round(file.size / 1024) });
+      } catch {/* skip */}
+    }
+    setFigmaImages(prev => [...prev, ...newItems]);
+    if (figmaFileRef.current) figmaFileRef.current.value = '';
+  };
+
+  const updateFigmaImageNote = (idx: number, note: string) => {
+    setFigmaImages(prev => prev.map((img, i) => i === idx ? { ...img, note } : img));
+  };
+
+  const removeFigmaImage = (idx: number) => {
+    setFigmaImages(prev => prev.filter((_, i) => i !== idx));
+  };
+
+  const handleGenerateFromFigma = async () => {
+    const urls = figmaUrlsText.split(/\n|,/).map(s => s.trim()).filter(Boolean);
+    if (!urls.length && !figmaImages.length && !details.trim()) {
+      setFigmaStatus('Add at least one Figma URL, uploaded image, or instructions.');
+      return;
+    }
+    setFigmaBuilding(true);
+    setFigmaStatus('Fetching Figma designs…');
+    try {
+      const res = await fetch('/api/email-hub', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'generate-from-figma',
+          figmaUrls: urls,
+          uploadedImages: figmaImages.map(img => ({ dataUrl: img.dataUrl, note: img.note, filename: img.filename })),
+          instructions: details,
+          concept: concept || 'Email from Figma',
+          audience,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        setFigmaStatus(`Generation failed: ${err.error || res.status}`);
+        setFigmaBuilding(false);
+        return;
+      }
+      // Stream to accumulate full HTML. We don't display it in real-time here
+      // (the backend auto-saves as a draft); instead we just read to the end
+      // and then navigate to the saved draft.
+      setFigmaStatus('Generating email (this can take 30-90 seconds)…');
+      const reader = res.body?.getReader();
+      const decoder = new TextDecoder();
+      let full = '';
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          full += decoder.decode(value, { stream: true });
+        }
+      }
+      // Parse the trailing draft-id comment the backend emits
+      const m = /<!--\s*EMAIL_HUB_DRAFT_ID:\s*(ehd_[\w-]+)\s*-->/.exec(full);
+      const draftId = m?.[1] || res.headers.get('X-Email-Hub-Draft-Id') || '';
+      setFigmaStatus(draftId ? `✓ Saved as draft ${draftId}` : '✓ Email generated');
+      if (draftId) {
+        // Navigate to the new draft
+        window.location.href = `/email-hub/?draft=${encodeURIComponent(draftId)}`;
+      }
+    } catch (err) {
+      setFigmaStatus(`Error: ${err instanceof Error ? err.message : 'unknown'}`);
+    } finally {
+      setFigmaBuilding(false);
+    }
   };
 
   // ── Generate options ────────────────────────────────────
@@ -1591,6 +1695,21 @@ body,.wrapper,.bg-pebble-lt { background-color: #21263a !important; }
                     >
                       <FileText className="h-3.5 w-3.5" /> Direct Copy
                     </button>
+                    <button
+                      onClick={() => { setShowFigmaPanel(!showFigmaPanel); setFigmaMode(!showFigmaPanel); }}
+                      disabled={isGenerating || figmaBuilding}
+                      className={`flex items-center gap-1.5 rounded-lg border px-3 py-2.5 text-xs font-medium transition-colors ${
+                        showFigmaPanel || figmaMode ? 'border-fuchsia-400 bg-fuchsia-50 text-fuchsia-700' : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+                      } disabled:opacity-60`}
+                      title="Generate an email from Figma design links + uploaded reference images"
+                    >
+                      <Palette className="h-3.5 w-3.5" /> Figma
+                      {(figmaUrlsText.trim() || figmaImages.length > 0) && (
+                        <span className="ml-1 rounded-full bg-fuchsia-200 px-1.5 py-0.5 text-[9px] font-bold text-fuchsia-900">
+                          {(figmaUrlsText.split('\n').filter(s => s.trim()).length) + figmaImages.length}
+                        </span>
+                      )}
+                    </button>
                   </div>
                 </div>
 
@@ -1904,6 +2023,102 @@ body,.wrapper,.bg-pebble-lt { background-color: #21263a !important; }
                           className="w-full rounded border border-emerald-200 bg-white px-2.5 py-1.5 text-xs focus:border-emerald-400 focus:outline-none resize-none disabled:opacity-60"
                         />
                       </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Figma Panel — paste Figma share links + upload reference images with placement notes */}
+                {showFigmaPanel && (
+                  <div className="space-y-3 rounded-lg border border-fuchsia-200 bg-fuchsia-50/30 p-3">
+                    <div className="flex items-center justify-between">
+                      <label className="text-[10px] font-semibold uppercase tracking-wide text-fuchsia-700">Build from Figma</label>
+                      <button onClick={() => { setShowFigmaPanel(false); setFigmaMode(false); }} className="text-gray-400 hover:text-gray-600"><X className="h-3 w-3" /></button>
+                    </div>
+                    <p className="text-[11px] text-gray-500 leading-relaxed">
+                      Paste Figma share links (we&apos;ll render each node via the Figma API), upload reference images with placement notes, and we&apos;ll build a cycle-template-structured email from them — auto-saved to your drafts.
+                    </p>
+
+                    {/* Figma URLs */}
+                    <div>
+                      <p className="text-[10px] font-medium text-gray-500 mb-1 flex items-center gap-1">
+                        <Palette className="h-3 w-3" /> Figma share links (one per line)
+                      </p>
+                      <textarea
+                        value={figmaUrlsText}
+                        onChange={e => setFigmaUrlsText(e.target.value)}
+                        placeholder="https://www.figma.com/design/FILE_KEY/name?node-id=123-456&#10;https://www.figma.com/design/FILE_KEY/name?node-id=789-012"
+                        rows={3}
+                        disabled={figmaBuilding || isGenerating}
+                        className="w-full rounded border border-fuchsia-200 bg-white px-2.5 py-1.5 text-xs font-mono focus:border-fuchsia-400 focus:outline-none resize-none disabled:opacity-60"
+                      />
+                      <p className="mt-1 text-[9px] text-gray-400">
+                        Specific nodes (with <code>?node-id=</code>) get rendered as PNG at 2×. File-level links are included as text context.
+                      </p>
+                    </div>
+
+                    {/* Image uploads with per-image notes */}
+                    <div>
+                      <p className="text-[10px] font-medium text-gray-500 mb-1 flex items-center gap-1">
+                        <ImagePlus className="h-3 w-3" /> Upload reference images (each ≤5MB)
+                      </p>
+                      <input
+                        ref={figmaFileRef}
+                        type="file"
+                        multiple
+                        accept="image/png,image/jpeg,image/webp,image/gif"
+                        onChange={handleFigmaImageUpload}
+                        disabled={figmaBuilding || isGenerating}
+                        className="w-full text-xs file:mr-3 file:rounded file:border-0 file:bg-fuchsia-100 file:px-2.5 file:py-1 file:text-xs file:font-medium file:text-fuchsia-700 hover:file:bg-fuchsia-200"
+                      />
+                      {figmaImages.length > 0 && (
+                        <div className="mt-2 space-y-2">
+                          {figmaImages.map((img, idx) => (
+                            <div key={idx} className="flex items-start gap-2 rounded border border-fuchsia-100 bg-white p-2">
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img src={img.dataUrl} alt={img.filename} className="h-12 w-12 flex-shrink-0 rounded object-cover border border-gray-200" />
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center justify-between gap-2">
+                                  <span className="truncate text-[10px] font-medium text-gray-700" title={img.filename}>{img.filename}</span>
+                                  <span className="flex-shrink-0 text-[9px] text-gray-400">{img.sizeKb}KB</span>
+                                </div>
+                                <input
+                                  type="text"
+                                  value={img.note}
+                                  onChange={e => updateFigmaImageNote(idx, e.target.value)}
+                                  placeholder="Where / how to use this image (e.g. 'top hero section', 'follicular how-to card')"
+                                  disabled={figmaBuilding || isGenerating}
+                                  className="mt-1 w-full rounded border border-fuchsia-200 bg-fuchsia-50/50 px-1.5 py-0.5 text-[10px] focus:border-fuchsia-400 focus:outline-none disabled:opacity-60"
+                                />
+                              </div>
+                              <button
+                                onClick={() => removeFigmaImage(idx)}
+                                className="flex-shrink-0 text-fuchsia-400 hover:text-fuchsia-700"
+                                title="Remove this image"
+                              ><X className="h-3 w-3" /></button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Generate-from-figma CTA (separate from the main Generate Emails button) */}
+                    <div className="flex items-center justify-between gap-3 border-t border-fuchsia-100 pt-3">
+                      <div className="text-[10px] text-gray-500">
+                        Uses <strong>Details &amp; Instructions</strong> above as the prompt. Result auto-saves as a draft.
+                      </div>
+                      <button
+                        onClick={handleGenerateFromFigma}
+                        disabled={figmaBuilding || isGenerating || (!figmaUrlsText.trim() && figmaImages.length === 0 && !details.trim())}
+                        className="flex items-center gap-1.5 rounded-lg bg-fuchsia-600 px-3 py-2 text-xs font-semibold text-white hover:bg-fuchsia-700 disabled:opacity-50"
+                      >
+                        {figmaBuilding
+                          ? <><Loader2 className="h-3.5 w-3.5 animate-spin" /> Building…</>
+                          : <><Sparkles className="h-3.5 w-3.5" /> Generate from Figma</>}
+                      </button>
+                    </div>
+
+                    {figmaStatus && (
+                      <div className="rounded border border-fuchsia-200 bg-white px-2 py-1 text-[10px] text-fuchsia-800">{figmaStatus}</div>
                     )}
                   </div>
                 )}

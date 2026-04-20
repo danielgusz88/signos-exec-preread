@@ -16,6 +16,7 @@ import {
   type ImageSubject,
 } from "./lib/email-design.mjs";
 import { computeMissingClosers, truncateToLastCompleteTr, healContent, healContentStream, auditContent } from "./lib/email-structure.mjs";
+import { parseFigmaUrl, exportFigmaNodes } from "./lib/figma-rest.mjs";
 import { runDesignLinter, findingsToPromptText, extractBlocksFromContent } from "./lib/email-design-linter.mjs";
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -657,6 +658,310 @@ Output a PREHEADER line first (prefixed "PREHEADER: "), then ONLY raw <tr>...</t
     } catch (err: unknown) {
       console.error(`[email-hub] generate error:`, err);
       return json({ error: err instanceof Error ? err.message : "Generation failed" }, 500);
+    }
+  }
+
+  /* ────────────────── generate-from-figma ──────────────────
+   * Build an email from Figma design links + user-uploaded reference images
+   * with notes. Renders each Figma node via the REST API as a PNG, sends
+   * the images + notes + instructions to Claude as multi-modal input, and
+   * streams HTML that uses the menstrual-cycle email as a structural base
+   * (per user's "go-forward template" direction).
+   *
+   * Auto-saves the result as a draft (stable id from concept+timestamp) so
+   * users see it in Saved Emails immediately after generation completes.
+   *
+   * Input:
+   *   {
+   *     figmaUrls: string[],           // Figma share URLs (any of /design /file /board /make)
+   *     uploadedImages: Array<{
+   *       dataUrl: string,             // "data:image/png;base64,..." (<5MB each)
+   *       note: string,                // where/how to use this image
+   *       filename?: string
+   *     }>,
+   *     instructions: string,          // free-form user instructions
+   *     concept: string,               // email concept / short title
+   *     audience: "members"|"leads"|"both",
+   *     draftId?: string               // optional stable draft id (else autogen)
+   *   }
+   */
+  if (action === "generate-from-figma") {
+    const figmaUrls = (body.figmaUrls as string[]) || [];
+    const uploadedImages = (body.uploadedImages as Array<{ dataUrl: string; note: string; filename?: string }>) || [];
+    const instructions = ((body.instructions as string) || "").trim();
+    const concept = ((body.concept as string) || "Email from Figma").trim();
+    const audience = (body.audience as string) || "both";
+    const providedDraftId = (body.draftId as string) || "";
+
+    if (!figmaUrls.length && !uploadedImages.length && !instructions) {
+      return json({ error: "Need at least one Figma URL, uploaded image, or instructions" }, 400);
+    }
+
+    // Parse Figma URLs. Invalid URLs are reported but don't abort.
+    const parsed = figmaUrls
+      .map((u) => ({ raw: u, parsed: parseFigmaUrl(u) }))
+      .filter((p) => p.parsed !== null) as { raw: string; parsed: NonNullable<ReturnType<typeof parseFigmaUrl>> }[];
+    const invalidUrls = figmaUrls.length - parsed.length;
+
+    // Fetch renders for each Figma node. Requires FIGMA_ACCESS_TOKEN.
+    // If token missing, we still proceed — Claude gets URLs as text context
+    // and uploaded images as the only visual reference.
+    const figmaToken = process.env.FIGMA_ACCESS_TOKEN || "";
+    type FigmaRender = { url: string; fileKey: string; nodeId: string | null; imageBase64: string };
+    const renders: FigmaRender[] = [];
+    if (figmaToken && parsed.length) {
+      // Group by fileKey so we can batch per-file
+      const byFile = new Map<string, string[]>();
+      for (const p of parsed) {
+        if (!p.parsed.nodeId) continue; // need a specific node to render
+        const arr = byFile.get(p.parsed.fileKey) || [];
+        arr.push(p.parsed.nodeId);
+        byFile.set(p.parsed.fileKey, arr);
+      }
+      for (const [fileKey, nodeIds] of byFile) {
+        try {
+          const exported = await exportFigmaNodes(figmaToken, fileKey, nodeIds, 2);
+          for (const e of exported) {
+            const originalUrl = parsed.find((p) => p.parsed.fileKey === fileKey && p.parsed.nodeId === e.nodeId)?.raw || "";
+            renders.push({ url: originalUrl, fileKey, nodeId: e.nodeId, imageBase64: e.imageBase64 });
+          }
+        } catch (err) {
+          console.warn(`[email-hub] figma export failed for ${fileKey}:`, err);
+        }
+      }
+    }
+
+    console.log(`[email-hub] generate-from-figma: ${figmaUrls.length} urls (${parsed.length} valid), ${renders.length} renders, ${uploadedImages.length} uploads, invalid=${invalidUrls}`);
+
+    /* System prompt: pin Claude to the menstrual-cycle email structure but
+     * tell it to adapt copy + colors to the user's topic + Figma designs. */
+    const systemPrompt = `You are a SENIOR EMAIL DESIGNER producing a Signos marketing email.
+
+BASE TEMPLATE: Model the structure on the Signos menstrual-cycle email (live at https://funnel-ai-signos.netlify.app/email-hub/?draft=ehd_cycle_members). Its anatomy:
+  1. Dark-navy header with Signos logo
+  2. Full-width hero image (600×408)
+  3. H1 + intro paragraph + primary CTA on pebble bg (#f5f6f7)
+  4. Transition wave band (pebble → pebble-alt gray #e3e4e7)
+  5. Large H2 intro headline — 56px Archivo Extra Condensed SemiBold, all caps (lh 1)
+  6. Phase rail image (600×149) with hex-cut + phase icon
+  7. H2 phase title + H2-sub subtitle (color-themed per phase) + body paragraphs with numbered citations
+  8. Transition wave band
+  9. Polygon-cut "How to" card image (568 CSS wide), H3 eyebrow, H3-main colored phase title, body bullets
+  Repeat rail → title → body → wave → card for each of 3 themed sections.
+  10. Bottom hero image
+  11. Final CTA section (H1-accent + H1-cta-alt + body + CTA button)
+  12. References list in dark-navy footer
+  13. Standard Signos footer (logo, links, social, app badges, disclaimer)
+
+CSS CLASSES AVAILABLE (already in the <head>): .h1, .h1-accent, .h1-cta-alt, .h2-intro, .h2, .h2-sub-follicular, .h2-sub-ovulatory, .h2-sub-luteal, .h3-eyebrow, .h3-main-follicular, .h3-main-ovulatory, .h3-main-luteal, .body-lg, .body-bold-follicular, .body-bold-ovulatory, .body-bold-luteal, .body-bold-cerise, .btn-cerise, .ref-copy, .footer-copy, .footer-links, .bg-pebble (#f5f6f7), .bg-gray (#e3e4e7), .bg-stone (#21263a).
+
+COLOR THEMES (reuse for the 3 sections — the user's topic may not be "cycle"; substitute section meaning):
+  - Section 1 theme: stone-light #8097b5 (h2-sub) + stone-med #465b7a (h3-main + body-bold) — "beginning / foundational" feel
+  - Section 2 theme: sky #3b88ff — "peak / energetic" feel
+  - Section 3 theme: gold pitch #6b4700 — "integration / maintenance" feel
+
+OUTPUT RULES:
+  - Output ONLY the email <tr> content blocks (no <!doctype>, no <head>, no <style>, no <body>, no footer). The head + footer are prepended/appended by the pipeline.
+  - Use the reference images (Figma renders + user uploads below) as the visual source of truth for layout, hierarchy, imagery, and overall feel.
+  - Respect the user's image-placement notes: if a note says "this goes in the top hero", use that image as the hero.
+  - Pull image URLs from the attached references by saying [USE REFERENCE IMAGE #N for hero] inline; the pipeline will substitute.
+  - Headings 3-7 words, uppercase for h1/h2/h3, body-lg 18px, body-bold-* 18px bold colored for emphasis.
+  - Always produce all 3 themed sections, a bottom hero, a final CTA, and a references list (even if numbered bullets only). Never skip the references — they're a Signos signature element.
+  - Citations in body: use <sup style="font-size:11px;line-height:0;vertical-align:super;position:relative;top:-0.1em;">N</sup>
+  - CTA URLs: use https://www.signos.com/mobileapp/home for members, /plans for leads, fallback /.
+
+EMAIL ASSETS (preload these URLs for band + rail + card imagery):
+  - Wave band pebble→gray: https://funnel-ai-signos.netlify.app/email-assets/menstrual-cycle/band-light-to-alt.png?v=3 (600×60)
+  - Wave band gray→pebble: https://funnel-ai-signos.netlify.app/email-assets/menstrual-cycle/band-alt-to-light.png?v=3 (600×60)
+  - Rail images with phase icons: rail-follicular.png (seedling, blue-gray), rail-ovulatory.png (lightning, blue), rail-luteal.png (waves, amber) — all 600×149 at /email-assets/menstrual-cycle/rail-*.png?v=3
+  - How-to card images: card-follicular/ovulatory/luteal.jpg at /email-assets/menstrual-cycle/ (568 CSS wide)
+
+Produce the email now. Output raw <tr> blocks only.`;
+
+    // Build multi-modal user message content blocks.
+    // Order matters for Claude: reference images first (with labels), then text instructions.
+    const content: Array<
+      { type: "text"; text: string } |
+      { type: "image"; source: { type: "base64"; media_type: "image/png" | "image/jpeg" | "image/webp" | "image/gif"; data: string } }
+    > = [];
+
+    // Figma renders
+    renders.forEach((r, i) => {
+      if (r.imageBase64) {
+        content.push({
+          type: "text",
+          text: `FIGMA REFERENCE #${i + 1} — ${r.url} (fileKey=${r.fileKey}, node=${r.nodeId}):`,
+        });
+        content.push({
+          type: "image",
+          source: { type: "base64", media_type: "image/png", data: r.imageBase64 },
+        });
+      }
+    });
+
+    // User-uploaded images with notes
+    uploadedImages.forEach((img, i) => {
+      // dataUrl format: "data:image/png;base64,XXXX"
+      const match = /^data:(image\/[a-z+]+);base64,(.+)$/i.exec(img.dataUrl || "");
+      if (!match) return;
+      const mediaType = match[1];
+      const data = match[2];
+      // Claude only accepts specific media types; narrow to supported set
+      const safeType: "image/png" | "image/jpeg" | "image/webp" | "image/gif" =
+        mediaType === "image/jpeg" ? "image/jpeg"
+        : mediaType === "image/webp" ? "image/webp"
+        : mediaType === "image/gif" ? "image/gif"
+        : "image/png";
+      const idx = renders.length + i + 1;
+      content.push({
+        type: "text",
+        text: `UPLOADED IMAGE #${idx}${img.filename ? ` (${img.filename})` : ""} — USAGE NOTE: ${img.note || "(no note provided)"}`,
+      });
+      content.push({ type: "image", source: { type: "base64", media_type: safeType, data } });
+    });
+
+    // Unrendered Figma URLs as text-only context (token missing or render failed)
+    const unrenderedUrls = figmaUrls.filter((u) => !renders.some((r) => r.url === u));
+    if (unrenderedUrls.length) {
+      content.push({
+        type: "text",
+        text: `REFERENCE FIGMA URLS (not rendered${figmaToken ? "" : "; FIGMA_ACCESS_TOKEN not configured"}):\n${unrenderedUrls.map((u) => `  - ${u}`).join("\n")}`,
+      });
+    }
+
+    // Main instructions block
+    content.push({
+      type: "text",
+      text: `EMAIL CONCEPT: ${concept}\nAUDIENCE: ${audience}\n\nINSTRUCTIONS:\n${instructions || "(no additional instructions — use the references as source of truth)"}\n\nProduce the complete email body as <tr> blocks now. Match the cycle template structure. Adapt all copy to this topic.`,
+    });
+
+    // Stable draft id (either provided or derived)
+    const now = Date.now();
+    const draftId = providedDraftId || `ehd_figma_${now}_${Math.random().toString(36).slice(2, 8)}`;
+
+    try {
+      const encoder = new TextEncoder();
+      const readable = new ReadableStream({
+        async start(controller) {
+          let fullOutput = "";
+          let totalChunks = 0;
+
+          try {
+            // Prepend the same TEMPLATE_HEAD used by generate-option so the
+            // output is a complete standalone email with cycle-matching CSS.
+            const headHtml = TEMPLATE_HEAD
+              .replace("{{PREHEADER}}", concept.slice(0, 80))
+              .replace("{{TITLE}}", concept || "Signos Email");
+            controller.enqueue(encoder.encode(headHtml));
+
+            const FIGMA_MAX_TOKENS = 24000;
+            const FIGMA_MAX_CONT = 5;
+
+            const streamChunk = async (s: ReturnType<typeof client.messages.stream>) => {
+              let headerParsed = false;
+              for await (const event of s) {
+                if (event.type === "content_block_delta" && event.delta.type === "text_delta") {
+                  totalChunks++;
+                  const text = event.delta.text;
+                  fullOutput += text;
+                  if (!headerParsed) {
+                    const trIdx = fullOutput.indexOf("<tr");
+                    if (trIdx >= 0) {
+                      headerParsed = true;
+                      controller.enqueue(encoder.encode(fullOutput.slice(trIdx)));
+                    }
+                  } else {
+                    controller.enqueue(encoder.encode(text));
+                  }
+                }
+              }
+              return s.finalMessage();
+            };
+
+            let finalMsg = await streamChunk(client.messages.stream({
+              model: "claude-sonnet-4-20250514",
+              max_tokens: FIGMA_MAX_TOKENS,
+              system: systemPrompt,
+              messages: [{ role: "user", content }],
+            }));
+
+            let conts = 0;
+            while (finalMsg.stop_reason === "max_tokens" && conts < FIGMA_MAX_CONT) {
+              conts++;
+              console.log(`[email-hub] figma generation continuation ${conts}/${FIGMA_MAX_CONT}`);
+              finalMsg = await streamChunk(client.messages.stream({
+                model: "claude-sonnet-4-20250514",
+                max_tokens: FIGMA_MAX_TOKENS,
+                system: "Continue generating the Signos email HTML <tr> blocks EXACTLY where you stopped. Output ONLY <tr> blocks.",
+                messages: [
+                  { role: "user", content },
+                  { role: "assistant", content: fullOutput },
+                ],
+              }));
+            }
+
+            // Truncation guard — same recovery pattern as generate-option
+            const tailLt = fullOutput.lastIndexOf("<");
+            const tailGt = fullOutput.lastIndexOf(">");
+            if (tailLt > tailGt) {
+              console.warn(`[email-hub] figma stream cut mid-tag at ${tailLt}; emitting recovery`);
+              controller.enqueue(encoder.encode("'\">"));
+              controller.enqueue(encoder.encode("</p></td></tr>"));
+            }
+            const cleanedOutput = truncateToLastCompleteTr(fullOutput);
+            const missingClosers = computeMissingClosers(cleanedOutput);
+            if (missingClosers) controller.enqueue(encoder.encode(missingClosers));
+
+            // Append TEMPLATE_FOOTER so the doc closes with </body></html>
+            controller.enqueue(encoder.encode(TEMPLATE_FOOTER));
+
+            // Auto-save as a draft so it appears in Saved Emails immediately.
+            // We re-assemble the full HTML by concatenating head + cleaned
+            // content + closers + footer (same order we just streamed).
+            const fullHtml =
+              headHtml +
+              cleanedOutput +
+              (missingClosers || "") +
+              TEMPLATE_FOOTER;
+            await ensureTables();
+            const db = sql();
+            await db/* sql */`
+              INSERT INTO email_hub_drafts
+                (id, title, theme, details, audience, html, created_at, updated_at)
+              VALUES
+                (${draftId}, ${concept || "Email from Figma"}, ${concept || ""},
+                 ${instructions || ""}, ${audience}, ${fullHtml}, ${now}, ${now})
+              ON CONFLICT (id) DO UPDATE SET
+                title = EXCLUDED.title,
+                theme = EXCLUDED.theme,
+                details = EXCLUDED.details,
+                audience = EXCLUDED.audience,
+                html = EXCLUDED.html,
+                updated_at = EXCLUDED.updated_at
+            `;
+            console.log(`[email-hub] figma generation done: ${totalChunks} chunks, ${conts} conts, ${fullHtml.length} bytes, saved as ${draftId}`);
+
+            // Emit a trailing HTML comment the client can parse for the draft id
+            controller.enqueue(encoder.encode(`\n<!-- EMAIL_HUB_DRAFT_ID: ${draftId} -->\n`));
+            controller.close();
+          } catch (streamErr) {
+            console.error(`[email-hub] figma generation stream error:`, streamErr);
+            controller.close();
+          }
+        },
+      });
+
+      return new Response(readable, {
+        headers: {
+          ...cors,
+          "Content-Type": "text/html; charset=utf-8",
+          "Cache-Control": "no-cache",
+          "X-Email-Hub-Draft-Id": draftId,
+        },
+      });
+    } catch (err: unknown) {
+      console.error(`[email-hub] generate-from-figma error:`, err);
+      return json({ error: err instanceof Error ? err.message : "Figma generation failed" }, 500);
     }
   }
 
