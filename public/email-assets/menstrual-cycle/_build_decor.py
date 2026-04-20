@@ -82,13 +82,18 @@ def make_bands() -> None:
     print(f"  band-alt-to-light.png  {alt_to_light.size}")
 
 
-def make_rail(icon_src: Path, circle_color: tuple, out_name: str) -> None:
+def make_rail(icon_src: Path, circle_color: tuple, out_name: str, glyph_color: tuple = None) -> None:
     """Build a 1200×298 phase-intro rail:
       - Top ~180 rows (90 CSS px): pebble-alt
       - Hex-cut wave band at y=180-298 transitioning alt → pebble-light
       - Circle badge on the left straddling the boundary, filled with circle_color
-      - Monochrome-stone phase icon centered in the badge
+      - Phase icon centered in the badge (glyph_color, defaults to STONE)
+
+    glyph_color: pass WHITE for badges with strong/dark backgrounds (e.g.
+    ovulatory #3B88FF) where a dark STONE glyph has poor contrast.
     """
+    if glyph_color is None:
+        glyph_color = STONE
     wave_src = NUTRITION / "hexcut-pebble-to-pebble2.png"
     base = Image.new("RGBA", (W, H_RAIL), PEBBLE_ALT)
 
@@ -148,7 +153,7 @@ def make_rail(icon_src: Path, circle_color: tuple, out_name: str) -> None:
         for x in range(bbox[0], bbox[2]):
             a = mp[x, y]
             if a > 0:
-                gp[x - bbox[0], y - bbox[1]] = (STONE[0], STONE[1], STONE[2], a)
+                gp[x - bbox[0], y - bbox[1]] = (glyph_color[0], glyph_color[1], glyph_color[2], a)
 
     icon_size = 82
     ratio = icon_size / max(glyph.width, glyph.height)
@@ -173,6 +178,8 @@ if __name__ == "__main__":
     # If we only have the circle PNGs, those will still work because the
     # rail script strips the colored circle bg (alpha bbox) and re-tints to stone.
     make_rail(HERE / "icon-phase-follicular.png", FOLLICULAR, "rail-follicular.png")
-    make_rail(HERE / "icon-phase-ovulatory.png",  OVULATORY,  "rail-ovulatory.png")
+    # Ovulatory circle is #3B88FF (strong sky blue) — use WHITE glyph for contrast per
+    # Nicole's feedback (2026-04-20: "icon in the blue circle should be white").
+    make_rail(HERE / "icon-phase-ovulatory.png",  OVULATORY,  "rail-ovulatory.png", glyph_color=(255, 255, 255, 255))
     make_rail(HERE / "icon-phase-luteal.png",     LUTEAL,     "rail-luteal.png")
     print("done.")
