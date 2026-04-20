@@ -27,10 +27,12 @@ const TEMPLATE_HEAD = `<!doctype html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
   <head>
     <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <meta name="format-detection" content="telephone=no, date=no, address=no, email=no, url=no" />
     <meta name="x-apple-disable-message-reformatting" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="color-scheme" content="light dark" />
-    <meta name="supported-color-schemes" content="light dark" />
+    <meta name="color-scheme" content="only light" />
+    <meta name="supported-color-schemes" content="only light" />
     <title>{{TITLE}}</title>
     <!--[if mso]><xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><![endif]-->
     <!--[if mso]><style>* { font-family: Arial, Helvetica, sans-serif !important; }</style><![endif]-->
@@ -41,7 +43,7 @@ const TEMPLATE_HEAD = `<!doctype html>
       @import url('https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62.5,600;62.5,700;75,600;75,700;100,400;100,500;100,600;100,700;125,600;125,700&family=JetBrains+Mono:wght@500;600&display=swap');
       @font-face { font-family:'Archivo'; font-style:normal; font-weight:400 700; font-stretch:62.5% 125%; font-display:swap; src:url(https://fonts.gstatic.com/s/archivo/v25/k3kQo8UDI-1M0wlSfdnoLmvDIaI.woff2) format('woff2'); }
       @font-face { font-family:'JetBrains Mono'; font-style:normal; font-weight:500 600; font-display:swap; src:url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxDcwgknk-4.woff2) format('woff2'); }
-      :root { color-scheme: light dark; supported-color-schemes: light dark; }
+      :root { color-scheme: only light; supported-color-schemes: only light; }
       body,table,td,p,a,li,blockquote { -webkit-text-size-adjust:100%;-ms-text-size-adjust:100%; }
       table,td { mso-table-lspace:0;mso-table-rspace:0; }
       img { -ms-interpolation-mode:bicubic;border:0;display:block;outline:none;text-decoration:none; }
@@ -81,26 +83,7 @@ const TEMPLATE_HEAD = `<!doctype html>
         .product-heading { font-size:28px!important; }
         .footer-links { font-size:12px!important; }
       }
-      @media (prefers-color-scheme:dark) {
-        body,.wrapper,.bg-pebble { background-color:#21263a!important; }
-        .bg-gray { background-color:#2a3050!important; }
-        .bg-white { background-color:#1a1f30!important; }
-        .h1,.h2,.h3,.list-title,.body-lg,.body-sm,.product-heading { color:#f5f6f7!important; }
-        .hex-light { display:none!important;max-height:0!important;overflow:hidden!important; }
-        .hex-dark { display:block!important;max-height:none!important;overflow:visible!important; }
-      }
-      [data-ogsc] body,[data-ogsc] .wrapper,[data-ogsc] .bg-pebble { background-color:#21263a!important; }
-      [data-ogsc] .bg-gray { background-color:#2a3050!important; }
-      [data-ogsc] .bg-white { background-color:#1a1f30!important; }
-      [data-ogsc] .h1,[data-ogsc] .h2,[data-ogsc] .h3,[data-ogsc] .list-title,[data-ogsc] .body-lg,[data-ogsc] .body-sm,[data-ogsc] .product-heading { color:#f5f6f7!important; }
-      [data-ogsc] .hex-light { display:none!important;max-height:0!important;overflow:hidden!important; }
-      [data-ogsc] .hex-dark { display:block!important;max-height:none!important;overflow:visible!important; }
-      [data-ogsb] body,[data-ogsb] .wrapper,[data-ogsb] .bg-pebble { background-color:#21263a!important; }
-      [data-ogsb] .bg-gray { background-color:#2a3050!important; }
-      [data-ogsb] .bg-white { background-color:#1a1f30!important; }
-      [data-ogsb] .h1,[data-ogsb] .h2,[data-ogsb] .h3,[data-ogsb] .list-title,[data-ogsb] .body-lg,[data-ogsb] .body-sm,[data-ogsb] .product-heading { color:#f5f6f7!important; }
-      [data-ogsb] .hex-light { display:none!important;max-height:0!important;overflow:hidden!important; }
-      [data-ogsb] .hex-dark { display:block!important;max-height:none!important;overflow:visible!important; }
+      /* Force-light strategy: meta tags + :root declaration above suppress dark-mode rendering on every client that respects standards. No @media (prefers-color-scheme: dark) block — iPhone 16 Pro Mail partial-inversion incident (2026-04-20) confirmed media-query dark CSS gets corrupted. Same decision applied to the menstrual-cycle emails. */
     </style>
   </head>
   <body style="margin:0;padding:0;background-color:#f5f6f7;">
@@ -143,8 +126,8 @@ const TEMPLATE_FOOTER = `
           <tr>
             <td class="bg-stone" style="background-color:#21263a;padding:32px 32px 0 32px;">
               <table role="presentation" border="0" cellspacing="0" cellpadding="0"><tr>
-                <td style="padding-right:12px;"><a href="https://apps.apple.com/us/app/signos/id1564313943" target="_blank"><img src="https://funnel-ai-signos.netlify.app/email-assets/experiments/badge-app-store.png" width="120" height="40" alt="Download on the App Store" style="display:block;color:#b5c3d6;font-size:11px;" /></a></td>
-                <td><a href="https://play.google.com/store/apps/details?id=com.signoshealth.signos" target="_blank"><img src="https://funnel-ai-signos.netlify.app/email-assets/experiments/badge-google-play.png" width="135" height="40" alt="Get it on Google Play" style="display:block;color:#b5c3d6;font-size:11px;" /></a></td>
+                <td style="padding-right:12px;"><a href="https://apps.apple.com/us/app/signos/id1534943157" target="_blank"><img src="https://funnel-ai-signos.netlify.app/email-assets/experiments/badge-app-store.png" width="120" height="40" alt="Download on the App Store" style="display:block;color:#b5c3d6;font-size:11px;" /></a></td>
+                <td><a href="https://play.google.com/store/apps/details?id=com.signos.core" target="_blank"><img src="https://funnel-ai-signos.netlify.app/email-assets/experiments/badge-google-play.png" width="135" height="40" alt="Get it on Google Play" style="display:block;color:#b5c3d6;font-size:11px;" /></a></td>
               </tr></table>
             </td>
           </tr>
@@ -1058,10 +1041,19 @@ REVIEW PRIORITY (order matters — fix the biggest hierarchy + design issues fir
 2. VISUAL DESIGN: is there background/module variety? Does every section have a design moment? Are there pull-quotes, cerise-bands, stat cards, comparisons?
 3. CONTENT: is the copy tight and punchy? Are headings short? Are decks sharp? Are there repeated headings that need varying?
 
-Return 3 to 6 suggestions, prioritized by impact. Prefer MORE suggestions when the pattern linter flagged many HIGH findings — aim for one suggestion per distinct HIGH finding. Each must be:
+Return 5 to 8 suggestions, prioritized by impact. ALWAYS prefer more when the email has room to improve — err toward 7-8, not 3-4. At LEAST 3 of the suggestions MUST have "impact: high" — these are the ones that drive the biggest visual transformation. Each must be:
 - SPECIFIC (name the section/module + target blockId(s), don't say "improve the design")
 - ACTIONABLE (the "fix" field must be a precise instruction the AI can execute on the HTML)
 - DISTINCT (each suggestion addresses a different issue)
+- BIG ENOUGH TO NOTICE — if the reviewer would have to squint to see the diff, the suggestion is too small. Prefer "replace the entire first section with a chapter-mark + pull-quote + stat-highlight triptych" over "tweak this eyebrow".
+- STRUCTURALLY SOUND — your "fix" must not break the <tr>/<td>/<table> nesting. If a suggestion requires replacing a block, use replace_module (not manual edits) and name the exact blockId. If it requires new content, use insert_module with a specific anchor blockId.
+
+POST-APPLY VERIFICATION EXPECTATION: after the user applies your suggestions, the resulting email MUST still have:
+- Header (Signos logo row) intact at the top
+- Footer (signos logo + social + copyright + unsubscribe) intact at the bottom
+- At least 1 valid hero image
+- All <table>/<tr>/<td> tags balanced — no orphan opens, no broken attributes
+If any suggestion risks any of the above, leave it out. The email must remain a valid, complete, senderable HTML document after application.
 
 MAPPING LINTER FINDINGS TO SUGGESTIONS (MANDATORY — do not skip these):
 - If HARD FACTS shows \`design-moment-repetition\` (e.g. "2 stat-highlight modules used"), one suggestion MUST be of the form:
@@ -1114,7 +1106,7 @@ ${contentOnly.slice(0, 18000)}`;
       // We still collect the full text before parsing JSON.
       const stream = client.messages.stream({
         model: "claude-sonnet-4-20250514",
-        max_tokens: 5000,  // room for 6 detailed suggestions
+        max_tokens: 8000,  // room for up to 8 detailed suggestions (raised 2026-04-20)
         system: reviewSystem,
         messages: [{ role: "user", content: reviewPrompt }],
       });
@@ -1148,7 +1140,7 @@ ${contentOnly.slice(0, 18000)}`;
         suggestions?: Array<Record<string, unknown>>;
       };
 
-      const suggestions = (review.suggestions || []).slice(0, 6).map((s, i) => ({
+      const suggestions = (review.suggestions || []).slice(0, 8).map((s, i) => ({
         id: (s.id as string) || `s${i + 1}`,
         category: (s.category as string) || "design",
         title: (s.title as string) || "Suggestion",
@@ -1396,26 +1388,94 @@ ${contentOnly.slice(0, 18000)}`;
   }
 
   if (action === "edit") {
-    const editPrompt = `Current Signos email HTML:\n\n${body.currentHtml}\n\nEdits requested: ${body.editInstructions}\n\nApply the edits. Maintain ALL existing structure, CSS classes, header, and footer. Output ONLY the complete updated HTML.`;
+    const editPrompt = `Current Signos email HTML:\n\n${body.currentHtml}\n\nEdits requested: ${body.editInstructions}\n\nApply the edits. Maintain ALL existing structure, CSS classes, header, and footer. Output ONLY the complete updated HTML, from <!doctype html> through </html>. Do not skip, abbreviate, or omit any sections — the bottom of the email (references, footer, closing tags) must be present.`;
+
+    // Stream with continuation support + truncation recovery.
+    // Earlier single-shot implementation truncated emails where Claude ran past
+    // max_tokens — the bottom (references + footer) would be cut off mid-tag.
+    // User-reported on 2026-04-20: "it did the change but did not complete the
+    // bottom of the email - make sure it rebuilds the entire email".
+    const EDIT_MAX_TOKENS = 48000;      // bumped from 32000 (beta output-128k enabled)
+    const EDIT_MAX_CONT = 5;            // continuation retries when max_tokens hit
 
     try {
-      const stream = await client.messages.stream({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 32000,
-        system: "You edit Signos email HTML. Preserve all structure, classes, and patterns. Output ONLY complete HTML — do NOT truncate any sections.",
-        messages: [{ role: "user", content: editPrompt }],
-      });
       const encoder = new TextEncoder();
+      const editSystem = "You edit Signos email HTML. Preserve all structure, classes, and patterns. Output the COMPLETE HTML document from <!doctype html> through </html>. Never truncate or skip sections — the references, footer, and closing tags must always be present.";
+
       const readable = new ReadableStream({
         async start(controller) {
-          try {
-            for await (const event of stream) {
+          let fullOutput = "";
+          let totalChunks = 0;
+
+          const streamChunk = async (s: ReturnType<typeof client.messages.stream>) => {
+            for await (const event of s) {
               if (event.type === "content_block_delta" && event.delta.type === "text_delta") {
-                controller.enqueue(encoder.encode(event.delta.text));
+                totalChunks++;
+                const text = event.delta.text;
+                fullOutput += text;
+                controller.enqueue(encoder.encode(text));
               }
             }
+            return s.finalMessage();
+          };
+
+          try {
+            let finalMsg = await streamChunk(client.messages.stream({
+              model: "claude-sonnet-4-20250514",
+              max_tokens: EDIT_MAX_TOKENS,
+              system: editSystem,
+              messages: [{ role: "user", content: editPrompt }],
+            }));
+
+            // CONTINUATION LOOP — pick up exactly where Claude stopped until the
+            // document actually closes with </html> or we exhaust retries.
+            let conts = 0;
+            while (
+              finalMsg.stop_reason === "max_tokens" &&
+              conts < EDIT_MAX_CONT &&
+              !fullOutput.trimEnd().endsWith("</html>")
+            ) {
+              conts++;
+              console.log(`[email-hub] edit continuation ${conts}/${EDIT_MAX_CONT}, output so far: ${fullOutput.length} chars`);
+              finalMsg = await streamChunk(client.messages.stream({
+                model: "claude-sonnet-4-20250514",
+                max_tokens: EDIT_MAX_TOKENS,
+                system: "Continue generating the Signos email HTML EXACTLY where you stopped. Output ONLY the remaining content until </html>. Do not repeat content already generated.",
+                messages: [
+                  { role: "user", content: editPrompt },
+                  { role: "assistant", content: fullOutput },
+                ],
+              }));
+            }
+
+            // STREAM TERMINATION GUARD — if we still ended mid-tag (max continuations
+            // hit, or stream errored), emit recovery bytes so the HTML is at least
+            // parseable and the browser doesn't eat the footer as attribute content.
+            const tailLt = fullOutput.lastIndexOf("<");
+            const tailGt = fullOutput.lastIndexOf(">");
+            if (tailLt > tailGt) {
+              console.warn(`[email-hub] edit stream cut mid-tag at offset ${tailLt}; emitting recovery`);
+              controller.enqueue(encoder.encode("'\">"));
+              controller.enqueue(encoder.encode("</p></td></tr>"));
+            }
+
+            // Final safety net: if the document didn't close properly with </html>,
+            // append the minimum structure to make it valid HTML so the browser
+            // parses + renders whatever we have.
+            if (!fullOutput.trimEnd().endsWith("</html>")) {
+              console.warn(`[email-hub] edit output missing </html>; appending closers`);
+              const needsBody = !/<\/body>\s*$/i.test(fullOutput.trimEnd());
+              const needsHtml = !/<\/html>\s*$/i.test(fullOutput.trimEnd());
+              if (needsBody) controller.enqueue(encoder.encode("</body>"));
+              if (needsHtml) controller.enqueue(encoder.encode("</html>"));
+            }
+
+            console.log(`[email-hub] edit done: ${totalChunks} chunks, ${conts} conts, ${fullOutput.length} chars`);
             controller.close();
-          } catch { controller.close(); }
+          } catch (streamErr) {
+            console.error(`[email-hub] edit stream error:`, streamErr);
+            controller.close();
+          }
         },
       });
       return new Response(readable, {
